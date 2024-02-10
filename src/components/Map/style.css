@@ -1,7 +1,12 @@
-.Home {
+.Map {
     position: fixed;
     top: 8vh;
     left: 5vw;
     width: 95vw;
     height: auto;
+}
+
+.leaflet-container {
+    width: 95vw;
+    height: 92vh;
 }

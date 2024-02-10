@@ -110,6 +110,7 @@ input:focus {
     text-indent: .5vw;
     position: relative;
     display: flex;
+    font-size: 1.6vh;
 }
 
 .Password__case input {
@@ -119,6 +120,7 @@ input:focus {
 ::placeholder {
     color: rgba(255, 255, 255, 0.6);
     text-indent: .5vw;
+    font-size: 1.4vh;
 }
 
 .Username__case input:hover,

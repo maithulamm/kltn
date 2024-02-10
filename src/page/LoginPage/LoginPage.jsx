@@ -1,7 +1,7 @@
 import React from "react";
 import { Login } from "../../components/Login/Login"
 
-function Page404() {
+function LoginPage() {
   return (
     <div className="App">
       <Login />
@@ -10,4 +10,4 @@ function Page404() {
   );
 }
 
-export default Page404;
+export default LoginPage;

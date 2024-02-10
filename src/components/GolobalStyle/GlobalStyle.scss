@@ -1,0 +1,53 @@
+@import "normalize.css";
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Whisper&display=swap");
+:root {
+  --font-family: "Roboto", sans-serif;
+  // --font-family-second: "Libre Bodoni", serif;
+  --font-family-second: var(--font-family);
+  --font-family-banner: "Whisper", sans-serif;
+  --btn-explore-color: #ff6b6c;
+  --navbar-color: #0139a6;
+  --white-prime: #ffffff;
+  --color-organe: #f91d5a;
+  --color-pink: #fec4c4;
+  --black-prime: #413f3f;
+  --container-width-lg: 75%;
+  --container-width-md: 86%;
+  --container-width-sm: 90%;
+  --media-container-lg: 70%;
+  --media-container-md: 80%;
+  --media-container-sm: 90%;
+  --post-detail-width-lg: 78%;
+  --post-detail-width-md: 85%;
+  --post-detail-width-sm: 95%;
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html {
+  scroll-behavior: smooth;
+}
+img {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+}
+
+::-webkit-scrollbar {
+  width: 0.7rem !important;
+  background-color: rgb(219, 218, 218) !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #a3a0a1bb !important;
+  border-radius: 0.5rem;
+  width: 0.6rem;
+  transition: all 0.3s ease !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #a59fdb !important;
+  transition: all 0.3s ease !important;
+}

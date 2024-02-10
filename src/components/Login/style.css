@@ -1,0 +1,191 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;500&display=swap');
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css");
+
+input:focus {
+    outline: none;
+}
+
+.fa-eye,
+.fa-eye-slash {
+    color: white;
+    font-size: 2vh;
+}
+
+.Login {
+    background-image: url("../../assets/images/backlogin.png");
+    opacity: .95;
+    height: 100vh;
+    width: 100vw;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+}
+
+.Login .Title {
+    margin-top: 5vh;
+    height: 15vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+
+.Title h1 {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 800;
+    font-size: 5vh;
+    color: white;
+}
+
+.Login .Logo {
+    height: 15vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.Login .Logo img {
+    height: 10vh;
+    width: 10vh;
+    object-fit: contain;
+}
+
+.Login .Login__form {
+    margin-top: 7.5vh;
+    height: auto;
+    width: auto;
+}
+
+.Back__login {
+    height: 25vh;
+    width: 22vw;
+    background-color: rgba(255, 255, 255, 0.2);
+    display: flex;
+    flex-direction: column;
+    border-radius: 3vh;
+    justify-content: center;
+    align-items: center;
+}
+
+.Title__login {
+    height: 5vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.Title__login h2 {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    font-size: 3vh;
+    color: white;
+    text-transform: uppercase;
+}
+
+.Username__case,
+.Password__case {
+    background-color: transparent;
+    height: 5vh;
+    width: 20vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.Username__case input,
+.Password__case input {
+    background-color: transparent;
+    height: 3vh;
+    width: 15vw;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 200;
+    color: white;
+    text-indent: .5vw;
+    position: relative;
+    display: flex;
+}
+
+.Password__case input {
+    width: 14vw;
+}
+
+::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+    text-indent: .5vw;
+}
+
+.Username__case input:hover,
+.Password__case input:hover {
+    border-bottom: 1px solid #3C7363;
+}
+
+.Username__case input:active,
+.Password__case input:active {
+    border-bottom: 1px solid #3C7363;
+}
+
+.Password__case .eye {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+.Password__case .eye .eye__button {
+    width: 2vh;
+    height: 2vh;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.eye_ch {
+    cursor: pointer;
+}
+
+label .pass {
+    display: none;
+}
+
+.fa-eye-slash {
+    display: none;
+}
+
+label .pass:checked~.fa-eye-slash {
+    display: flex;
+}
+
+label .pass:checked~.fa-eye {
+    display: none;
+}
+
+
+.Button__login button {
+    height: 4vh;
+    width: auto;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    margin: 2vh 0 0 0;
+    padding: 1vh;
+    font-size: 1.4vh;
+    background-color: #3C7363;
+    border: #3C7363 1px solid;
+    border-radius: 1vh;
+    color: white;
+    box-shadow: 0 0 .3vh rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+}
+
+#login__button:hover {
+    background-color: #375a50;
+}
+
+#login__button:active {
+    border: white 1px solid;
+}

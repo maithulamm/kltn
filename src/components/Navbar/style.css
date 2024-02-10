@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;500&display=swap');
+
+.Navbar {
+    display: block;
+    align-items: center;
+    background-color: white;
+    height: 92vh;
+    width: 5vw;
+    border: .1vh #3C7363;
+    border-style: none solid none none;
+    box-shadow: 0 0 .5vh rgba(0, 0, 0, 0.5);
+    position: absolute;
+    top: 8vh;
+}
+.Navbar__icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* căn giữ ngang */
+    text-align: center; /* căn giữ dọc */
+    justify-content: flex-end;
+    position: relative;
+    
+}
+
+.Navbar__icon:hover {
+    background-color: #3c73631c;
+}
+
+.Navbar__icon input:checked ~ .label p {
+    font-weight: 600;
+}
+
+.Navbar__icon input:checked ~ .label img {
+    height: 2.6vw;
+    width: 2.6vw;
+}
+
+.Home {
+    display: none;
+}
+
+.Navbar__icon input:checked ~ .Home {
+    display: block;
+}
+
+
+
+/* .Navbar__icon input:checked ~ .label {
+    border-style: none solid solid none;
+} */
+
+.Navbar__icon input {
+    display: none;
+}
+
+.Navbar__icon .label {
+    height: 5vw;
+    width: 5vw;
+    border: .2vh #3C7363;
+    border-style: none none solid none;
+    cursor: pointer;
+}
+
+.Navbar__icon .label img {
+    height: 2.4vw;
+    width: 2.4vw;
+    object-fit: contain;
+    margin: 0;
+    padding-top: 1vh;
+}
+
+.Navbar__icon .label p {
+    display: block;
+    font-size: 1.5vh;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 200;
+    color: #3C7363;
+    padding-top: 1vh;
+}
+
+.Navbar__icon .selected {
+    width: 0;
+    height: 0;
+    border-bottom: 0vw solid #3c736c;
+    border-left: 1vw solid transparent;
+    position: absolute;
+    left: 4vw;
+}
+
+.Navbar__icon input:checked ~ .selected {
+    border-bottom: 1vw solid #3c736c;
+}
+

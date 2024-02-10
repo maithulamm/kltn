@@ -1,0 +1,13 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Roboto Mono", monospace;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100vw;
+}

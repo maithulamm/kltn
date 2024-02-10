@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;500&display=swap');
+.Header { 
+    background-color: #3C7363;
+    height: 8vh;
+    width: 100vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    position: -webkit-sticky;
+}
+a {
+    text-decoration: none;
+    color: #3C7363;
+  }
+  
+.Logo-name {
+    display: flex;
+    align-items: center;
+}
+.Logo .App-logo{
+    height: 6vh;
+    object-fit: contain;
+    margin: 1vh;
+}
+.Name h1{
+    color: white;
+    font-size: 2.5vh;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    margin: 1vh;
+}
+
+.Username-avt {
+    display: flex;
+    align-items: center;
+}
+
+.Username h6{
+    color: white;
+    font-size: 1.6vh;
+    font-family: 'Roboto', sans-serif;
+    margin: 1vh;
+    font-weight: 100;
+}
+
+.Avt .Avt-img{
+    height: 6vh;
+    object-fit: contain;
+    margin: 1vh;
+    border-radius: 50%;
+    border: .2vh solid rgb(135, 214, 175);
+}

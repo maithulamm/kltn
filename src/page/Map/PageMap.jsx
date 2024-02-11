@@ -8,7 +8,7 @@ function Mapapp() {
     <div className="App">
       <Header />
       <Navbar selected_Item={1} />
-      <Map />
+      <Map whtl={["95vw", "92vh", "8vh", "5vw"]} />
     </div>
 
   );

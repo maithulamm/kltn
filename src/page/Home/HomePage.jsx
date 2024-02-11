@@ -8,8 +8,10 @@ function HomePage() {
     <div className="HomePage">
       <Header />
       <Navbar selected_Item={0} />
-      <Statistic />
-      <Map whtl={["30vw", "40vh", "0", "10vw"]} />
+      <section>
+        <Statistic />
+        <Map whtl={["30vw", "40vh", "0", "10vw"]} />
+      </section>
     </div>
   );
 }

@@ -1,0 +1,14 @@
+
+tbody tr,
+tbody td
+ {
+  border-width: 1px;
+  border-color: #e7e2e2;
+}
+
+tr th {
+    border-left-width: 1px;
+    border-color: #e7e2e2;
+}
+
+

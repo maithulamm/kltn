@@ -1,0 +1,12 @@
+
+
+.leaflet-container {
+    /* width: 90%; */
+    height: 100%;
+}
+
+.icon-image {
+    height: 2.1vh;
+    object-fit: contain;
+    text-align: center;
+}

@@ -66,7 +66,7 @@ const MapOverlay = ({LAT, LNG, onPositionChange}) =>  {
   
       legend.onAdd = function () {
         const div = L.DomUtil.create('div', 'info legend');
-        div.innerHTML += '<strong>Kéo thả để thay đổi vị trí</strong>';
+        div.innerHTML += `<strong style="padding: .3rem;background-color: #007bff;border-radius: 10px;color: white;">Kéo thả để thay đổi vị trí</strong> ${markerPosition}`;
         return div;
       };
   
@@ -95,6 +95,7 @@ const MapOverlay = ({LAT, LNG, onPositionChange}) =>  {
       <OverlayPanel
         ref={op}
         style={{ height: "300px", width: "400px" }}
+        showCloseIcon
       >
         {/*  */}
         <div style={{ height: 'calc(300px - 2.5rem)' }}>

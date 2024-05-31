@@ -6,6 +6,7 @@ import { Admin } from "../../components/admin/admin"
 import { Col, ListGroup, Row } from "react-bootstrap";
 import { SlidebarData } from "../../components/SlidebarData/SlidebarData";
 import { Table } from "../../components/Table/Table";
+import {Table as Table_User } from "../../components/Table/Table_User";
 
 import 'primereact/resources/primereact.min.css';
 function Place() {
@@ -29,8 +30,7 @@ function User() {
   return (
     <Fragment>
       <Header handleClick={handleShow}/>
-      <Navbar show={show} handleClose={handleClose} current={2}/>
-      
+      <Table_User />
     </Fragment>
       
   );

@@ -1,4 +1,10 @@
-import React, { useState, useEffect, Fragment, useRef, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  Fragment,
+  useRef,
+  useCallback,
+} from "react";
 import { classNames } from "primereact/utils";
 import { FilterMatchMode, FilterOperator } from "primereact/api";
 import { DataTable } from "primereact/datatable";
@@ -12,7 +18,6 @@ import { Tag } from "primereact/tag";
 import { TriStateCheckbox } from "primereact/tristatecheckbox";
 import { useSelector } from "react-redux";
 import { BreadCrumb } from "primereact/breadcrumb";
-
 import "primereact/resources/themes/lara-light-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
@@ -30,15 +35,16 @@ import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import MapOverlay from "./MapOverlay";
 
 function DynamicColumnsDemo() {
-  const [data_ID, setData_ID] = useState("");
   const [currentRowData, setCurrentRowData] = useState(null);
   const [visible_d, setVisible_d] = useState(false);
   const [visible_x, setVisible_x] = useState(false);
   const [visible_a, setVisible_a] = useState(false);
-  const Data = useSelector((state) => state.places?.places?.allPlaces);
+  const Data = useSelector((state) => state.users?.users?.allUsers);
+
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
+
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
     intro: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -101,21 +107,6 @@ function DynamicColumnsDemo() {
   };
   const header = renderHeader();
   const [selectedProducts, setSelectedProducts] = useState(null);
-
-  const columns = [
-    // {field: 'code', header: 'Code'},
-    { field: "intro", header: "Tên" },
-    { field: "type", header: "Loại" },
-    { field: "phone", header: "SĐT" },
-    { field: "during", header: "Thời gian" },
-    { field: "open", header: "Mở cửa" },
-    { field: "close", header: "Đóng cửa" },
-    { field: "email", header: "Email" },
-    { field: "address", header: "Địa chỉ" },
-    { field: "info", header: "Thông tin" },
-    { field: "lat", header: "Vĩ độ" },
-    { field: "long", header: "Kinh độ" },
-  ];
   const iconItemTemplate = (item, options) => {
     return (
       <a className={options.className}>
@@ -178,25 +169,28 @@ function DynamicColumnsDemo() {
       setDataEdit((prev) => ({ ...prev, [field]: e.target.value }));
     };
 
-    const [markerPosition, setMarkerPosition] = useState([dataEdit.lat, dataEdit.long]);
+    const [markerPosition, setMarkerPosition] = useState([
+      dataEdit.lat,
+      dataEdit.long,
+    ]);
 
     const handleMarkerPositionChange = (newPosition) => {
-            setMarkerPosition([newPosition.lat, newPosition.lng]);
-        } // Cập nhật trạng thái của vị trí marker khi nó thay đổi
-    
+      setMarkerPosition([newPosition.lat, newPosition.lng]);
+    }; // Cập nhật trạng thái của vị trí marker khi nó thay đổi
+
     const update_data = {
-        intro: dataEdit.intro,
-        type: dataEdit.type,
-        phone: dataEdit.phone,
-        during: dataEdit.during,
-        open: dataEdit.open,
-        close: dataEdit.close,
-        email: dataEdit.email,
-        address: dataEdit.address,
-        info: dataEdit.info,
-        lat: markerPosition[0].toString(),
-        long: markerPosition[1].toString(),
-        };
+      intro: dataEdit.intro,
+      type: dataEdit.type,
+      phone: dataEdit.phone,
+      during: dataEdit.during,
+      open: dataEdit.open,
+      close: dataEdit.close,
+      email: dataEdit.email,
+      address: dataEdit.address,
+      info: dataEdit.info,
+      lat: markerPosition[0].toString(),
+      long: markerPosition[1].toString(),
+    };
     console.log(update_data);
     return (
       <Dialog
@@ -304,7 +298,11 @@ function DynamicColumnsDemo() {
             />
           </div>
           <div className="field col-12 md:col-5">
-            <MapOverlay LAT={dataEdit.lat} LNG={dataEdit.long} onPositionChange={handleMarkerPositionChange}/>
+            <MapOverlay
+              LAT={dataEdit.lat}
+              LNG={dataEdit.long}
+              onPositionChange={handleMarkerPositionChange}
+            />
           </div>
           {/* <div className="field col-12 md:col-3"> </div> */}
           <div className="flex col-12 md:col-12 justify-content-center">
@@ -377,41 +375,44 @@ function DynamicColumnsDemo() {
 
   const Dialog_A = () => {
     const [dataEdit, setDataEdit] = useState({
-      intro: '',
-        type: '',
-        phone: '',
-        during: '',
-        open: '',
-        close: '',
-        email: '',
-        address: '',
-        info: '',
-        lat: '10.530582870379785',
-        long: '105.21931237399188',   
+      intro: "",
+      type: "",
+      phone: "",
+      during: "",
+      open: "",
+      close: "",
+      email: "",
+      address: "",
+      info: "",
+      lat: "10.530582870379785",
+      long: "105.21931237399188",
     });
     const handleInputChange = (e, field) => {
       setDataEdit((prev) => ({ ...prev, [field]: e.target.value }));
     };
 
-    const [markerPosition, setMarkerPosition] = useState([dataEdit.lat, dataEdit.long]);
+    const [markerPosition, setMarkerPosition] = useState([
+      dataEdit.lat,
+      dataEdit.long,
+    ]);
 
     const handleMarkerPositionChange = (newPosition) => {
-            setMarkerPosition([newPosition.lat, newPosition.lng]);
-        } // Cập nhật trạng thái của vị trí marker khi nó thay đổi
-    
+      setMarkerPosition([newPosition.lat, newPosition.lng]);
+    }; // Cập nhật trạng thái của vị trí marker khi nó thay đổi
+
     const new_data = {
-        intro: dataEdit.intro,
-        type: dataEdit.type,
-        phone: dataEdit.phone,
-        during: dataEdit.during,
-        open: dataEdit.open,
-        close: dataEdit.close,
-        email: dataEdit.email,
-        address: dataEdit.address,
-        info: dataEdit.info,
-        lat: markerPosition[0].toString(),
-        long: markerPosition[1].toString(),
-        };
+      intro: dataEdit.intro,
+      type: dataEdit.type,
+      phone: dataEdit.phone,
+      during: dataEdit.during,
+      open: dataEdit.open,
+      close: dataEdit.close,
+      email: dataEdit.email,
+      address: dataEdit.address,
+      info: dataEdit.info,
+      lat: markerPosition[0].toString(),
+      long: markerPosition[1].toString(),
+    };
     console.log(new_data);
     return (
       <Dialog
@@ -519,7 +520,11 @@ function DynamicColumnsDemo() {
             />
           </div>
           <div className="field col-12 md:col-5">
-            <MapOverlay LAT={dataEdit.lat} LNG={dataEdit.long} onPositionChange={handleMarkerPositionChange}/>
+            <MapOverlay
+              LAT={dataEdit.lat}
+              LNG={dataEdit.long}
+              onPositionChange={handleMarkerPositionChange}
+            />
           </div>
           {/* <div className="field col-12 md:col-3"> </div> */}
           <div className="flex col-12 md:col-12 justify-content-center">

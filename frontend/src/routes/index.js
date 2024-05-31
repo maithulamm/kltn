@@ -1,6 +1,6 @@
 import HomePage from "../page/Home/HomePage";
 import Map from "../page/Map/PageMap";
-import Data, { Place, User } from "../page/DataBasePage/Data";
+import { Place, User } from "../page/DataBasePage/Data";
 import Feedback from "../page/Feedback/Feedback";
 import Links from "../page/LinkPage/LinkPage"
 import Guide from "../page/Guide/Guide";

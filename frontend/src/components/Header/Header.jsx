@@ -65,7 +65,7 @@ const page =
     { label: 'Trang chủ', icon: 'pi pi-fw pi-home', url: '/admin/home'},
     { label: 'Dữ liệu', icon: 'pi pi-fw pi-database', items: [
       { label: 'Địa điểm', icon: 'pi pi-fw pi-map-marker', url: '/admin/data/place' },
-      { label: 'Người dùng', icon: 'pi pi-fw pi-address-book', url: '/admin/places' },
+      { label: 'Người dùng', icon: 'pi pi-fw pi-address-book', url: '/admin/data/user' },
       { label: 'Loại địa điểm', icon: 'pi pi-fw pi-list', url: '/admin/types' },
       ],
       

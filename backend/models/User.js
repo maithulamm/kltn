@@ -24,6 +24,31 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    fullName: {
+      type: String,
+      require: true,
+      max: 50,
+    },
+    avt: {
+      type: String,
+      default: "",
+    },
+    birthday: {
+      type: Date,
+      default: Date.now,
+    },
+    gender: {
+      type: String,
+      default: "Nam",
+    },
+    phone: {
+      type: String,
+      default: "",
+    },
+    prefer: {
+      type: Array,
+      default: [],
+    },
   },
   { timestamps: true }
 );

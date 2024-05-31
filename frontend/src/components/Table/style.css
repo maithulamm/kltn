@@ -1,4 +1,4 @@
-
+/* 
 tbody tr,
 tbody td
  {
@@ -10,5 +10,19 @@ tr th {
     border-left-width: 1px;
     border-color: #e7e2e2;
 }
+ */
 
 
+.esri-truncated-attribution {
+  display: none !important;
+
+}
+
+.leaflet-container {
+  /* width: 90%; */
+  height: 100%;
+}
+
+.leaflet-tooltip-top {
+  margin-top: -16px !important;
+}

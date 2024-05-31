@@ -6,7 +6,7 @@ import { getPlacesStart, getPlacesSuccess, getPlacesFailure } from './placeSlice
 export const loginUser = async (user, dispatch, navigate) => {
     dispatch(loginStart());
     try {
-        const res = await axiost.post('http://localhost:8000/v1/auth/login', user);
+        const res = await axiost.post('hhttps://kltn-pdoe.onrender.com/login/v1/auth/login', user);
         dispatch(loginSuccess(res.data));
         navigate('/home');
     } catch (err) {
@@ -18,7 +18,7 @@ export const loginUser = async (user, dispatch, navigate) => {
 export const registerUser = async (user, dispatch, navigate) => {
     dispatch(registerStart());
     try {
-        const res = await axiost.post('http://localhost:8000/v1/auth/register', user);
+        const res = await axiost.post('hhttps://kltn-pdoe.onrender.com/login/v1/auth/register', user);
         dispatch(registerSuccess());
         navigate('/login');
         //alert("Đăng ký thành công!");
@@ -30,7 +30,7 @@ export const registerUser = async (user, dispatch, navigate) => {
 export const getAllUser = async (accessToken, dispatch) => {
     dispatch(getUsersStart());
     try {
-        const res = await axiost.get('http://localhost:8000/v1/user/', {
+        const res = await axiost.get('hhttps://kltn-pdoe.onrender.com/login/v1/user/', {
             headers: {
                 Token: `Bearer ${accessToken}`,
             },
@@ -44,7 +44,7 @@ export const getAllUser = async (accessToken, dispatch) => {
 export const getAllPlace = async (accessToken, dispatch) => {
     dispatch(getPlacesStart());
     try {
-        const res = await axiost.get('http://localhost:8000/v1/place/', {
+        const res = await axiost.get('hhttps://kltn-pdoe.onrender.com/login/v1/place/', {
             headers: {
                 Token: `Bearer ${accessToken}`,
             },
@@ -59,7 +59,7 @@ export const getAllPlace = async (accessToken, dispatch) => {
 export const deleteUser = async (id, accessToken, dispatch) => {
     dispatch(deleteUserStart());
     try {
-        const res = await axiost.delete("http://localhost:8000/v1/user/"+id, {
+        const res = await axiost.delete("hhttps://kltn-pdoe.onrender.com/login/v1/user/"+id, {
             headers: {
                 Token: `Bearer ${accessToken}`,
             },
@@ -74,7 +74,7 @@ export const deleteUser = async (id, accessToken, dispatch) => {
 export const logOut = async (dispatch, navigate, accessToken, id) => {
     dispatch(logOutStart());
     try {
-        // await axiost.post('http://localhost:8000/v1/auth/logout', id , {
+        // await axiost.post('hhttps://kltn-pdoe.onrender.com/login/v1/auth/logout', id , {
         //     headers: {
         //         Token: `Bearer ${accessToken}`,
         //     },

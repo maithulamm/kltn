@@ -19,6 +19,8 @@ import { Toast } from 'primereact/toast';
 import { SplitButton } from 'primereact/splitbutton';
 import { Image } from 'primereact/image';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+// import 'primereact/resources/primereact.min.css';
+import 'primereact/resources/themes/bootstrap4-light-blue/theme.css';
 
 
 const rl = [
@@ -58,9 +60,59 @@ export const Header = () => {
 
     });
 };
+const page =               
+  [
+    { label: 'Trang chủ', icon: 'pi pi-fw pi-home', url: '/admin/home'},
+    { label: 'Dữ liệu', icon: 'pi pi-fw pi-database', items: [
+      { label: 'Địa điểm', icon: 'pi pi-fw pi-map-marker', url: '/admin/data/place' },
+      { label: 'Người dùng', icon: 'pi pi-fw pi-address-book', url: '/admin/places' },
+      { label: 'Loại địa điểm', icon: 'pi pi-fw pi-list', url: '/admin/types' },
+      ],
+      
+    },
+    { label: 'Bản đồ', icon: 'pi pi-fw pi-map', url: '/admin/map' },
+    { label: 'Phản hồi', icon: 'pi pi-fw pi-comments', url: '/admin/users' },
+    { label: 'Liên kết', icon: 'pi pi-fw pi-link', url: '/admin/users' },
+    { label: 'Báo cáo', icon: 'pi pi-fw pi-chart-bar', url: '/admin/reports' },
+    { label: 'Hướng dẫn', icon: 'pi pi-fw pi-question-circle', url: '/admin/guide' },
+  ]
 
   useEffect(() => {
-    // document.getElementsByClassName
+   
+   // Lấy đường dẫn tới file CSS từ node_modules
+    const cssPath = require('primereact/resources/themes/bootstrap4-light-blue/theme.css');
+
+    // Tạo một thẻ link để thêm CSS từ PrimeReact
+    const linkElement = document.createElement('link');
+    linkElement.rel = 'stylesheet';
+    linkElement.href = cssPath;
+
+    // Thêm thẻ link vào phần tử <head> của trang
+    document.head.appendChild(linkElement);
+    const style = document.createElement('style');
+
+    const hrefPage = window.location.pathname.split('/');
+    
+    style.innerHTML = `
+        li[data-id="pr_id_4_${hrefPage[2] === 'home' 
+          ? '0' 
+          : hrefPage[2] === 'data' ? '1' 
+          : hrefPage[2] === 'map' ? '2'
+          : hrefPage[2] === 'feedback' ? '3'
+          : hrefPage[2] === 'link' ? '4'
+          : hrefPage[2] === 'reports' ? '5'
+          : '6'
+        }"] {
+            font-weight: 900;
+            border-radius: 10px;
+        }
+        
+    `;
+    document.head.appendChild(style);
+    return () => {
+        document.head.removeChild(style);
+    };
+
   }, []);
     return (
         // <section className="Header">
@@ -92,35 +144,21 @@ export const Header = () => {
         //         </div>
         //   </div>
         // </section>
-        <Fragment>
+        <section id="HEADER">
           <Menubar 
             start={
-              <img alt="logo" src={logo} height="40" className="mr-2"></img>
+              <Link to='/admin/home'> <img alt="logo" src={logo} height="40" className="mr-2"></img> </Link>
             }
             model={
-              [
-                { label: 'Trang chủ', icon: 'pi pi-fw pi-home', url: '/admin/home', style: {backgroundColor: 'red'}},
-                { label: 'Dữ liệu', icon: 'pi pi-fw pi-database', items: [
-                  { label: 'Địa điểm', icon: 'pi pi-fw pi-map-marker', url: '/admin/data/places' },
-                  { label: 'Người dùng', icon: 'pi pi-fw pi-address-book', url: '/admin/places' },
-                  { label: 'Loại địa điểm', icon: 'pi pi-fw pi-list', url: '/admin/types' },
-                  ],
-                  
-                },
-                { label: 'Bản đồ', icon: 'pi pi-fw pi-map', url: '/admin/map' },
-                { label: 'Phản hồi', icon: 'pi pi-fw pi-comments', url: '/admin/users' },
-                { label: 'Liên kết', icon: 'pi pi-fw pi-link', url: '/admin/users' },
-                { label: 'Báo cáo', icon: 'pi pi-fw pi-chart-bar', url: '/admin/reports' },
-                { label: 'Hướng dẫn', icon: 'pi pi-fw pi-question-circle', url: '/admin/guide' },
-              ]
+              page
             }
             end={
               <Fragment>
                 <SplitButton label={
-                  <Fragment>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
                     Xin chào, {user.username}!
-                    <Image className='mx-2' src={avt} width={40} />
-                  </Fragment>
+                    <Image className='' src={avt} width={40} style={{marginLeft: '1rem'}}/>
+                  </div>
                 } 
                 //  onClick={save} 
                  model={
@@ -140,7 +178,7 @@ export const Header = () => {
 
             />
             <ConfirmDialog />
-        </Fragment>
+        </section>
     );
 
 }

@@ -11,10 +11,10 @@ import { Card, CardTitle, Col, Image, Row } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 
-import 'primereact/resources/primereact.min.css';
-import '@coreui/coreui/dist/css/coreui.min.css'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'mdb-react-ui-kit/dist/css/mdb.min.css';
+// import 'primereact/resources/primereact.min.css';
+// import '@coreui/coreui/dist/css/coreui.min.css'
+// import 'bootstrap/dist/css/bootstrap.min.css'
+
 
 import { CBadge, CButton, CCard, CCardBody, CCollapse, CDropdown, CDropdownDivider, CDropdownItem, CDropdownMenu, CDropdownToggle, CNavGroup, CNavGroupItems, CNavItem, CNavLink, CNavTitle, CSidebarNav } from '@coreui/react'
 import logo from '../../assets/images/logo.png';

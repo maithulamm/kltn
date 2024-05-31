@@ -1,147 +1,63 @@
-import React from 'react';
-import { 
-  MDBContainer,
-  MDBRow,
-  MDBCard,
-  MDBCol,
-  MDBBadge,
-  MDBCardBody,
-  MDBBtn,
-  MDBIcon,
-  MDBCardFooter
-} from 'mdb-react-ui-kit';
+
+import React, { Fragment, useEffect, useRef } from 'react';
+import { MeterGroup } from 'primereact/metergroup';
+import { Card } from 'primereact/card';
+import { Button } from 'primereact/button';
+import 'primereact/resources/themes/bootstrap4-light-blue/theme.css'
+import 'primereact/resources/primereact.min.css'
+import 'primeicons/primeicons.css'
+import 'primeflex/primeflex.css'
+import './style.css'
+import { useNavigate } from 'react-router-dom';
 
 function Dashboard() {
-  return (
-    <MDBContainer fluid>
-      <MDBRow className='justify-content-center'>
-        <MDBCol md='11'>
-          <section>
-            {/* <h5 className='mb-4'>Last month</h5> */}
-            <br/>
-            <MDBRow>
-              <MDBCol md='3' className='mb-md-0'>
-                <MDBCard>
-                  <MDBCardBody>
-                    <div className='d-flex align-items-center'>
-                      <div className='flex-shrink-0'>
-                        <div className='p-3 bg-primary rounded-4 shadow-2-strong'>
-                          <MDBIcon icon='map-marker-alt' size='lg' className='text-white fa-fw' />
-                        </div>
-                      </div>
-                      <div className='flex-grow-1 ms-4'>
-                        <p className='text-muted mb-1'>Địa điểm</p>
-                        <h2 className='mb-0'>
-                          71,897
-                          {/* <span className='text-success' style={{ fontSize: '0.875rem' }}>
-                            <MDBIcon icon='arrow-up' className='ms-1' size='sm' />
-                            <span> 5.4%</span>
-                          </span> */}
-                        </h2>
-                      </div>
-                    </div>
-                  </MDBCardBody>
-                  <MDBCardFooter background='light' className='border-0 p-2'>
-                    <MDBBtn color='none' className='ms-3' tag='a' href='#'>
-                      Xem thêm <MDBIcon icon='arrow-right' className='ms-2' />
-                    </MDBBtn>
-                  </MDBCardFooter>
-                </MDBCard>
-              </MDBCol>
+    const navigate = useNavigate();
+    useEffect(() => {
 
-              <MDBCol md='3' className='mb-md-0'>
-                <MDBCard>
-                  <MDBCardBody>
-                    <div className='d-flex align-items-center'>
-                      <div className='flex-shrink-0'>
-                        <div className='p-3 bg-primary rounded-4 shadow-2-strong'>
-                          <MDBIcon icon='user' size='lg' className='text-white fa-fw' />
+    }, []);
+    const labelList = ({ values }) => (
+        <div className="flex flex-wrap justify-content-center gap-3">
+            {values.map((item, index) => (
+                <Card className={`border-round flex align-items-center justify-content-center w-${window.innerWidth < window.innerHeight ? '24rem' : 'auto'} h-8rem border-1 border-primary hover:bg-primary `} key={index}>
+                    <div className={`flex justify-content-between w-12rem h-6rem`}>
+                        <div className="flex flex-column">
+                            <span className="text-secondary text-xl">{item.label}</span>
+                            <br/>
+                            <span className="font-bold text-3xl">{item.value}</span>
                         </div>
-                      </div>
-                      <div className='flex-grow-1 ms-4'>
-                        <p className='text-muted mb-1'>Tài khoản người dùng</p>
-                        <h2 className='mb-0'>
-                          146,926
-                          {/* <span className='text-success' style={{ fontSize: '0.875rem' }}>
-                            <MDBIcon icon='arrow-up' className='ms-1' size='sm' />
-                            <span> 8.3%</span>
-                          </span> */}
-                        </h2>
-                      </div>
+                        <div className="flex flex-column">
+                            <span className="border-circle inline-flex justify-content-center align-items-center text-center" style={{ backgroundColor: item.color1, color: '#ffffff', width: '30px', height: '30px' }}>
+                                <i className={item.icon} />
+                            </span>
+                            <br/>
+                            <br/>
+                            <a href='#'><i className='pi pi-arrow-right hover:bg-primary cursor-pointer ' style={{ color: '#ffffff' }}/></a>
+                        </div>
                     </div>
-                  </MDBCardBody>
-                  <MDBCardFooter background='light' className='border-0 p-2'>
-                    <MDBBtn color='none' className='ms-3' tag='a' href='#'>
-                      Xem thêm <MDBIcon icon='arrow-right' className='ms-2' />
-                    </MDBBtn>
-                  </MDBCardFooter>
-                </MDBCard>
-              </MDBCol>
+                </Card>
+            ))}
 
-              <MDBCol md='3' className='mb-md-0'>
-                <MDBCard>
-                  <MDBCardBody>
-                    <div className='d-flex align-items-center'>
-                      <div className='flex-shrink-0'>
-                        <div className='p-3 bg-primary rounded-4 shadow-2-strong'>
-                          <MDBIcon icon='comments' size='lg' className='text-white fa-fw' />
-                        </div>
-                      </div>
-                      <div className='flex-grow-1 ms-4'>
-                        <p className='text-muted mb-1'>Phản hồi</p>
-                        <h2 className='mb-0'>
-                          24.57
-                          {/* <span className='text-danger' style={{ fontSize: '0.875rem' }}>
-                            <MDBIcon icon='arrow-down' className='ms-1' size='sm' />
-                            <span> 3.9%</span>
-                          </span> */}
-                        </h2>
-                      </div>
-                    </div>
-                  </MDBCardBody>
-                  <MDBCardFooter background='light' className='border-0 p-2'>
-                    <MDBBtn color='none' className='ms-3' tag='a' href='#'>
-                      Xem thêm <MDBIcon icon='arrow-right' className='ms-2' />
-                    </MDBBtn>
-                  </MDBCardFooter>
-                </MDBCard>
-              </MDBCol>
+        </div>
+    );
 
-              <MDBCol md='3' className='mb-md-0'>
-                <MDBCard>
-                  <MDBCardBody>
-                    <div className='d-flex align-items-center'>
-                      <div className='flex-shrink-0'>
-                        <div className='p-3 bg-primary rounded-4 shadow-2-strong'>
-                          <MDBIcon icon='chart-pie' size='lg' className='text-white fa-fw' />
-                        </div>
-                      </div>
-                      <div className='flex-grow-1 ms-4'>
-                        <p className='text-muted mb-1'>Loại địa điểm</p>
-                        <h2 className='mb-0'>
-                          24.57
-                          {/* <span className='text-danger' style={{ fontSize: '0.875rem' }}>
-                            <MDBIcon icon='arrow-down' className='ms-1' size='sm' />
-                            <span> 3.9%</span>
-                          </span> */}
-                        </h2>
-                      </div>
-                    </div>
-                    {/* <iframe src="https://thoitiet.vn/embed/yyvuapulmz?days=5&hC=%23ffffff&hB=%23FF0000&tC=%23848484&bC=%23FF0000&lC=%23dddddd" id="widgeturl" width="100%" height="297" scrolling="no" frameborder="0" allowtransparency="true" ></iframe> */}
-                  </MDBCardBody>
-                  <MDBCardFooter background='light' className='border-0 p-2'>
-                    <MDBBtn color='none' className='ms-3' tag='a' href='#'>
-                      Xem thêm <MDBIcon icon='arrow-right' className='ms-2' />
-                    </MDBBtn>
-                  </MDBCardFooter>
-                </MDBCard>
-              </MDBCol>
-            </MDBRow>
-          </section>
-        </MDBCol>
-      </MDBRow>
-    </MDBContainer>
-  );
+
+    const values = [
+        { label: 'Địa điểm', color1: '#34d399', color2: '#fbbf24', value: 25, icon: 'pi pi-map-marker' },
+        { label: 'Người dùng', color1: '#fbbf24', color2: '#60a5fa', value: 15, icon: 'pi pi-user' },
+        { label: `Loại địa điểm`, color1: '#60a5fa', color2: '#c084fc', value: 20, icon: 'pi pi-list' },
+        { label: 'System', color1: '#c084fc', color2: '#c084fc', value: 10, icon: 'pi pi-cog' }
+    ];
+
+ 
+
+    return (
+        <Fragment>
+            <div className="card flex justify-content-center my-4 w-12">
+                <MeterGroup values={values}  labelList={labelList} />
+            </div>
+        </Fragment>
+    )
 }
+        
 
 export default Dashboard;

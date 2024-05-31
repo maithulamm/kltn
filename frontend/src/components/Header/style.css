@@ -1,1 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;500&display=swap');
+.p-menubar .p-submenu-list {
+    z-index: 9999;
+}
+
+li[aria-level="2"] {
+    font-weight: 300;
+}

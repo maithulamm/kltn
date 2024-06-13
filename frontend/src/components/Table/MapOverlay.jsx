@@ -66,14 +66,25 @@ const MapOverlay = ({LAT, LNG, onPositionChange}) =>  {
   
       legend.onAdd = function () {
         const div = L.DomUtil.create('div', 'info legend');
-        div.innerHTML += `<strong style="padding: .3rem;background-color: #007bff;border-radius: 10px;color: white;">Kéo thả để thay đổi vị trí</strong> ${markerPosition}`;
+        div.innerHTML += `<strong style="padding: .3rem;background-color: #007bff;border-radius: 10px;color: white;">Kéo thả để thay đổi vị trí</strong> `;
         return div;
       };
   
       legend.addTo(map);
+
+      const legend2 = L.control({ position: 'topright' });
+  
+      legend2.onAdd = function () {
+        const div = L.DomUtil.create('div', 'info legend');
+        div.innerHTML += `<div style="padding-top: .3rem; color: blue">${markerPosition}</div>`;
+        return div;
+      };
+  
+      legend2.addTo(map);
   
       return () => {
         map.removeControl(legend);
+        map.removeControl(legend2);
       };
     }, [map]);
   
@@ -90,7 +101,7 @@ const MapOverlay = ({LAT, LNG, onPositionChange}) =>  {
         icon="pi pi-map"
         label="Chọn trên bản đồ"
         onClick={(e) => op.current.toggle(e)}
-        className="p-button-primary m-2 h-3rem"
+        className="p-button-primary m-2 h-4rem"
       />
       <OverlayPanel
         ref={op}
@@ -101,7 +112,7 @@ const MapOverlay = ({LAT, LNG, onPositionChange}) =>  {
         <div style={{ height: 'calc(300px - 2.5rem)' }}>
           <MapContainer
             center={[10.530582870379785, 105.21931237399188]}
-            zoom={9}
+            zoom={8}
             minZoom={8}
             maxZoom={14}
             crollWheelZoom={true}

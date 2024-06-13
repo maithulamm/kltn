@@ -1,4 +1,6 @@
 .p-metergroup-meter-container {
     display: none;
 }
-
+div.col-12.p-metergroup.p-component .p-card-body {
+    padding: 0;
+}

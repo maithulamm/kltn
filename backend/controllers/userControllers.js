@@ -61,6 +61,13 @@ const userControllers = {
           username: req.body.username,
           email: req.body.email,
           password: await bcrypt.hash(req.body.password, salt),
+          isAdmin: req.body.isAdmin,
+          fullName: req.body.fullName,
+          avt: req.body.avt,
+          birthday: req.body.birthday,
+          gender: req.body.gender,
+          phone: req.body.phone,
+          prefer: req.body.prefer,
         });
         await newUser.save();
         res.status(200).json("User has been added...");

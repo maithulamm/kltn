@@ -1,6 +1,4 @@
 const express = require("express");
-const https = require("https");
-const fs = require("fs");
 const app = express();
 const cors = require("cors");
 const dotenv = require("dotenv");
@@ -9,6 +7,8 @@ const cookieParser = require("cookie-parser");
 const authRoute = require("./routes/auth");
 const userRoute = require("./routes/user");
 const placeRoute = require("./routes/place");
+const place2Route = require("./routes/place2");
+const typePlaceRoute = require("./routes/typePlace");
 
 dotenv.config();
 
@@ -24,17 +24,9 @@ app.use(express.json());
 app.use("/v1/auth", authRoute);
 app.use("/v1/user", userRoute);
 app.use("/v1/place", placeRoute);
+app.use("/v1/place2", place2Route);
+app.use("/v1/type", typePlaceRoute);
 
-// HTTPS credentials
-const httpsOptions = {
-  key: fs.readFileSync('./key.pem'),
-  cert: fs.readFileSync('./cert.pem')
-};
-
-const port = 8001;
-https.createServer(httpsOptions, app).listen(port, () => {
-  console.log("Server is running on https://localhost:" + port);
-});
 
 // HTTP
 app.listen(8000, () => {

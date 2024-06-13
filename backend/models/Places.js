@@ -1,4 +1,4 @@
-const { Double } = require("mongodb");
+
 const mongoose = require("mongoose");
 
 const placeSchema = new mongoose.Schema(
@@ -16,14 +16,13 @@ const placeSchema = new mongoose.Schema(
       max: 50,
     },
     type: {
-      type: String,
-      require: true,
+      type: Array,
+      default: [],
       min: 1,
       max: 50,
     },
     phone: {
       type: String,
-      require: true,
       min: 1,
       max: 50,
     },
@@ -36,17 +35,16 @@ const placeSchema = new mongoose.Schema(
     open: {
         type: String,
         min: 1,
-        max: 100,
+        max: 50,
     },
     close: {
         type: String,
         require: true,
         min: 1,
-        max: 100,
+        max: 50,
     },
     email: {
         type: String,
-        require: true,
         min: 1,
         max: 100,
     },
@@ -54,13 +52,13 @@ const placeSchema = new mongoose.Schema(
         type: String,
         require: true,
         min: 1,
-        max: 100,
+        max: 200,
     },
     info: {
         type: String,
         require: true,
         min: 1,
-        max: 100,
+        max: 1000,
     },
     lat: {
         type: String,
@@ -73,8 +71,13 @@ const placeSchema = new mongoose.Schema(
         require: true,
         min: 1,
         max: 50,
-    }
-    
+    },
+    imgURL: {
+        type: String,
+        default: "", 
+        min: 1,
+        max: 1000,
+    },
   },
   { timestamps: true }
 );

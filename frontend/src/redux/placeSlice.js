@@ -25,29 +25,58 @@ const placeSlice = createSlice({
             state.places.isFetching = false;
             state.places.error = true;
         },
-        deleteUserStart: (state) => {
+        deletePlaceStart: (state) => {
             state.places.isFetching = true;
         },
-        deleteUserSuccess: (state, action) => {
+        deletePlaceSuccess: (state, action) => {
             state.places.isFetching = false;
-            // state.message = action.payload;
-            // state.deleteUser.error = false;
+            state.places.allPlaces = state.places.allPlaces.filter((p) => p._id !== action.payload);
+            state.places.error = false;
         },
-        deleteUserFailure: (state, action) => {
+        deletePlaceFailure: (state) => {
             state.places.isFetching = false;
             state.places.error = true;
-            state.message = action.payload;
         },
+        updatePlaceStart: (state) => {
+            state.places.isFetching = true;
+        },
+        updatePlaceSuccess: (state, action) => {
+            state.places.isFetching = false;
+            state.places.error = false;
+        },
+        updatePlaceFailure: (state, action) => {
+            state.places.isFetching = false;
+            state.places.error = true;
+        },
+        addPlaceStart: (state) => {
+            state.places.isFetching = true;
+        },
+        addPlaceSuccess: (state, action) => {
+            state.places.isFetching = false;
+            state.places.allPlaces.push(action.payload);
+            state.places.error = false;
+        },
+        addPlaceFailure: (state) => {
+            state.places.isFetching = false;
+            state.places.error = true;
+        }
     }
 });
 
 export const { 
-    getPlacesStart, 
-    getPlacesSuccess, 
+    
+    getPlacesStart,
+    getPlacesSuccess,
     getPlacesFailure,
-    deleteUserStart,
-    deleteUserSuccess,
-    deleteUserFailure
+    deletePlaceStart,
+    deletePlaceSuccess,
+    deletePlaceFailure,
+    updatePlaceStart,
+    updatePlaceSuccess,
+    updatePlaceFailure,
+    addPlaceStart,
+    addPlaceSuccess,
+    addPlaceFailure
 } = placeSlice.actions;
 
 export default placeSlice.reducer;

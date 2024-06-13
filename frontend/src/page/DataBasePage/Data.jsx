@@ -7,8 +7,10 @@ import { Col, ListGroup, Row } from "react-bootstrap";
 import { SlidebarData } from "../../components/SlidebarData/SlidebarData";
 import { Table } from "../../components/Table/Table";
 import {Table as Table_User } from "../../components/Table/Table_User";
+import {Table as Table_Types } from "../../components/Table/Table_Types";
+import { Table2 } from "../../components/Table/Tabl2";
 
-import 'primereact/resources/primereact.min.css';
+// import 'primereact/resources/primereact.min.css';
 function Place() {
   const [show, setShow] = React.useState(false);
   const handleClose = () => setShow(false);
@@ -18,6 +20,20 @@ function Place() {
       <Header handleClick={handleShow}/>
       {/* <Navbar show={show} handleClose={handleClose} current={2}/> */}
       <Table />
+    </Fragment>
+      
+  );
+}
+
+function Place2() {
+  const [show, setShow] = React.useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  return (
+    <Fragment>
+      <Header handleClick={handleShow}/>
+      {/* <Navbar show={show} handleClose={handleClose} current={2}/> */}
+      <Table2 />
     </Fragment>
       
   );
@@ -36,5 +52,18 @@ function User() {
   );
 }
 
+function Type() {
+  const [show, setShow] = React.useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  return (
+    <Fragment>
+      <Header handleClick={handleShow}/>
+      <Table_Types />
 
-export { Place, User };
+    </Fragment>
+  );
+}
+
+
+export { Place, User, Type, Place2 };

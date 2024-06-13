@@ -3,14 +3,14 @@ import { Header } from "../../components/Header/Header";
 // import { Navbar } from "../../components/Navbar/Navbar";
 import { Statistic } from "../../components/statistic";
 import { Map } from "../../components/Map";
-import { AdminHome } from "../../components/admin/admin";
 import { Fragment, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getAllPlace, getAllUser } from "../../redux/apiRequest";
 import { useNavigate } from "react-router-dom";
-import Dashboard from "../../components/Home/Home.jsx";
-import { Col, Row } from "react-bootstrap";
-
+import Dashboard, { device } from "../../components/Home/Home.jsx";
+import PieChart from "../../components/Home/Chart.jsx";
+import { logOut } from "../../redux/apiRequest.js";
+import "primereact/resources/themes/lara-light-green/theme.css"
+import "primereact/resources/primereact.min.css";
 
 function HomePage() {
   const user = useSelector((state) => state.auth.login?.currentUser);
@@ -21,36 +21,38 @@ function HomePage() {
 
   // localStorage.setItem('access_Token', accessToken);
   useEffect(() => {
-    if (!user) {
+    if (user === null || !user) {
       navigate("/admin/login");
     }
 
-      // // Tạo một thẻ link để thêm CSS từ PrimeReact
-      // const linkElement = document.createElement('link');
-      // linkElement.rel = 'stylesheet';
-      // linkElement.href = require('mdb-react-ui-kit/dist/css/mdb.min.css');
-
-      // // Thêm thẻ link vào phần tử <head> của trang
-      // document.head.appendChild(linkElement);
-
-    if (accessToken) {
-      // console.log("accessToken");
-      getAllUser(accessToken, dispatch);
+    if (user?.isAdmin === false) {
+      logOut(dispatch, navigate);
+      alert("Bạn không có quyền truy cập vào trang này!");
     }
+      // Lấy đường dẫn tới file CSS từ node_modules
+      const cssPath = require('primereact/resources/themes/lara-light-green/theme.css');
 
-    getAllPlace(accessToken, dispatch);
-  }, [user, dispatch, accessToken, navigate]);
+      // Tạo một thẻ link để thêm CSS từ PrimeReact
+      const linkElement = document.createElement('link');
+      linkElement.rel = 'stylesheet';
+      linkElement.href = cssPath;
+
+      // Thêm thẻ link vào phần tử <head> của trang
+      document.head.appendChild(linkElement);
+    
+  }, [user, navigate]);
 
   return (
     <Fragment>
       <Header />
-      {/* <Navbar show={show} handleClose={handleClose} current={0} /> */}
       <Dashboard />
-      <div className="card justify-content-center my-4 w-12">
-        <div className="justify-content-center w-8">
-          <Map height={"50vh"} />
+      <div className="card flex justify-content-center col-12 grid m-0">
+        <div className="justify-content-center col-12 md:col-8">
+          <Map height={device() ? "65vh" : '30vh'} />
         </div>
-        
+        <div className="justify-content-center col-12 md:col-4">
+          <PieChart />
+        </div>
       </div>
     </Fragment>
   );

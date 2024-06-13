@@ -13,7 +13,7 @@ function Mapapp() {
     <Fragment>
       <Header handleClick={handleShow}/>
       {/* <Navbar show={show} handleClose={handleClose} current={1}/> */}
-      <Map height={'91vh'}/>
+      <Map height={'90vh'}/>
     </Fragment>
   );
 }

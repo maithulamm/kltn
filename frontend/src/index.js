@@ -8,6 +8,8 @@ import App from "./App";
 import { PersistGate } from "redux-persist/integration/react";
 // import { GoogleOAuthProvider } from "@react-oauth/google";
 import 'primereact/resources/primereact.min.css';
+// @import "primereact/resources/primereact.min.css";
+import "primereact/resources/themes/lara-light-green/theme.css";
 // Assuming `createBrowserRouter` creates your router
 // const router = createBrowserRouter(publicRoutes);
 const root = ReactDOM.createRoot(document.getElementById('root'));

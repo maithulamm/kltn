@@ -9,7 +9,7 @@ const router = require("express").Router();
 
 router.post("/add", verifyTokenAndAdmin, placeControllers.addPlace);
 
-router.get("/", verifyToken, placeControllers.getAllPlaces);
+router.get("/", placeControllers.getAllPlaces);
 
 router.delete("/del/:id", verifyTokenAndAdmin, placeControllers.deletePlace);
 

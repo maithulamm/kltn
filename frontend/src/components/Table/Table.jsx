@@ -1,4 +1,10 @@
-import React, { useState, useEffect, Fragment, useRef, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  Fragment,
+  useRef,
+  useCallback,
+} from "react";
 import { classNames } from "primereact/utils";
 import { FilterMatchMode, FilterOperator } from "primereact/api";
 import { DataTable } from "primereact/datatable";
@@ -10,12 +16,9 @@ import { Dropdown } from "primereact/dropdown";
 import { MultiSelect } from "primereact/multiselect";
 import { Tag } from "primereact/tag";
 import { TriStateCheckbox } from "primereact/tristatecheckbox";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { BreadCrumb } from "primereact/breadcrumb";
 
-import "primereact/resources/themes/lara-light-blue/theme.css";
-import "primereact/resources/primereact.min.css";
-import "primeicons/primeicons.css";
 import "./style.css";
 import { Link } from "react-router-dom";
 import { Row } from "primereact/row";
@@ -28,9 +31,31 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { InputSwitch } from "primereact/inputswitch";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import MapOverlay from "./MapOverlay";
+import {
+  addPlace,
+  addTypePlace,
+  deletePlace,
+  getAllPlace,
+  updatePlace,
+} from "../../redux/apiRequest";
+import { device } from "../Home/Home";
+import { Toast } from "primereact/toast";
 
 function DynamicColumnsDemo() {
-  const [data_ID, setData_ID] = useState("");
+  const accessToken = useSelector(
+    (state) => state.auth.login?.currentUser?.accessToken
+  );
+  const dispatch = useDispatch();
+  const toast = useRef(null);
+
+  const show = ({ severity, summary, detail }) => {
+    toast.current.show({
+      severity: severity,
+      summary: summary,
+      detail: detail,
+    });
+  };
+
   const [currentRowData, setCurrentRowData] = useState(null);
   const [visible_d, setVisible_d] = useState(false);
   const [visible_x, setVisible_x] = useState(false);
@@ -49,7 +74,19 @@ function DynamicColumnsDemo() {
     info: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
   const clearFilter = () => {
-    filters();
+    setGlobalFilterValue("");
+    setFilters({
+      global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      intro: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      type: {
+        value: null,
+        matchMode: FilterMatchMode.CONTAINS,
+      },
+      phone: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      email: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      address: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      info: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    });
   };
   const onGlobalFilterChange = (e) => {
     const value = e.target.value;
@@ -60,6 +97,7 @@ function DynamicColumnsDemo() {
     setFilters(_filters);
     setGlobalFilterValue(value);
   };
+
   const op = useRef(null);
   const renderHeader = () => {
     return (
@@ -70,10 +108,46 @@ function DynamicColumnsDemo() {
         {window.innerHeight > window.innerWidth ? (
           <Fragment>
             <Button
+              label={null}
+              icon="pi pi-filter-slash"
+              className="p-button-primary"
+              onClick={() => {
+                clearFilter();
+              }}
+              text
+              rounded
+              // tooltip="Xóa tất cả bộ lọc"
+            />
+            <Button
+              label={null}
+              icon="pi pi-plus"
+              className="p-button-primary"
+              onClick={() => {
+                setVisible_a(true);
+              }}
+              text
+              rounded
+              // tooltip="Thêm địa điểm mới"
+            />
+            <Button
+              type="button"
+              icon="pi pi-refresh"
+              label=""
+              onClick={() => {
+                getAllPlace(accessToken, dispatch);
+              }}
+              text
+              rounded
+              className=""
+              // tooltip="Làm mới"
+            />
+            <Button
               type="button"
               icon="pi pi-search"
               label=""
               onClick={(e) => op.current.toggle(e)}
+              text
+              rounded
             />
             <OverlayPanel ref={op}>
               <IconField iconPosition="left">
@@ -82,19 +156,56 @@ function DynamicColumnsDemo() {
                   value={globalFilterValue}
                   onChange={(e) => onGlobalFilterChange(e)}
                   placeholder="Nhập từ khóa"
+                  autoFocus
                 />
               </IconField>
             </OverlayPanel>
           </Fragment>
         ) : (
-          <IconField iconPosition="left">
-            <InputIcon className="pi pi-search" />
-            <InputText
-              value={globalFilterValue}
-              onChange={(e) => onGlobalFilterChange(e)}
-              placeholder="Nhập từ khóa"
+          <Fragment>
+            <Button
+              label={null}
+              icon="pi pi-filter-slash"
+              className="p-button-primary"
+              onClick={() => {
+                clearFilter();
+              }}
+              text
+              rounded
+              tooltip="Xóa tất cả bộ lọc"
             />
-          </IconField>
+            <Button
+              label={null}
+              icon="pi pi-plus"
+              className="p-button-primary"
+              onClick={() => {
+                setVisible_a(true);
+              }}
+              text
+              rounded
+              tooltip="Thêm địa điểm mới"
+            />
+            <Button
+              type="button"
+              icon="pi pi-refresh"
+              label=""
+              onClick={() => {
+                getAllPlace(accessToken, dispatch);
+              }}
+              text
+              rounded
+              className="mr-2"
+              tooltip="Làm mới"
+            />
+            <IconField iconPosition="left">
+              <InputIcon className="pi pi-search" />
+              <InputText
+                value={globalFilterValue}
+                onChange={(e) => onGlobalFilterChange(e)}
+                placeholder="Nhập từ khóa"
+              />
+            </IconField>
+          </Fragment>
         )}
       </div>
     );
@@ -102,20 +213,6 @@ function DynamicColumnsDemo() {
   const header = renderHeader();
   const [selectedProducts, setSelectedProducts] = useState(null);
 
-  const columns = [
-    // {field: 'code', header: 'Code'},
-    { field: "intro", header: "Tên" },
-    { field: "type", header: "Loại" },
-    { field: "phone", header: "SĐT" },
-    { field: "during", header: "Thời gian" },
-    { field: "open", header: "Mở cửa" },
-    { field: "close", header: "Đóng cửa" },
-    { field: "email", header: "Email" },
-    { field: "address", header: "Địa chỉ" },
-    { field: "info", header: "Thông tin" },
-    { field: "lat", header: "Vĩ độ" },
-    { field: "long", header: "Kinh độ" },
-  ];
   const iconItemTemplate = (item, options) => {
     return (
       <a className={options.className}>
@@ -139,6 +236,8 @@ function DynamicColumnsDemo() {
             setVisible_d(true);
             setCurrentRowData(rowData);
           }}
+          tooltip="Chỉnh sửa thông tin"
+          className="p-button-success"
         />
       </Fragment>
     );
@@ -155,55 +254,73 @@ function DynamicColumnsDemo() {
             setVisible_x(true);
             setCurrentRowData(rowData);
           }}
+          tooltip="Xóa địa điểm"
         />
       </Fragment>
     );
   };
-
+  const Type = useSelector(
+    (state) => state.typePlaces?.typePlaces?.allTypePlaces
+  );
   const Dialog_C = () => {
     const [dataEdit, setDataEdit] = useState({
-      intro: currentRowData.intro,
-      type: currentRowData.type,
-      phone: currentRowData.phone,
-      during: currentRowData.during,
-      open: currentRowData.open,
-      close: currentRowData.close,
-      email: currentRowData.email,
-      address: currentRowData.address,
-      info: currentRowData.info,
-      lat: currentRowData.lat,
-      long: currentRowData.long,
+      id: currentRowData?._id,
+      intro: currentRowData?.intro,
+      type: currentRowData?.type,
+      phone: currentRowData?.phone,
+      during: currentRowData?.during,
+      open: currentRowData?.open,
+      close: currentRowData?.close,
+      email: currentRowData?.email,
+      address: currentRowData?.address,
+      info: currentRowData?.info,
+      lat: currentRowData?.lat,
+      long: currentRowData?.long,
+      startDate: currentRowData?.createdAt || "Đang cập nhật",
+      updatedAt: currentRowData?.updatedAt || "Đang cập nhật",
+      imgURL: currentRowData?.imgURL,
     });
+    const [selectType, setSelectType] = useState(
+      currentRowData?.type?.map((t) => t[0])
+    );
+    const Type = useSelector(
+      (state) => state.typePlaces?.typePlaces?.allTypePlaces
+    );
     const handleInputChange = (e, field) => {
       setDataEdit((prev) => ({ ...prev, [field]: e.target.value }));
     };
 
-    const [markerPosition, setMarkerPosition] = useState([dataEdit.lat, dataEdit.long]);
+    const [markerPosition, setMarkerPosition] = useState([
+      dataEdit.lat,
+      dataEdit.long,
+    ]);
 
     const handleMarkerPositionChange = (newPosition) => {
-            setMarkerPosition([newPosition.lat, newPosition.lng]);
-        } // Cập nhật trạng thái của vị trí marker khi nó thay đổi
-    
+      setMarkerPosition([newPosition.lat, newPosition.lng]);
+    }; // Cập nhật trạng thái của vị trí marker khi nó thay đổi
+
     const update_data = {
-        intro: dataEdit.intro,
-        type: dataEdit.type,
-        phone: dataEdit.phone,
-        during: dataEdit.during,
-        open: dataEdit.open,
-        close: dataEdit.close,
-        email: dataEdit.email,
-        address: dataEdit.address,
-        info: dataEdit.info,
-        lat: markerPosition[0].toString(),
-        long: markerPosition[1].toString(),
-        };
-    console.log(update_data);
+      id: dataEdit.id,
+      intro: dataEdit.intro,
+      type: selectType?.map((t) => ({ name: t })),
+      phone: dataEdit.phone,
+      during: dataEdit.during,
+      open: dataEdit.open,
+      close: dataEdit.close,
+      email: dataEdit.email,
+      address: dataEdit.address,
+      info: dataEdit.info,
+      lat: markerPosition[0].toString(),
+      long: markerPosition[1].toString(),
+      imgURL: dataEdit.imgURL,
+    };
+    // console.log(selectType);
     return (
       <Dialog
-        header={`Thông tin chi tiết`}
+        header={`Thông tin chi tiết | ID: ${dataEdit.id}`}
         visible={visible_d}
         maximizable
-        style={{ width: "70vw", Height: "95vh" }}
+        style={{ width: !device ? "70vw" : "90vw" }}
         onHide={() => setVisible_d(false)}
         draggable={false}
       >
@@ -217,6 +334,22 @@ function DynamicColumnsDemo() {
             backgroundColor: "#fff",
           }}
         >
+          <div className="field col-12 md:col-6 ">
+            <label htmlFor="intro">Ngày tạo</label>
+            <InputText
+              disabled
+              value={dataEdit.startDate}
+              className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+            />
+          </div>
+          <div className="field col-12 md:col-6 ">
+            <label htmlFor="lastname6">Cập nhật gần nhất</label>
+            <InputText
+              disabled
+              value={dataEdit.updatedAt}
+              className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+            />
+          </div>
           <div className="field col-12 md:col-5">
             <label htmlFor="intro">Tên địa điểm</label>
             <InputText
@@ -226,12 +359,44 @@ function DynamicColumnsDemo() {
               className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
             />
           </div>
-          <div className="field col-12 md:col-3">
+          <div className="field col-12 md:col-7">
             <label htmlFor="lastname6">Loại</label>
-            <InputText
-              onChange={(e) => handleInputChange(e, "type")}
-              value={dataEdit.type}
-              className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+            <MultiSelect
+              value={selectType?.map((t) => ({ name: t }))}
+              onChange={(e) => {
+                setSelectType(e.value?.map((t) => t.name) || []);
+              }}
+              options={
+                Type?.map((t) => ({
+                  name: t.name,
+                })) || []
+              }
+              optionLabel="name"
+              display="chip"
+              placeholder="Chọn loại"
+              maxSelectedLabels={10}
+              className="w-full"
+              itemTemplate={(option) => {
+                // console.log(option.name);
+                return (
+                  <Tag
+                    value={option.name}
+                    style={{
+                      backgroundColor: `#${
+                        Type.find((t) => t.name === option.name)?.color
+                      }`,
+                      color:
+                        parseInt(
+                          Type.find((t) => t.name === option.name)?.color,
+                          16
+                        ) >
+                        0xffffff / 0.9
+                          ? "gray"
+                          : "white",
+                    }}
+                  />
+                );
+              }}
             />
           </div>
           <div className="field col-12 md:col-2">
@@ -250,7 +415,7 @@ function DynamicColumnsDemo() {
               className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
             />
           </div>
-          <div className="field col-12 md:col-4">
+          <div className="field col-12 md:col-3">
             <label htmlFor="firstname6">Số điện thoại</label>
             <InputText
               keyfilter="num"
@@ -259,7 +424,7 @@ function DynamicColumnsDemo() {
               className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
             />
           </div>
-          <div className="field col-12 md:col-8">
+          <div className="field col-12 md:col-5">
             <label htmlFor="lastname6">Email</label>
             <InputText
               onChange={(e) => handleInputChange(e, "email")}
@@ -268,11 +433,19 @@ function DynamicColumnsDemo() {
               className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
             />
           </div>
-          <div className="field col-12">
+          <div className="field col-6">
             <label htmlFor="address">Địa chỉ</label>
             <InputText
               onChange={(e) => handleInputChange(e, "address")}
               value={dataEdit.address}
+              className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+            ></InputText>
+          </div>
+          <div className="field col-6">
+            <label htmlFor="address">Hình ảnh</label>
+            <InputText
+              onChange={(e) => handleInputChange(e, "imgURL")}
+              value={dataEdit.imgURL}
               className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
             ></InputText>
           </div>
@@ -303,8 +476,12 @@ function DynamicColumnsDemo() {
               className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
             />
           </div>
-          <div className="field col-12 md:col-5">
-            <MapOverlay LAT={dataEdit.lat} LNG={dataEdit.long} onPositionChange={handleMarkerPositionChange}/>
+          <div className="field col-12 md:col-6 flex justify-content-start">
+            <MapOverlay
+              LAT={dataEdit.lat}
+              LNG={dataEdit.long}
+              onPositionChange={handleMarkerPositionChange}
+            />
           </div>
           {/* <div className="field col-12 md:col-3"> </div> */}
           <div className="flex col-12 md:col-12 justify-content-center">
@@ -312,11 +489,36 @@ function DynamicColumnsDemo() {
               label="Lưu"
               icon="pi pi-save"
               className="p-button-success m-2 h-3rem"
-              onClick={() =>
-                alert(
-                  `Tên: ${dataEdit.intro}\nLoại: ${dataEdit.type}\nMở cửa: ${dataEdit.open}\nĐóng cửa: ${dataEdit.close}\nSĐT: ${dataEdit.phone}\nEmail: ${dataEdit.email}\nĐịa chỉ: ${dataEdit.address}\nMô tả: ${dataEdit.info}\nVĩ độ: ${dataEdit.lat}\nKinh độ: ${dataEdit.long}`
-                )
-              }
+              onClick={() => {
+                if (
+                  dataEdit.intro === "" ||
+                  dataEdit.phone === "" ||
+                  dataEdit.open === "" ||
+                  dataEdit.close === "" ||
+                  dataEdit.email === "" ||
+                  dataEdit.address === "" ||
+                  dataEdit.info === "" ||
+                  dataEdit.lat === "" ||
+                  dataEdit.long === ""
+                ) {
+                  show({
+                    severity: "error",
+                    summary: "Thất bại",
+                    detail: "Vui lòng điền đầy đủ thông tin",
+                  });
+                } else {
+                  updatePlace(update_data, accessToken, dispatch);
+                  show({
+                    severity: "success",
+                    summary: "Thành công",
+                    detail: "Đã cập nhật địa điểm",
+                  });
+                  setVisible_d(false);
+                  setTimeout(() => {
+                    getAllPlace(accessToken, dispatch);
+                  }, 1000);
+                }
+              }}
             />
             <Button
               label="Hủy bỏ"
@@ -349,11 +551,19 @@ function DynamicColumnsDemo() {
             fontWeight: "bold",
           }}
         >
-          <div className="flex col-12 md:col-12 justify-content-center font-bold text-2xl">
-            <label htmlFor="lastname6">
-              Xác nhận xóa địa điểm {currentRowData?.intro}?
+          <div className="flex col-12 md:col-12 justify-content-center font-bold text-xl">
+            <label className="flex justify-content-center flex-column">
+              <p className="flex justify-content-center m-0">
+                Xác nhận xóa địa điểm
+              </p>{" "}
+              <p
+                className="flex justify-content-center m-0"
+                style={{ color: "red" }}
+              >
+                {currentRowData?.intro}
+              </p>
+              {/* <p className="flex justify-content-center m-0"> ?</p> */}
             </label>
-            {/* <InputText readOnly={true}  value={currentRowData?.long} className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"/> */}
           </div>
           <div className="field col-12 md:col-12"> </div>
           <div className="flex col-12 md:col-12 justify-content-center">
@@ -361,13 +571,25 @@ function DynamicColumnsDemo() {
               label="Hủy"
               icon="pi pi-times"
               className="p-button-primary m-2 h-3rem"
-              onClick={null}
+              onClick={() => setVisible_x(false)}
             />
             <Button
               label="Xóa"
               icon="pi pi-trash"
               className="p-button-warning m-2 h-3rem"
-              onClick={null}
+              onClick={() => {
+                deletePlace(currentRowData?._id, accessToken, dispatch);
+                show({
+                  severity: "success",
+                  summary: "Thành công",
+                  detail: "Đã xóa địa điểm",
+                });
+                setVisible_x(false);
+                setTimeout(() => {
+                  getAllPlace(accessToken, dispatch);
+                }, 1000);
+                // getAllPlace(accessToken, dispatch);
+              }}
             />
           </div>
         </div>
@@ -376,49 +598,56 @@ function DynamicColumnsDemo() {
   };
 
   const Dialog_A = () => {
+    const [selectType, setSelectType] = useState([]);
     const [dataEdit, setDataEdit] = useState({
-      intro: '',
-        type: '',
-        phone: '',
-        during: '',
-        open: '',
-        close: '',
-        email: '',
-        address: '',
-        info: '',
-        lat: '10.530582870379785',
-        long: '105.21931237399188',   
+      intro: "",
+      // type: "",
+      phone: "",
+      during: "",
+      open: "",
+      close: "",
+      email: "",
+      address: "",
+      info: "",
+      lat: "10.530582870379785",
+      long: "105.21931237399188",
+      imgURL:
+        "https://i.pinimg.com/originals/72/66/03/7266036c9f3383d21730484150602f01.gif",
     });
     const handleInputChange = (e, field) => {
       setDataEdit((prev) => ({ ...prev, [field]: e.target.value }));
     };
 
-    const [markerPosition, setMarkerPosition] = useState([dataEdit.lat, dataEdit.long]);
+    const [markerPosition, setMarkerPosition] = useState([
+      dataEdit.lat,
+      dataEdit.long,
+    ]);
 
     const handleMarkerPositionChange = (newPosition) => {
-            setMarkerPosition([newPosition.lat, newPosition.lng]);
-        } // Cập nhật trạng thái của vị trí marker khi nó thay đổi
-    
+      setMarkerPosition([newPosition.lat, newPosition.lng]);
+    }; // Cập nhật trạng thái của vị trí marker khi nó thay đổi
+
     const new_data = {
-        intro: dataEdit.intro,
-        type: dataEdit.type,
-        phone: dataEdit.phone,
-        during: dataEdit.during,
-        open: dataEdit.open,
-        close: dataEdit.close,
-        email: dataEdit.email,
-        address: dataEdit.address,
-        info: dataEdit.info,
-        lat: markerPosition[0].toString(),
-        long: markerPosition[1].toString(),
-        };
-    console.log(new_data);
+      intro: dataEdit.intro,
+      type: selectType,
+      phone: dataEdit.phone,
+      during: dataEdit.during,
+      open: dataEdit.open,
+      close: dataEdit.close,
+      email: dataEdit.email,
+      address: dataEdit.address,
+      info: dataEdit.info,
+      lat: markerPosition[0].toString(),
+      long: markerPosition[1].toString(),
+      imgURL: dataEdit.imgURL,
+    };
+    // console.log(new_data);
     return (
       <Dialog
         header={`Thông tin chi tiết`}
         visible={visible_a}
         maximizable
-        style={{ width: "70vw", Height: "95vh" }}
+        style={{ width: !device ? "70vw" : "90vw", Height: "95vh" }}
         onHide={() => setVisible_a(false)}
         draggable={false}
       >
@@ -441,12 +670,39 @@ function DynamicColumnsDemo() {
               className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
             />
           </div>
-          <div className="field col-12 md:col-3">
+          <div className="field col-12 md:col-7">
             <label htmlFor="lastname6">Loại</label>
-            <InputText
-              onChange={(e) => handleInputChange(e, "type")}
-              value={dataEdit.type}
-              className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+            <MultiSelect
+              value={selectType}
+              onChange={(e) => setSelectType(e.value)}
+              options={
+                Type?.map((t) => ({
+                  name: t.name,
+                })) || []
+              }
+              optionLabel="name"
+              display="chip"
+              placeholder="Chọn loại"
+              maxSelectedLabels={10}
+              className="w-full"
+              itemTemplate={(option) => (
+                <Tag
+                  value={option.name}
+                  style={{
+                    backgroundColor: `#${
+                      Type.find((t) => t.name === option.name)?.color
+                    }`,
+                    color:
+                      parseInt(
+                        Type.find((t) => t.name === option.name)?.color,
+                        16
+                      ) >
+                      0xffffff / 0.9
+                        ? "gray"
+                        : "white",
+                  }}
+                />
+              )}
             />
           </div>
           <div className="field col-12 md:col-2">
@@ -465,7 +721,7 @@ function DynamicColumnsDemo() {
               className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
             />
           </div>
-          <div className="field col-12 md:col-4">
+          <div className="field col-12 md:col-3">
             <label htmlFor="firstname6">Số điện thoại</label>
             <InputText
               keyfilter="num"
@@ -474,7 +730,7 @@ function DynamicColumnsDemo() {
               className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
             />
           </div>
-          <div className="field col-12 md:col-8">
+          <div className="field col-12 md:col-5">
             <label htmlFor="lastname6">Email</label>
             <InputText
               onChange={(e) => handleInputChange(e, "email")}
@@ -483,11 +739,19 @@ function DynamicColumnsDemo() {
               className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
             />
           </div>
-          <div className="field col-12">
+          <div className="field col-6">
             <label htmlFor="address">Địa chỉ</label>
             <InputText
               onChange={(e) => handleInputChange(e, "address")}
               value={dataEdit.address}
+              className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+            ></InputText>
+          </div>
+          <div className="field col-6">
+            <label htmlFor="address">Hình ảnh</label>
+            <InputText
+              onChange={(e) => handleInputChange(e, "imgURL")}
+              value={dataEdit.imgURL}
               className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
             ></InputText>
           </div>
@@ -518,8 +782,12 @@ function DynamicColumnsDemo() {
               className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
             />
           </div>
-          <div className="field col-12 md:col-5">
-            <MapOverlay LAT={dataEdit.lat} LNG={dataEdit.long} onPositionChange={handleMarkerPositionChange}/>
+          <div className="field col-12 md:col-6 flex justify-content-st">
+            <MapOverlay
+              LAT={dataEdit.lat}
+              LNG={dataEdit.long}
+              onPositionChange={handleMarkerPositionChange}
+            />
           </div>
           {/* <div className="field col-12 md:col-3"> </div> */}
           <div className="flex col-12 md:col-12 justify-content-center">
@@ -527,11 +795,36 @@ function DynamicColumnsDemo() {
               label="Lưu"
               icon="pi pi-save"
               className="p-button-success m-2 h-3rem"
-              onClick={() =>
-                alert(
-                  `Tên: ${dataEdit.intro}\nLoại: ${dataEdit.type}\nMở cửa: ${dataEdit.open}\nĐóng cửa: ${dataEdit.close}\nSĐT: ${dataEdit.phone}\nEmail: ${dataEdit.email}\nĐịa chỉ: ${dataEdit.address}\nMô tả: ${dataEdit.info}\nVĩ độ: ${dataEdit.lat}\nKinh độ: ${dataEdit.long}`
-                )
-              }
+              onClick={() => {
+                if (
+                  dataEdit.intro === "" ||
+                  dataEdit.phone === "" ||
+                  dataEdit.open === "" ||
+                  dataEdit.close === "" ||
+                  dataEdit.email === "" ||
+                  dataEdit.address === "" ||
+                  dataEdit.info === "" ||
+                  dataEdit.lat === "" ||
+                  dataEdit.long === ""
+                ) {
+                  show({
+                    severity: "error",
+                    summary: "Thất bại",
+                    detail: "Vui lòng điền đầy đủ thông tin",
+                  });
+                } else {
+                  addPlace(new_data, accessToken, dispatch);
+                  show({
+                    severity: "success",
+                    summary: "Thành công",
+                    detail: "Đã thêm địa điểm",
+                  });
+                  setVisible_a(false);
+                  setTimeout(() => {
+                    getAllPlace(accessToken, dispatch);
+                  }, 1000);
+                }
+              }}
             />
             <Button
               label="Hủy bỏ"
@@ -545,31 +838,140 @@ function DynamicColumnsDemo() {
     );
   };
 
+  const [types] = useState(Type?.map((t) => [t.name]));
+  // console.log(types);
+  const bodyType = (rowData) => {
+    // console.log(rowData.type);
+    return (
+      <div className={`grid flex justify-content-${"center"}`}>
+        {rowData.type?.length > 0 ? (
+          rowData.type[0] ? (
+            rowData.type?.map((e, index) => {
+              const findType = Type?.find((t) => t.name === e[0]);
+              // console.log(findType);
+              return findType?.name ? (
+                <Tag
+                  key={index}
+                  value={findType?.name || null}
+                  className="m-1"
+                  style={{
+                    backgroundColor: `#${findType?.color || "none"}`,
+                    color:
+                      parseInt(findType?.color, 16) > 0xffffff / 0.9
+                        ? "gray"
+                        : "white",
+                    // boxShadow: "0 0 0 1px #d9d9d9",
+                  }}
+                />
+              ) : null;
+            })
+          ) : (
+            <Tag value="Đang cập nhật" severity="warning" />
+          )
+        ) : (
+          <Tag value="Chưa cập nhật" severity="warning" />
+        )}
+      </div>
+    );
+  };
+
+  const typesRowFilterTemplate = (options) => {
+    // console.log(options);
+    return (
+      <MultiSelect
+        value={options.value}
+        options={types?.map((t) => ({ name: t })) || []}
+        onChange={(e) => {
+          options.filterCallback(e.value, options.field);
+          // console.log(e);
+        }}
+        itemTemplate={typesItemTemplate}
+        placeholder="Chọn loại"
+        className="p-column-filter"
+        optionLabel="name"
+        optionValue="name"
+        maxSelectedLabels={10}
+        style={{ width: "100%" }}
+        // selectedItemsLabel={(e) => `${e.length} loại đã chọn`}
+      />
+    );
+  };
+
+  const typesItemTemplate = (option) => {
+    // console.log(option);
+    return (
+      <div className="flex">
+        <Tag
+          value={option.name[0]}
+          className="m-1"
+          style={{
+            backgroundColor: `#${
+              Type.find((t) => t.name === option.name[0])?.color
+            }`,
+            color:
+              parseInt(Type.find((t) => t.name === option.name[0])?.color, 16) >
+              0xffffff / 0.9
+                ? "gray"
+                : "white",
+          }}
+        />
+      </div>
+    );
+  };
   useEffect(() => {
     setProducts(
-      Data.map((D, index) => {
+      Data?.map((D, index) => {
         return {
           ID: index + 1,
           _id: D._id,
           intro: D.intro,
-          type: D.type,
+          type: D.type?.map((t) => {
+            return [t.name];
+          }),
           phone: D.phone ? D.phone : "Đang cập nhật",
           during: D.during,
           open: D.open,
           close: D.close,
-          email: D.email === "unknow@gmail.com" ? "Đang cập nhật" : D.email,
+          email:
+            D.email === "unknown@gmail.com" || D.email === "unknow@gmail.com"
+              ? "Đang cập nhật"
+              : D.email,
           address: D.address,
           info: D.info,
           lat: D.lat,
           long: D.long,
+          createdAt: D.createdAt
+            ? new Date(D.createdAt).toLocaleString()
+            : "Chưa cập nhật",
+          updatedAt: D.updatedAt
+            ? new Date(D.updatedAt).toLocaleString()
+            : "Chưa cập nhật",
+          imgURL: D.imgURL,
         };
       })
     );
     setLoading(false);
-    // console.log(selectedProducts?.map((e) => e.ID));
-    // console.log(Data);
+    // console.log(filters);
+    // console.log(products);
+    // console.log(selectedProducts?.map((e) => e._id));
+    // console.log(Data[0].type);
   }, [Data, selectedProducts]);
-
+  // console.log(Type.map((t) => (t.name)))
+  const removeData = selectedProducts?.map((e) => e._id);
+  const clearSelect = () => {
+    removeData.map((d) => {
+      deletePlace(d, accessToken, dispatch);
+    });
+    show({
+      severity: "success",
+      summary: "Thành công",
+      detail: `Đã xóa ${removeData?.length} địa điểm`,
+    });
+    setTimeout(() => {
+      getAllPlace(accessToken, dispatch);
+    }, 1000);
+    window.location.reload();
+  };
   return (
     <div className="card ">
       <div
@@ -578,25 +980,22 @@ function DynamicColumnsDemo() {
       >
         <div
           className={`flex col-${
-            window.innerWidth > window.innerHeight ? 6 : 9
+            window.innerWidth > window.innerHeight ? 6 : 6
           } justify-content-start`}
         >
           <BreadCrumb
             model={items}
             home={home}
             className="ml-3"
-            style={{ width: "auto", border: "none", padding: "1rem 0 0 0" }}
-          />
-          <Button
-            label={null}
-            icon="pi pi-plus"
-            className="p-button-primary ml-3"
-            onClick={() => {
-              setVisible_a(true);
+            style={{
+              width: "auto",
+              border: "none",
+              padding: "1rem 0 0 0",
+              backgroundColor: "transparent",
             }}
           />
 
-          {selectedProducts?.length > 0 && (
+          {!selectedProducts ? null : (
             <Button
               label={
                 window.innerWidth > window.innerHeight
@@ -605,7 +1004,7 @@ function DynamicColumnsDemo() {
               }
               icon="pi pi-trash"
               className="p-button-warning ml-2"
-              onClick={null}
+              onClick={clearSelect}
             />
           )}
         </div>
@@ -670,7 +1069,7 @@ function DynamicColumnsDemo() {
           alignHeader={"center"}
           align={"left"}
           field="intro"
-          header="Tên"
+          header="Tên địa điểm"
           sortable
           style={{ minWidth: "10rem" }}
           filter
@@ -684,7 +1083,9 @@ function DynamicColumnsDemo() {
           sortable
           style={{ minWidth: "10rem" }}
           filter
-          filterPlaceholder="Search by type"
+          filterElement={typesRowFilterTemplate}
+          body={bodyType}
+          filterMenuStyle={{ width: "25rem" }}
         />
         <Column
           alignHeader={"center"}
@@ -732,6 +1133,7 @@ function DynamicColumnsDemo() {
       {visible_d && <Dialog_C />}
       {visible_x && <Dialog_X />}
       {visible_a && <Dialog_A />}
+      <Toast ref={toast} />
     </div>
   );
 }

@@ -26,16 +26,16 @@ const userSchema = new mongoose.Schema(
     },
     fullName: {
       type: String,
-      require: true,
+      default: "",
       max: 50,
     },
     avt: {
       type: String,
-      default: "",
+      default: "3",
     },
     birthday: {
       type: Date,
-      default: Date.now,
+      default: '',
     },
     gender: {
       type: String,
@@ -47,7 +47,9 @@ const userSchema = new mongoose.Schema(
     },
     prefer: {
       type: Array,
-      default: [],
+      default: null,
+      min: 1,
+      max: 50,
     },
   },
   { timestamps: true }

@@ -1,0 +1,263 @@
+body {
+    background : var(--highlight-bg);
+    font-family: 'Roboto';
+}
+
+::-webkit-input-placeholder {
+    color: #748194;
+}
+
+::-moz-placeholder {
+    color: #748194;
+}
+
+:-ms-input-placeholder {
+    color: #748194;
+}
+
+:-moz-placeholder {
+    color: #748194;
+}
+
+.container {
+    display      : none;
+    position     : absolute;
+    width        : auto;
+    height       : auto;
+    top          : calc(50% - 240px);
+    left         : calc(40% - 160px);
+    border-radius: 15px;
+}
+
+.c1 {
+    box-shadow      : 0 0 10px grey;
+    background-color: white;
+    width           : 300px;
+    height          : 500px;
+    display         : inline-block;
+    border-radius   : 15px;
+}
+
+.c11 {
+    /* background-image: url('https://kifatravel.com/wp-content/uploads/2022/07/2-18.jpg'); */
+    background-size  : cover;
+    background-repeat: no-repeat;
+    background-color : white;
+    width            : 300px;
+    height           : 400px;
+    display          : inline-block;
+    position         : absolute;
+    z-index          : 4;
+    border-radius    : 15px 15px 200px 200px;
+    opacity          : 1;
+    transition       : opacity 2s ease-in-out;
+    animation        : fadeIn 2s;
+    color            : white;
+    /* Đảm bảo văn bản có màu trắng để dễ nhìn trên nền */
+    padding          : 20px;
+    /* Thêm khoảng cách để văn bản không chạm viền */
+}
+
+.c11 h3,
+.c11 p {
+    position: relative;
+    /* Đảm bảo văn bản định vị đúng */
+    z-index : 5;
+    /* Đảm bảo văn bản nằm trên hình nền */
+    margin  : 0;
+}
+
+/* .c11 {
+    position: relative;
+    width: 100%;
+    height: 400px; 
+    overflow: hidden;
+  } */
+
+.c11::before,
+.c11::after {
+    content            : '';
+    position           : absolute;
+    top                : 0;
+    left               : 0;
+    width              : 300px;
+    height             : 400px;
+    background-size    : cover;
+    background-position: center;
+    background-repeat  : no-repeat;
+    transition         : opacity 1s ease-in-out;
+    z-index            : 1;
+    border-radius      : 15px 15px 200px 200px;
+}
+
+.c11::before {
+    background-image: url('https://kifatravel.com/wp-content/uploads/2022/07/2-18.jpg');
+    opacity         : 1;
+    
+}
+
+.c11::after {
+    background-image: url('https://vcdn1-dulich.vnecdn.net/2022/03/30/Ta-Pa-An-Giang-8780-1648633991.jpg?w=0&h=0&q=100&dpr=1&fit=crop&s=cdl7RV9csdy8LKnIHzZkYg');
+    opacity         : 0;
+}
+
+.c11.fade-in::before {
+    opacity: 0;
+}
+
+.c11.fade-in::after {
+    opacity: 1;
+}
+
+
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+
+#left,
+#right {
+    color           : white;
+    display         : inline-block;
+    width           : 146px;
+    height          : 500px;
+    background-color: white;
+    cursor          : pointer;
+}
+
+#left {
+    border-radius: 15px;
+}
+
+#right {
+    border-radius: 15px 15px 15px 15px;
+}
+
+.left_hover {
+    color     : #EE9BA3;
+    /* box-shadow: 5px 0 18px -10px #333; */
+    z-index   : 1;
+    /* position  : absolute; */
+}
+
+.right_hover {
+    /* box-shadow: -5px 0 15px -10px #333; */
+    z-index   : 1;
+    /* position  : absolute; */
+}
+
+.s1class {
+    color      : #748194;
+    position   : absolute;
+    bottom     : 5%;
+    left       : 63%;
+    margin-left: -50%;
+}
+
+.s1class span,
+.s2class span {
+    display: flex;
+    justify-content: center;
+}
+
+
+
+.su {
+    font-size: 20px;
+}
+
+.s2class {
+    color       : #748194;
+    position    : absolute;
+    bottom      : 5%;
+    right       : 63%;
+    margin-right: -50%;
+}
+
+.mainhead {
+    color     : white;
+    font-size : 24px;
+    text-align: center;
+    margin-top: 50px;
+}
+
+.mainp {
+    /* color     : white; */
+    font-size : 13px;
+    text-align: center;
+    margin-top: 10px;
+    z-index   : 100;
+}
+
+.c2 {
+    background-color: white;
+    width           : 300px;
+    height          : 500px;
+    border-radius   : 15px;
+    position        : absolute;
+    left            : 370px;
+    display         : inline-block;
+}
+
+.username {
+    font-weight  : bold;
+    width        : 200px;
+    margin       : 0 35px 20px;
+    height       : 35px;
+    padding      : 6px 15px;
+    border-radius: 5px;
+    outline      : none;
+    border       : none;
+    background   : #F6F7F9;
+    color        : #748194;
+    font-size    : 14px;
+}
+
+.btn {
+    font-weight  : bold;
+    width        : 230px;
+    margin       : 0 35px 20px;
+    height       : 45px;
+    padding      : 6px 15px;
+    border-radius: 5px;
+    outline      : none;
+    border       : none;
+    /* background   : #EE9BA3; */
+    color        : white;
+    font-size    : 14px;
+}
+
+.signup1 {
+    color     : #748194;
+    font-size : 30px;
+    text-align: center;
+}
+
+a {
+    text-decoration: none;
+}
+
+.signup2 {
+    color     : #748194;
+    font-size : 20px;
+    text-align: center;
+}
+
+.signup {
+    display: initial;
+}
+
+.signin {
+    display: initial;
+}
+
+.c2 .p-icon-field>.p-input-icon {
+    top: 50% !important;
+}

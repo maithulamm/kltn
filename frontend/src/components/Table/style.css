@@ -26,3 +26,8 @@ tr th {
 .leaflet-tooltip-top {
   margin-top: -16px !important;
 }
+
+.p-colorpicker-preview {
+  width: 100%;
+  height: 1rem;
+}

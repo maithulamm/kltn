@@ -1,9 +1,8 @@
-*, body {
-  margin: 0 !important;
-  padding: 0 !important;
+body {
+  /* margin: 0;
+  padding: 0; */
   box-sizing: border-box;
   font-family: "Roboto Mono", sans-serif;
-
 }
 
 :root {
@@ -12,3 +11,4 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+

@@ -6,7 +6,21 @@
 }
 
 .icon-image {
-    height: 2.1vh;
-    object-fit: contain;
+    height: 2.2rem;
+    width: 2.2rem;
     text-align: center;
+    object-fit: contain;
 }
+
+.icon-image2 {
+    height: 3.5rem;
+    width: 3.5rem;
+    text-align: center;
+    object-fit: contain;
+}
+
+.p-toast {
+    z-index: 17234 !important;
+    position: fixed;
+}
+

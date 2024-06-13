@@ -5,7 +5,7 @@ const placeControllers = {
   addPlace: async (req, res) => {
     try {
         const newPlace = await new Places({
-            inrto: req.body.intro,
+            intro: req.body.intro,
             price: req.body.price,
             type: req.body.type,
             phone: req.body.phone,
@@ -54,9 +54,8 @@ const placeControllers = {
   // Delete a place
   deletePlace: async (req, res) => {
     try {
-      //const user = await Users.findById(req.params.id);
-      await Users.findByIdAndDelete(req.params.id);
-      // res.status(200).json('User has been deleted...');
+      await Places.findByIdAndDelete(req.params.id);
+      res.status(200).json("Place has been deleted...");
     } catch (err) {
       res.status(500).json(err);
     }

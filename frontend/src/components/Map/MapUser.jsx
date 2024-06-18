@@ -49,7 +49,7 @@ import { deletePlace, updatePlace } from "../../redux/apiRequest";
 import { getAllPlace } from "../../redux/apiRequest";
 import { Toast } from "primereact/toast";
 
-const Map = ({ height }) => {
+const MapUser = ({ height }) => {
   const accessToken = useSelector(
     (state) => state.auth.login?.currentUser?.accessToken
   );
@@ -819,4 +819,4 @@ const Map = ({ height }) => {
   );
 };
 
-export { Map };
+export { MapUser };

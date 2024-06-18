@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { publicRoutes, privateRoutes } from './routes'; // Import các route đã định nghĩa
 import "primereact/resources/themes/lara-light-green/theme.css"
 import "primereact/resources/primereact.min.css";
+import "primeicons/primeicons.css";
+import './App.css'
 function App() {
   return (
     <Router>

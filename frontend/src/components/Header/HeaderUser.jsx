@@ -5,8 +5,10 @@ import "./style.css";
 import { Link } from "react-router-dom/dist";
 import { useSelector } from "react-redux";
 import {
+  getAllNews,
   getAllPlace2,
   getAllTypePlace,
+  getDistance,
   getWeather,
   loading,
   logOut,
@@ -31,6 +33,7 @@ import { device } from "../Home/Home";
 import { Button } from "primereact/button";
 import { Dock } from "primereact/dock";
 import { Card } from "primereact/card";
+import { getPlaces2Success } from "../../redux/place2Slice";
 export const HeaderUser = () => {
   const user = useSelector((state) => state.auth?.login?.currentUser);
   const User = useSelector((state) => state.users?.users?.allUsers);
@@ -44,6 +47,7 @@ export const HeaderUser = () => {
     dispatch(getPlacesSuccess([]));
     dispatch(getUsersSuccess([]));
     dispatch(getTypePlacesSuccess([]));
+    dispatch(getPlaces2Success([]));
     navigate("/login");
   };
 
@@ -92,6 +96,23 @@ export const HeaderUser = () => {
       </Dialog>
     );
   };
+  const [curDate, setCurrentTime] = useState(new Date().toLocaleString());
+  const [curWeather, setCurWeather] = useState(
+    JSON?.parse(localStorage?.getItem("weather")) || JSON?.parse("{}")
+  );
+
+  useEffect(() => {
+    const timerId = setInterval(() => {
+      setCurrentTime(
+        new Date().toLocaleString("vi-VN", {
+          timeZone: "Asia/Ho_Chi_Minh",
+        })
+      );
+    }, 1000);
+
+    return () => clearInterval(timerId);
+  }, [curDate]);
+  // console.log(curWeather);
 
   const page = [
     {
@@ -137,40 +158,81 @@ export const HeaderUser = () => {
       url: "/map",
       command: () => showLoadingScreen(),
     },
-    { label: "Phản hồi", icon: "pi pi-fw pi-comments", url: "/admin/users" },
-    // { label: "Liên kết", icon: "pi pi-fw pi-link", url: "/admin/users" },
+    {
+      label: "Địa điểm",
+      icon: "pi pi-fw pi-map-marker",
+      url: "/place",
+      command: () => {
+        showLoadingScreen();
+      },
+    },
+    {
+      label: "Tiện ích",
+      icon: "pi pi-fw pi-objects-column",
+      url: "/place2",
+      command: () => showLoadingScreen(),
+    },
+    {
+      label: "Bản tin",
+      icon: "pi pi-fw pi-book",
+      url: "/news",
+      command: () => showLoadingScreen(),
+    },
+    {
+      label: "Góp ý",
+      icon: "pi pi-fw pi-comments",
+      url: "/rp",
+      command: () => showLoadingScreen(),
+    },
+    ,
     {
       label: "Hướng dẫn",
       icon: "pi pi-fw pi-question-circle",
-      url: "/admin/guide",
+      url: "/guide",
     },
   ];
+  const getCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        console.log("Latitude is :", latitude);
+        console.log("Longitude is :", longitude);
+      });
+    } else {
+      console.log("Geolocation is not supported by this browser.");
+    }
+  };
 
   useEffect(() => {
-    getAllUser(accessToken, dispatch);
+    // console.log(getDistance("10.378172695497733", "105.43429861542022", "10.378471348476113", "105.4396288379375"));
+    // getCurrentLocation();
+    // getAllUser(accessToken, dispatch);
     getAllPlace(accessToken, dispatch);
     getAllPlace2(accessToken, dispatch);
     getAllTypePlace(accessToken, dispatch);
-    // getWeather();
+    getAllNews(accessToken, dispatch);
+    // getWeather()
+
     const style = document.createElement("style");
 
     const hrefPage = window.location.pathname.split("/");
-    console.log(hrefPage)
+    // console.log(getWeather())
     style.innerHTML = `
           #HEADER > div.p-menubar.p-component > ul > li:nth-child(${
             hrefPage[1] === "home"
               ? 1
               : hrefPage[1] === "map"
               ? 2
-              : hrefPage[2] === "feedback"
+              : hrefPage[1] === "place"
               ? 3
-              : hrefPage[2] === "feedback"
+              : hrefPage[1] === "place2"
               ? 4
-              : hrefPage[2] === "link"
+              : hrefPage[1] === "news"
               ? 5
-              : hrefPage[2] === "reports"
+              : hrefPage[1] === "rp"
               ? 6
-              : 7
+              : null
           }) > div > a > span {
             font-weight: 700;
             border-radius: 10px;
@@ -179,6 +241,8 @@ export const HeaderUser = () => {
         
     `;
     document.head.appendChild(style);
+
+    // console.log(curDate);
     return () => {
       document.head.removeChild(style);
     };
@@ -213,16 +277,82 @@ export const HeaderUser = () => {
         model={page}
         end={
           <Fragment>
-            <Image
-              className="rounded-full"
-              src={
-                avtData[User?.find((u) => u._id === user._id)?.avt || 3]
-                  ?.path || avtData[3].path
-              }
-              width={"40vw"}
-              style={{ marginLeft: "1rem" }}
-              imageClassName="rounded-full h-3rem w-2rem"
-            />
+            {user ? (
+              <div className="flex justify-content-center align-items-center">
+                {device() ? (
+                  <div className="h-2rem flex justify-content-center align-items-center mx-3">
+                    {curDate} | Long Xuyên
+                  </div>
+                ) : (
+                  <div className="h-2rem flex justify-content-center align-items-center">
+                    <img
+                      src={
+                        curWeather?.current?.condition?.icon ||
+                        "https://cdn-icons-png.flaticon.com/512/757/757401.png"
+                      }
+                      style={{
+                        height: "3rem",
+                        width: "2rem",
+                        objectFit: "contain",
+                      }}
+                    />
+                    <p
+                      style={{
+                        fontSize: "0.9rem",
+                      }}
+                    >
+                      {curWeather?.current?.temp_c || 30}°C
+                    </p>
+                  </div>
+                )}{" "}
+                {device() ? (
+                  <div className="h-2rem flex justify-content-center align-items-center">
+                    <img
+                      src={
+                        curWeather?.current?.condition?.icon ||
+                        "https://cdn-icons-png.flaticon.com/512/757/757401.png"
+                      }
+                      style={{
+                        height: "3rem",
+                        width: "2rem",
+                        objectFit: "contain",
+                      }}
+                    />
+                    <p
+                      style={{
+                        fontSize: "0.9rem",
+                      }}
+                    >
+                      {curWeather?.current?.temp_c || 30}°C
+                    </p>
+                  </div>
+                ) : null}
+                <Image
+                  className="rounded-full"
+                  src={
+                    avtData[User?.find((u) => u?._id === user?._id)?.avt || 3]
+                      ?.path || avtData[3].path
+                  }
+                  width={"40vw"}
+                  style={{ marginLeft: "1rem" }}
+                  imageClassName="rounded-full h-3rem w-2rem"
+                />
+              </div>
+            ) : (
+              <div className="flex justify-content-center align-items-center">
+                {device() ? (
+                  <div className="h-2rem flex justify-content-center align-items-center mx-3">
+                    {curDate}
+                  </div>
+                ) : null}
+                |
+                <Button
+                  label="Đăng nhập"
+                  onClick={() => navigate("/login")}
+                  text
+                />
+              </div>
+            )}
             {/* <SplitButton
               label={
                 <div style={{ display: "flex", alignItems: "center" }}>

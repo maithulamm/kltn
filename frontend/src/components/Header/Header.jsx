@@ -4,7 +4,14 @@ import avt from "../../assets/images/avatar.svg";
 import "./style.css";
 import { Link } from "react-router-dom/dist";
 import { useSelector } from "react-redux";
-import { getAllPlace2, getAllTypePlace, getWeather, logOut } from "../../redux/apiRequest";
+import {
+  getAllPlace2,
+  getAllTypePlace,
+  getWeather,
+  loading,
+  logOut,
+  showLoadingScreen,
+} from "../../redux/apiRequest";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getAllUser } from "../../redux/apiRequest";
@@ -20,10 +27,7 @@ import { Dialog } from "primereact/dialog";
 import { getPlacesSuccess } from "../../redux/placeSlice";
 import { getUsersSuccess } from "../../redux/userSlice";
 import { getTypePlacesSuccess } from "../../redux/typePlaceSlice";
-const rl = [
-  ["/admin/register", "Đăng ký"],
-  ["/admin/login", "Đăng nhập"],
-];
+
 
 export const Header = () => {
   const user = useSelector((state) => state.auth.login.currentUser);
@@ -43,7 +47,7 @@ export const Header = () => {
     dispatch(getPlacesSuccess([]));
     dispatch(getUsersSuccess([]));
     dispatch(getTypePlacesSuccess([]));
-    navigate("/admin/login");
+    navigate("/login");
   };
 
   const confirm1 = () => {
@@ -83,8 +87,8 @@ export const Header = () => {
           </div>
           <div className="flex flex-column items-center justify-content-center align-items-start col-12">
             <div className="flex flex-column items-center justify-content-center align-items-start col-12">
-              <span className="text-lg font-bold">{user.username}</span>
-              <span className="text-sm text-gray-500">{user.email}</span>
+              <span className="text-lg font-bold">{user?.username}</span>
+              <span className="text-sm text-gray-500">{user?.email}</span>
             </div>
           </div>
         </div>
@@ -102,21 +106,25 @@ export const Header = () => {
           label: "Địa điểm du lịch",
           icon: "pi pi-fw pi-map-marker",
           url: "/admin/data/place",
+          command: () => showLoadingScreen(),
         },
         {
           label: "Loại địa điểm",
           icon: "pi pi-fw pi-list",
           url: "/admin/data/type",
+          command: () => showLoadingScreen(),
         },
         {
           label: "Người dùng",
           icon: "pi pi-fw pi-address-book",
           url: "/admin/data/user",
+          command: () => showLoadingScreen(),
         },
         {
           label: "Địa điểm tiện ích",
           icon: "pi pi-fw pi-objects-column",
           url: "/admin/data/place2",
+          command: () => showLoadingScreen(),
         },
         // {
         //   label: "Sở thích",
@@ -125,8 +133,18 @@ export const Header = () => {
         // },
       ],
     },
-    { label: "Bản đồ", icon: "pi pi-fw pi-map", url: "/admin/map" },
-    { label: "Phản hồi", icon: "pi pi-fw pi-comments", url: "/admin/users" },
+    {
+      label: "Bản đồ",
+      icon: "pi pi-fw pi-map",
+      url: "/admin/map",
+      command: () => showLoadingScreen(),
+    },
+    {
+      label: "Phản hồi",
+      icon: "pi pi-fw pi-comments",
+      url: "/admin/users",
+      command: () => showLoadingScreen(),
+    },
     // { label: "Liên kết", icon: "pi pi-fw pi-link", url: "/admin/users" },
     {
       label: "Hướng dẫn",
@@ -136,6 +154,11 @@ export const Header = () => {
   ];
 
   useEffect(() => {
+    
+    if (!user || user.isAdmin === false) {
+      showLoadingScreen();
+      // navigate("/login");
+    }
     getAllUser(accessToken, dispatch);
     getAllPlace(accessToken, dispatch);
     getAllPlace2(accessToken, dispatch);
@@ -174,6 +197,7 @@ export const Header = () => {
   }, []);
   return (
     <section id="HEADER">
+      {loading()}
       <Menubar
         start={
           <Link to="/admin/home">
@@ -187,11 +211,13 @@ export const Header = () => {
             <SplitButton
               label={
                 <div style={{ display: "flex", alignItems: "center" }}>
-                  <a style={{ fontSize: '0.9rem' }}>Xin chào, {user?.username}!</a>
+                  <a style={{ fontSize: "0.9rem" }}>
+                    Xin chào, {user?.username}!
+                  </a>
                   <Image
                     className=""
                     src={
-                      avtData[User?.find((u) => u._id === user._id)?.avt || 3]
+                      avtData[User?.find((u) => u?._id === user?._id)?.avt || 3]
                         ?.path || avtData[3].path
                     }
                     width={"40vw"}

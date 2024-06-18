@@ -12,7 +12,7 @@ li[aria-level="2"] {
 } */
 
 #HEADER .p-menubar {
-    background-image: url('');
+    /* background-image: url(''); */
     background-color: white;
     border: none;
     border-radius: 0;
@@ -24,4 +24,17 @@ li[aria-level="2"] {
 
 #HEADER {
     max-height: 10vh;
+
 }
+
+.p-dataview-content {
+    overflow: auto;
+    height: 80vh;
+}
+
+.p-dataview .p-dataview-header {
+    border: none;
+    background-color: transparent;
+    padding: 0.5rem;
+}
+

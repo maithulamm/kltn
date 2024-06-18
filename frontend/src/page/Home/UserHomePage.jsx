@@ -9,39 +9,41 @@ import { useNavigate } from "react-router-dom";
 import Dashboard, { device } from "../../components/Home/Home.jsx";
 import PieChart from "../../components/Home/Chart.jsx";
 import { loading, logOut } from "../../redux/apiRequest.js";
-import "primereact/resources/themes/lara-light-green/theme.css"
+import "primereact/resources/themes/lara-light-green/theme.css";
 import "primereact/resources/primereact.min.css";
 import { HeaderUser } from "../../components/Header/HeaderUser.jsx";
 import Circular from "../../components/Home/Circular.jsx";
+import { MenuUser } from "../../components/User/MenuUser.jsx";
+import { NewsUser } from "../../components/User/NewsUser.jsx";
 function UserHomePage() {
   const user = useSelector((state) => state.auth.login?.currentUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const accessToken = user?.accessToken;
 
-
   // localStorage.setItem('access_Token', accessToken);
   useEffect(() => {
-    document.title = "Du lịch An Giang"
+    document.title = "Du lịch An Giang";
     // if (user === null || !user) {
     //   navigate("/login");
     // }
-      // Lấy đường dẫn tới file CSS từ node_modules
-      // const cssPath = require('primereact/resources/themes/lara-light-green/theme.css');
+    // Lấy đường dẫn tới file CSS từ node_modules
+    // const cssPath = require('primereact/resources/themes/lara-light-green/theme.css');
 
-      // Tạo một thẻ link để thêm CSS từ PrimeReact
-      // const linkElement = document.createElement('link');
-      // linkElement.rel = 'stylesheet';
-      // linkElement.href = cssPath;
+    // Tạo một thẻ link để thêm CSS từ PrimeReact
+    // const linkElement = document.createElement('link');
+    // linkElement.rel = 'stylesheet';
+    // linkElement.href = cssPath;
 
-      // Thêm thẻ link vào phần tử <head> của trang
-      // document.head.appendChild(linkElement);
-    
+    // Thêm thẻ link vào phần tử <head> của trang
+    // document.head.appendChild(linkElement);
   }, []);
 
   return (
     <Fragment>
       <HeaderUser />
+      <MenuUser />
+      <NewsUser />
       <Circular />
       {/* <Dashboard /> */}
       {/* <div className="card flex justify-content-center col-12 grid m-0">

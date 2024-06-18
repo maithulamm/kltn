@@ -1,10 +1,8 @@
 
-import React, { Fragment, useEffect, useRef } from 'react';
+import React, { Fragment} from 'react';
 import { MeterGroup } from 'primereact/metergroup';
 import { Card } from 'primereact/card';
-import { Button } from 'primereact/button';
-// import 'primereact/resources/themes/bootstrap4-light-blue/theme.css'
-// import 'primereact/resources/primereact.min.css'
+// import { Button } from 'primereact/button';
 import 'primeicons/primeicons.css'
 import 'primeflex/primeflex.css'
 import './style.css'
@@ -58,10 +56,11 @@ function Dashboard() {
 
 
     const values = [
-        { label: 'Du lịch', color1: '#34d399', color2: '#fbbf24', value: Place?.length, icon: 'pi pi-map-marker', ref: '/admin/data/place' },
+        { label: 'Du lịch', color1: '#34d399', color2: '#f87171', value: Place?.length, icon: 'pi pi-map-marker', ref: '/admin/data/place' },
         { label: `Loại`, color1: '#60a5fa', color2: '#c084fc', value: Type?.length, icon: 'pi pi-list', ref: '/admin/data/type'},
         { label: 'Người dùng', color1: '#fbbf24', color2: '#60a5fa', value: User?.length-1, icon: 'pi pi-address-book', ref: '/admin/data/user'},
         { label: 'Tiện ích ', color1: '#c084fc', color2: '#34d399', value: Place2?.length, icon: 'pi pi-objects-column', ref: '/admin/data/place2'},
+        { label: 'Bài viết', color1: '#f87171', color2: '#fbbf24', value: 0, icon: 'pi pi-bookmark', ref: '/admin/users' },
     ];
 
  

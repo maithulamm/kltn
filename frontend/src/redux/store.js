@@ -4,6 +4,7 @@ import userReducer from './userSlice';
 import placeReducer from './placeSlice';
 import place2Reducer from './place2Slice';
 import typePlaceReducer from './typePlaceSlice';
+import newsReducer from './newsSlice';
 
 import {
   persistStore,
@@ -29,7 +30,8 @@ const rootReducer = combineReducers({
   users: userReducer,
   places: placeReducer,
   places2: place2Reducer,
-  typePlaces: typePlaceReducer
+  typePlaces: typePlaceReducer,
+  news: newsReducer
 
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);

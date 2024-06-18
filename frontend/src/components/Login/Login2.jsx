@@ -11,7 +11,7 @@ import backgif from "../../data/Presentation1.gif";
 import { Dialog } from "primereact/dialog";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { loading, loginUser } from "../../redux/apiRequest";
+import { getWeather, loading, loginUser } from "../../redux/apiRequest";
 const Login2 = () => {
   const [isSignUp, setIsSignUp] = useState(true);
   const [username, setUsername] = useState("");
@@ -83,6 +83,7 @@ const Login2 = () => {
       username: username,
       password: password,
     };
+    getWeather();
     loginUser(newUser, dispatch, navigate);
   };
   return (
@@ -215,13 +216,13 @@ const Login2 = () => {
                 style={{ display: !visibleLogin ? "none" : "block" }}
               />
               {/* <Button label={`Chưa có tài khoản? Đăng ký ngay`} text severity="secondary" /> */}
-              <Button
+              {/* <Button
                 label="Quản trị viên đăng nhập"
                 text
                 severity="secondary"
                 onClick={() => navigate("/admin/login")}
                 className="m-0 p-0"
-              />
+              /> */}
             </div>
             <div
               className="signin formgrid grid gap-3 justify-conent-center mt-3"
@@ -297,12 +298,11 @@ const Login2 = () => {
             position: "absolute",
             top: "0",
             left: "0",
-            width: "100vw",
             height: "100vh",
             borderRadius: "0",
             maxHeight: "100vh",
             overflow: "hidden",
-            position: "fixed",
+            // position: "fixed",
           }}
         >
           <div className="">
@@ -507,13 +507,13 @@ const Login2 = () => {
                 onClick={() => setResetPassword(true)}
                 className="m-0"
               />
-              <Button
+              {/* <Button
                 className="btn m-0"
                 label="Quản trị viên đăng nhập"
                 text
-                // severity="secondary"
+                severity="secondary"
                 onClick={() => navigate("/admin/login")}
-              />
+              /> */}
             </div>
           </div>
         </div>

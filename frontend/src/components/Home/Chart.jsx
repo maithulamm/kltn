@@ -6,12 +6,12 @@ export default function PieChart() {
   const [chartData, setChartData] = useState({});
   const [chartOptions, setChartOptions] = useState({});
   const places2 = useSelector((state) => state.places2?.places2?.allPlaces2);
-  const anUong = places2.filter((place) => place.type === "Ăn uống").length;
-  const tramXangDau = places2.filter(
-    (place) => place.type === "Trạm xăng dầu"
-  ).length;
-  const coSoYTe = places2.filter((place) => place.type === "Cơ sở y tế").length;
-  const atm = places2.filter((place) => place.type === "ATM").length;
+  const anUong = places2?.filter((place) => place?.type === "Ăn uống")?.length;
+  const tramXangDau = places2?.filter(
+    (place) => place?.type === "Trạm xăng dầu"
+  )?.length;
+  const coSoYTe = places2?.filter((place) => place?.type === "Cơ sở y tế")?.length;
+  const atm = places2?.filter((place) => place?.type === "ATM")?.length;
   useEffect(() => {
     const documentStyle = getComputedStyle(document.documentElement);
     const data = {

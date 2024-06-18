@@ -40,6 +40,7 @@ import {
     addPlace2Failure as createPlace2Failure,
 } from './place2Slice';
 import ld from '../data/load.gif'
+import { addNewsStart, addNewsSuccess, deleteNewsFailure, deleteNewsStart, getNewsFailure, getNewsStart, getNewsSuccess, updateNewsFailure, updateNewsStart, updateNewsSuccess } from './newsSlice';
 const host = 'http://localhost:8000/';
 export const loading = () => {
     return (
@@ -53,7 +54,7 @@ export const loading = () => {
                 display: 'none',
                 justifyContent: 'center',
                 alignItems: 'center',
-                backgroundColor: 'rgba(255, 255, 255, 0.377)',
+                backgroundColor: 'rgba(255, 255, 255, 0.8)',
                 left: '0px',
                 top: '0px',
 
@@ -75,6 +76,19 @@ export function hideLoadingScreen() {
 
 }
 
+export const getDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // Radius of the Earth in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+    return distance.toFixed(2); // Distance in km
+  };
+
 // Get Weather
 export const getWeather = async () => {
 
@@ -82,7 +96,7 @@ export const getWeather = async () => {
         const res = await axiost.get(`http://api.weatherapi.com/v1/current.json?key=48cf1935cce6440886911534241306&q=AnGiang&aqi=yes`,
             { headers: { 'Content-Type': 'application/json' } }
         );
-        console.log(res.data);
+        localStorage.setItem('weather', JSON.stringify(res.data));
     } catch (err) {
         return err.response.data;
     }
@@ -122,7 +136,7 @@ export const registerUser = async (user, dispatch, navigate) => {
         const res = await axiost.post(`${host}v1/auth/register/`, user);
         dispatch(registerSuccess());
         navigate('/login');
-        //alert("Đăng ký thành công!");
+        alert(res);
     } catch (err) {
         dispatch(registerFailure());
     }
@@ -360,5 +374,62 @@ export const addTypePlace = async (typePlace, accessToken, dispatch) => {
         dispatch(addTypePlaceSuccess(res.data));
     } catch (err) {
         dispatch(addTypePlaceFailure());
+    }
+}
+
+// News
+export const getAllNews = async (accessToken, dispatch) => {
+    dispatch(getNewsStart());
+    try {
+        const res = await axiost.get(`${host}v1/news/`, {
+            headers: {
+                Token: `Bearer ${accessToken}`,
+            },
+        });
+        dispatch(getNewsSuccess(res.data));
+    } catch (err) {
+        dispatch(getNewsFailure());
+    }
+};
+
+export const addNews = async (news, accessToken, dispatch) => {
+    dispatch(addNewsStart());
+    try {
+        const res = await axiost.post(`${host}v1/news/add/`, news, {
+            headers: {
+                Token: `Bearer ${accessToken}`,
+            },
+        });
+        dispatch(addNewsSuccess(res.data));
+    } catch (err) {
+        dispatch([]);
+    }
+};
+
+export const deleteNews = async (id, accessToken, dispatch) => {
+    dispatch(deleteNewsStart());
+    try {
+        const res = await axiost.delete(`${host}v1/news/del/${id}`, {
+            headers: {
+                Token: `Bearer ${accessToken}`,
+            },
+        });
+        dispatch(deleteNewsStart(res.data));
+    } catch (err) {
+        dispatch(deleteNewsFailure());
+    }
+}
+
+export const updateNews = async (news, accessToken, dispatch) => {
+    dispatch(updateNewsStart());
+    try {
+        const res = await axiost.put(`${host}v1/news/update/${news.id}`, news, {
+            headers: {
+                Token: `Bearer ${accessToken}`,
+            },
+        });
+        dispatch(updateNewsSuccess(res.data));
+    } catch (err) {
+        dispatch(updateNewsFailure());
     }
 }

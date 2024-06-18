@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, {  } from "react";
 import { Header } from "../../components/Header/Header";
 // import { Navbar } from "../../components/Navbar/Navbar";
-import { Statistic } from "../../components/statistic";
 import { Map } from "../../components/Map";
 import { Fragment, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -16,13 +15,13 @@ function HomePage() {
   const user = useSelector((state) => state.auth.login?.currentUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const accessToken = user?.accessToken;
+  // const accessToken = user?.accessToken;
 
 
   // localStorage.setItem('access_Token', accessToken);
   useEffect(() => {
     if (user === null || !user) {
-      navigate("/admin/login");
+      navigate("/login");
     }
 
     if (user?.isAdmin === false) {

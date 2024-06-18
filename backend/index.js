@@ -9,6 +9,7 @@ const userRoute = require("./routes/user");
 const placeRoute = require("./routes/place");
 const place2Route = require("./routes/place2");
 const typePlaceRoute = require("./routes/typePlace");
+const newsRoute = require("./routes/news");
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use("/v1/user", userRoute);
 app.use("/v1/place", placeRoute);
 app.use("/v1/place2", place2Route);
 app.use("/v1/type", typePlaceRoute);
+app.use("/v1/news", newsRoute);
 
 
 // HTTP

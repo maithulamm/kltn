@@ -76,6 +76,10 @@ export function hideLoadingScreen() {
 
 }
 
+export const showConfirm = (message) => {
+    return window.confirm(message) ? hideLoadingScreen() : hideLoadingScreen();
+};
+
 export const getDistance = (lat1, lon1, lat2, lon2) => {
     const R = 6371; // Radius of the Earth in km
     const dLat = (lat2 - lat1) * Math.PI / 180;

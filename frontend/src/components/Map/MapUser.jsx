@@ -131,11 +131,7 @@ const MapUser = ({ height }) => {
     setGetZoom(map.getZoom());
   }, [map]);
   useEffect(() => {
-    // map.on("move", onMove);
-    // return () => {
-    //   map.off("move", onMove);
-    // };
-    // map.on("zoom", onZoom);
+
   }, [map, onZoom]);
 
   const add_Data = () => {

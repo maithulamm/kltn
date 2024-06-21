@@ -4,10 +4,11 @@ import { device } from "../Home/Home";
 import { useSelector } from "react-redux";
 import { showLoadingScreen } from "../../redux/apiRequest";
 import { useNavigate } from "react-router-dom";
-import AgodaWidget from "./Agoda";
 import { Dialog } from "primereact/dialog";
 
 export const NewsUser = () => {
+  const [visibleNews, setVisibleNews] = useState(false);
+  const [currentNews, setCurrentNews] = useState(null);
   const news =
     useSelector((state) => state?.news?.news?.allNews)
       ?.filter((item, index) => index < 100)
@@ -60,6 +61,10 @@ export const NewsUser = () => {
                 height: "100%",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
+              }}
+              onClick={() => {
+                setCurrentNews(news[0]);
+                setVisibleNews(true);
               }}
             ></div>
             <div className="flex-column justify-content-center col-12 md:col-5 p-0">
@@ -128,6 +133,10 @@ export const NewsUser = () => {
                         maxHeight: "6rem",
                       }}
                       key={index}
+                      onClick={() => {
+                        setCurrentNews(item);
+                        setVisibleNews(true);
+                      }}
                     >
                       <div
                         className=" col-3"
@@ -170,6 +179,72 @@ export const NewsUser = () => {
                     </div>
                   );
                 })}
+              <Dialog
+                header={`Bảng tin`}
+                visible={visibleNews}
+                style={{ width: "100vw", height: "100vh", overflow: "hidden" }}
+                onHide={() => {
+                  if (!visibleNews) return;
+                  setVisibleNews(false);
+                }}
+                draggable={false}
+                contentClassName="flex justify-content-center"
+                className="h-full"
+              >
+                <div
+                  className={`${
+                    device() ? "flex" : "flex-column"
+                  } justify-content-center col-12`}
+                >
+                  <div
+                    className="flex justify-content-center col-12 md:col-5 h-20rem md:h-full"
+                    style={{
+                      backgroundImage: `url(${currentNews?.image})`,
+                      // height: "20rem",
+                      maxWidth: "100%",
+                      backgroundSize: "contain",
+                      backgroundPosition: "center",
+                      backgroundRepeat: "no-repeat",
+                    }}
+                  />
+                  <div className="flex justify-content-center col-12 md:col-6">
+                    <div
+                      className={`flex-column justify-content-center col-12 p-0 m-3`}
+                    >
+                      <div className="col-12">
+                        <div
+                          className="text-center p-0 border-round-sm font-bold mx-3"
+                          style={{
+                            maxHeight: "4rem",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            fontSize: "1rem",
+                          }}
+                        >
+                          {currentNews?.title}
+                        </div>
+                      </div>
+                      <div className="col-12">
+                        <div
+                          className=" p-0 border-round-sm font-light m-3"
+                          style={{
+                            textAlign: "justify",
+                            textIndent: "2rem",
+                            maxHeight: "100%",
+                            overflow: "hidden",
+                            webkitLineClamp: "20",
+                            webkitBoxOrient: "vertical",
+                            display: "-webkit-box",
+                            fontSize: `${device() ? "2rem" : "0.8rem"}`,
+                          }}
+                        >
+                          {currentNews?.content}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Dialog>
             </div>
           </div>
         </div>
@@ -311,7 +386,6 @@ export const NewsUser2 = () => {
                     device() ? "flex" : "flex-column"
                   } justify-content-center col-12`}
                 >
-                  
                   <div
                     className="flex justify-content-center col-12 md:col-5 h-20rem md:h-full"
                     style={{

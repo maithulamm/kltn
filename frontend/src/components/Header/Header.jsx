@@ -10,6 +10,7 @@ import {
   getWeather,
   loading,
   logOut,
+  showConfirm,
   showLoadingScreen,
 } from "../../redux/apiRequest";
 import { useDispatch } from "react-redux";
@@ -150,6 +151,12 @@ export const Header = () => {
       label: "Hướng dẫn",
       icon: "pi pi-fw pi-question-circle",
       url: "/admin/guide",
+      command: () => {
+        showLoadingScreen();
+        setTimeout(() => {
+          showConfirm('')
+        }, 500);
+      },
     },
   ];
 

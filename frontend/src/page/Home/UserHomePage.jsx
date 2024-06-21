@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Dashboard, { device } from "../../components/Home/Home.jsx";
 import PieChart from "../../components/Home/Chart.jsx";
-import { loading, logOut } from "../../redux/apiRequest.js";
+import { getAllNews, getAllPlace, getAllTypePlace, loading, logOut } from "../../redux/apiRequest.js";
 import "primereact/resources/themes/lara-light-green/theme.css";
 import "primereact/resources/primereact.min.css";
 import { HeaderUser } from "../../components/Header/HeaderUser.jsx";
@@ -23,6 +23,10 @@ function UserHomePage() {
 
   // localStorage.setItem('access_Token', accessToken);
   useEffect(() => {
+    getAllPlace(accessToken, dispatch);
+    // getAllPlace2(accessToken, dispatch);
+    getAllTypePlace(accessToken, dispatch);
+    getAllNews(accessToken, dispatch);
     document.title = "Du lịch An Giang";
     // if (user === null || !user) {
     //   navigate("/login");

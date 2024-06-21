@@ -12,6 +12,7 @@ import {
   getWeather,
   loading,
   logOut,
+  showConfirm,
   showLoadingScreen,
 } from "../../redux/apiRequest";
 import { useDispatch } from "react-redux";
@@ -48,7 +49,7 @@ export const HeaderUser = () => {
     dispatch(getUsersSuccess([]));
     dispatch(getTypePlacesSuccess([]));
     dispatch(getPlaces2Success([]));
-    navigate("/login");
+    // navigate("/login");
   };
 
   const confirm1 = () => {
@@ -181,15 +182,22 @@ export const HeaderUser = () => {
     {
       label: "Góp ý",
       icon: "pi pi-fw pi-comments",
-      url: "/rp",
-      command: () => showLoadingScreen(),
+      command: () => {
+        showConfirm("Chức năng đang cập nhật");
+        showLoadingScreen();
+        // setTimeout(() => {
+          
+        // }, 500);
+      },
+      url: "/home",
     },
     ,
-    {
-      label: "Hướng dẫn",
-      icon: "pi pi-fw pi-question-circle",
-      url: "/guide",
-    },
+    // {
+    //   label: "Hướng dẫn",
+    //   icon: "pi pi-fw pi-question-circle",
+    //   url: "/",
+
+    // },
   ];
   const getCurrentLocation = () => {
     if (navigator.geolocation) {
@@ -209,7 +217,7 @@ export const HeaderUser = () => {
     // getCurrentLocation();
     // getAllUser(accessToken, dispatch);
     getAllPlace(accessToken, dispatch);
-    getAllPlace2(accessToken, dispatch);
+    // getAllPlace2(accessToken, dispatch);
     getAllTypePlace(accessToken, dispatch);
     getAllNews(accessToken, dispatch);
     // getWeather()
@@ -237,6 +245,7 @@ export const HeaderUser = () => {
             font-weight: 700;
             border-radius: 10px;
             color: #10b981 ;
+            font-size: 1.1rem;
         }
         
     `;

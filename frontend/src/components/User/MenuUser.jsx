@@ -2,9 +2,10 @@ import { Button } from "primereact/button";
 import React, { useEffect, useState } from "react";
 import { device } from "../Home/Home";
 import { useNavigate } from "react-router-dom";
-import { hideLoadingScreen, showLoadingScreen } from "../../redux/apiRequest";
+import { hideLoadingScreen, showConfirm, showLoadingScreen } from "../../redux/apiRequest";
 import { Dialog } from "primereact/dialog";
-import {Accordion, AccordionTab } from "primereact/accordion";
+import { Accordion, AccordionTab } from "primereact/accordion";
+import WeatherWidget from "./wt";
 
 export const MenuUser = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -79,7 +80,12 @@ export const MenuUser = () => {
     {
       icon: "pi pi-comments",
       title: "Góp ý",
-      ref: "/feedback",
+      onClick: () => {
+        showLoadingScreen();
+        setTimeout(() => {
+          showConfirm("Chức năng đang cập nhật");
+        }, 500);
+      },
     },
     {
       icon: "pi pi-calendar-plus",
@@ -132,10 +138,10 @@ export const MenuUser = () => {
           {listMenu?.map((item, index) => {
             return (
               <div
-                className="flex flex-column align-items-center font-bold m-2 col-3 sm:col-2  text-primary hover:text-green-800"
+                className="flex flex-column align-items-center font-bold m-2 col-3 sm:col-2  text-primary hover:text-green-800 "
                 key={index}
               >
-                <Button icon={item?.icon} raised onClick={item?.onClick} />
+                <Button icon={item?.icon} raised onClick={item?.onClick} className="hover:text-primary-50 hover:shadow-4"/>  
                 <label
                   htmlFor=""
                   className="mt-2 w-100 text-center h-2rem"
@@ -191,14 +197,15 @@ export const MenuUser = () => {
         contentClassName="flex justify-content-center"
         className="h-full"
       >
-        <iframe
+        {/* <iframe
           src="https://thoitiet.vn/embed/vopgfypubzd?days=5&hC=%2310b982&hB=%23caf1d8&tC=%2310b981&bC=transpane&lC=%23dddddd"
           id="widgeturl"
           width="90%"
           height="100%"
           allowTransparency="true"
           style={{ border: "none", overflow: "hidden" }}
-        ></iframe>
+        ></iframe> */}  
+        <WeatherWidget />
       </Dialog>
       <Dialog
         header={`${curDate} | Booking.com`}
@@ -227,7 +234,7 @@ export const MenuUser = () => {
       <Dialog
         header={`Hướng dẫn sử dụng`}
         visible={visibleGuide}
-        style={{ width: "100%", height: "100%", }}
+        style={{ width: "100%", height: "100%" }}
         onHide={() => {
           if (!visibleGuide) return;
           setVisibleGuide(false);

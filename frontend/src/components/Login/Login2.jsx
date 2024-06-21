@@ -11,7 +11,12 @@ import backgif from "../../data/Presentation1.gif";
 import { Dialog } from "primereact/dialog";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getWeather, loading, loginUser } from "../../redux/apiRequest";
+import { getWeather, loading, logOut, loginUser } from "../../redux/apiRequest";
+import { getPlacesSuccess } from "../../redux/placeSlice";
+import { getUsersSuccess } from "../../redux/userSlice";
+import { getTypePlacesSuccess } from "../../redux/typePlaceSlice";
+import { getPlaces2Success } from "../../redux/place2Slice";
+
 const Login2 = () => {
   const [isSignUp, setIsSignUp] = useState(true);
   const [username, setUsername] = useState("");
@@ -76,6 +81,15 @@ const Login2 = () => {
       container.classList.add("fade-in");
     }
   }, [isSignUp]);
+
+  const handleLogout = () => {
+    logOut(dispatch, navigate);
+    dispatch(getPlacesSuccess([]));
+    dispatch(getUsersSuccess([]));
+    dispatch(getTypePlacesSuccess([]));
+    dispatch(getPlaces2Success([]));
+    navigate("/home");
+  };
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -146,7 +160,7 @@ const Login2 = () => {
                     severity="info"
                     className={`mx-3 w-full  ${visibleLogin ? 'py-2' : 'py-3'}`}
                     tooltip="Sử dụng phần mềm mà không cần tài khoản"
-                    onClick={() => navigate('/home')}
+                    onClick={() => handleLogout()}
                   />
                 </div>
                 <div className={`flex justify-content-center my-${visibleLogin ? '1' : '4'}`}>
@@ -420,7 +434,7 @@ const Login2 = () => {
                       Đăng nhập
                     </p>
                   </Button>
-                  <Button label="" text onClick={() => navigate('/home')} className="py-0 h-2rem w-full flex justify-content-center">
+                  <Button label="" text onClick={() => handleLogout()} className="py-0 h-2rem w-full flex justify-content-center">
                     Đăng nhập không cần tài khoản
                   </Button>
                 </div>

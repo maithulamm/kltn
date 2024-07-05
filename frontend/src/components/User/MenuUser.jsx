@@ -88,7 +88,7 @@ export const MenuUser = () => {
       onClick: () => {
         showLoadingScreen();
         setTimeout(() => {
-          showConfirm("Chức năng đang cập nhật");
+          navigate("/kltn/feedback");
         }, 500);
       },
     },

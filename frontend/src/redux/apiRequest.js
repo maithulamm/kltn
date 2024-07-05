@@ -41,7 +41,8 @@ import {
 } from './place2Slice';
 import ld from '../data/load.gif'
 import { addNewsStart, addNewsSuccess, deleteNewsFailure, deleteNewsStart, getNewsFailure, getNewsStart, getNewsSuccess, updateNewsFailure, updateNewsStart, updateNewsSuccess } from './newsSlice';
-const host = 'http://localhost:8000/';
+// const host = 'http://localhost:8000/';
+const host = "http://192.168.1.248:8000/"
 export const loading = () => {
     return (
         <div

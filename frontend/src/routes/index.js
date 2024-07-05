@@ -7,7 +7,7 @@ import Guide from "../page/Guide/Guide";
 import Page404 from "../page/Page404/Page404";
 import { LoginPage, LoginPageUser } from "../page/LoginPage/LoginPage"
 import UserHomePage from "../page/Home/UserHomePage.jsx";
-import { PlaceUserPage, PlaceUserPage1, PlaceUserPage2, NewsPage} from "../page/DataBasePage/PlaceUser.jsx";
+import { PlaceUserPage, PlaceUserPage1, PlaceUserPage2, NewsPage } from "../page/DataBasePage/PlaceUser.jsx";
 import { NewsUser } from "../components/User/NewsUser.jsx";
 import ChatbotPage from "../page/Chatbot/ChatbotPage.jsx";
 
@@ -25,8 +25,9 @@ const publicRoutes = [
     path: "/place2", element: <PlaceUserPage2 />
   },
   {
-    path: "/news", element: < NewsPage/>
+    path: "/news", element: < NewsPage />
   },
+  { path: "/feedback", element: <Feedback /> },
 ];
 
 const privateRoutes = [

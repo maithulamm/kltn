@@ -50,6 +50,7 @@ import { getAllPlace } from "../../redux/apiRequest";
 import { Toast } from "primereact/toast";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import "leaflet-routing-machine";
+import 'leaflet-control-geocoder';
 import Select from "react-select";
 const waypoints = [
   { lat: 10.580582870379785, lng: 104.21931237399188 },
@@ -61,7 +62,6 @@ const RoutingControl = ({ map, waypoints, mode }) => {
 
     const leafletWaypoints = waypoints.map(point => L.latLng(point.lat, point.lng));
     const routingControl = L.Routing.control({
-      
       waypoints: leafletWaypoints,
       routeWhileDragging: true,
       show: true,
@@ -73,9 +73,25 @@ const RoutingControl = ({ map, waypoints, mode }) => {
         serviceUrl: 'http://router.project-osrm.org/route/v1'
       }),
       geocoder: L.Control.Geocoder.nominatim(),
+      fitSelectedRoutes: true,
+      showAlternatives: true,
+      altLineOptions: {
+        styles: [{ color: 'red', opacity: 0.6, weight: 4 }]
+      },
+      icons: {
+        start: new L.divIcon({
+          className: 'routing-icon routing-icon-start',
+          iconSize: [20, 20],
+          html: '🏁'
+        }),
+        end: new L.divIcon({
+          className: 'routing-icon routing-icon-end',
+          iconSize: [20, 20],
+          html: '🏁'
+        }),
+      },
+
     }).addTo(map);
-
-
 
     return () => {
       if (map && routingControl) {
@@ -156,6 +172,7 @@ const DirectionsPanel = ({ setWaypoints, setMode }) => {
     </div>
   );
 };
+
 const MapUser = ({ height }) => {
   const accessToken = useSelector(
     (state) => state.auth.login?.currentUser?.accessToken
@@ -188,7 +205,7 @@ const MapUser = ({ height }) => {
   function layersControlData() {
     return (
       <Fragment>
-        <LayersControl position="topright" collapsed={device() ? false : true}>
+        <LayersControl position="topright" collapsed={device() ? true : true}>
           {basemap.map((b) => (
             <LayersControl.BaseLayer
               key={b}
@@ -907,7 +924,7 @@ const MapUser = ({ height }) => {
     <div style={{ height: height, maxHeight: "90vh" }}>
       {popupSidiebar()}
       {popupSidiebar2()}
-      {/* <DirectionsPanel setWaypoints={setWaypoints} setMode={setMode} /> */}
+      <DirectionsPanel setWaypoints={setWaypoints} setMode={setMode} />
       <MapContainer
         ref={setMap}
         center={center}

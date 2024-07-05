@@ -147,11 +147,11 @@ export const HeaderUser = () => {
     {
       label: "Góp ý",
       icon: "pi pi-fw pi-comments",
+      url: "/kltn/feedback",
       command: () => {
-        showConfirm("Chức năng đang cập nhật");
+        // showConfirm("Chức năng đang cập nhật");
         showLoadingScreen();
       },
-      url: "/kltn/home",
     },
   ];
   const getCurrentLocation = () => {
@@ -189,7 +189,7 @@ export const HeaderUser = () => {
              ? 4
              : hrefPage[1] === "news"
              ? 5
-             : hrefPage[1] === "rp"
+             : hrefPage[1] === "feedback"
              ? 6
              : 7
          }) > div > a > span {

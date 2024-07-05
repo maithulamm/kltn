@@ -17,11 +17,11 @@ function HomePage() {
   const navigate = useNavigate();
   // const accessToken = user?.accessToken;
 
-
+  const places2 = useSelector((state) => state.places2?.places2?.allPlaces2);
   // localStorage.setItem('access_Token', accessToken);
   useEffect(() => {
     if (user === null || !user) {
-      navigate("/login");
+      navigate("/kltn/login");
     }
 
     if (user?.isAdmin === false) {
@@ -50,7 +50,7 @@ function HomePage() {
           <Map height={device() ? "65vh" : '30vh'} />
         </div>
         <div className="justify-content-center col-12 md:col-4">
-          <PieChart />
+          <PieChart places2={places2}/>
         </div>
       </div>
     </Fragment>

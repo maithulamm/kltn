@@ -224,7 +224,7 @@ function DynamicColumnsDemo2() {
   };
   const items = [
     { icon: "pi pi-database", template: iconItemTemplate },
-    { icon: "pi pi-map-marker", template: iconItemTemplate },
+    { icon: "pi pi-objects-column", template: iconItemTemplate },
   ];
   const home = { icon: "pi pi-home", url: "../" };
 

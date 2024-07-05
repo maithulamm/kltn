@@ -1,6 +1,6 @@
 import HomePage from "../page/Home/HomePage";
 import Map, { Mapapp, MapappUser } from "../page/Map/PageMap";
-import { Place, Place2, Type, User } from "../page/DataBasePage/Data";
+import { News, Place, Place2, Type, User } from "../page/DataBasePage/Data";
 import Feedback from "../page/Feedback/Feedback";
 import Links from "../page/LinkPage/LinkPage"
 import Guide from "../page/Guide/Guide";
@@ -9,12 +9,13 @@ import { LoginPage, LoginPageUser } from "../page/LoginPage/LoginPage"
 import UserHomePage from "../page/Home/UserHomePage.jsx";
 import { PlaceUserPage, PlaceUserPage1, PlaceUserPage2, NewsPage} from "../page/DataBasePage/PlaceUser.jsx";
 import { NewsUser } from "../components/User/NewsUser.jsx";
+import ChatbotPage from "../page/Chatbot/ChatbotPage.jsx";
 
 const publicRoutes = [
-  { path: "/", element: <LoginPageUser /> },
+  { path: "/", element: <UserHomePage /> },
   { path: "/login", element: <LoginPageUser /> },
+  { path: "*", element: <LoginPageUser /> },
   { path: "/home", element: <UserHomePage /> },
-  { path: "*", element: <Page404 /> },
   { path: "/place", element: <PlaceUserPage /> },
   { path: "/map", element: <MapappUser /> },
   {
@@ -40,11 +41,13 @@ const privateRoutes = [
   { path: "/data/place2", element: <Place2 /> },
   { path: "/data/user", element: <User /> },
   { path: "/data/type", element: <Type /> },
+  { path: "/data/news", element: <News /> },
+
 
   { path: "/feedback", element: <Feedback /> },
-  { path: "/link", element: <Links /> },
+  { path: "/chatbot", element: <ChatbotPage /> },
   { path: "/guide", element: <Guide /> },
-  { path: "*", element: <Page404 /> },
+  { path: "*", element: <LoginPageUser /> },
 ];
 
 export { publicRoutes, privateRoutes };

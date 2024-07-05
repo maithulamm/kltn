@@ -95,16 +95,16 @@ export const getDistance = (lat1, lon1, lat2, lon2) => {
 
 // Get Weather
 export const getWeather = async () => {
-
     try {
-        const res = await axiost.get(`http://api.weatherapi.com/v1/current.json?key=48cf1935cce6440886911534241306&q=AnGiang&aqi=yes`,
+        const res = await axiost.get(`https://api.weatherapi.com/v1/forecast.json?q=An%20Giang&days=14&lang=vi&key=48cf1935cce6440886911534241306`,
             { headers: { 'Content-Type': 'application/json' } }
         );
-        localStorage.setItem('weather', JSON.stringify(res.data));
+        localStorage.setItem('weather', JSON.stringify(res?.data));
     } catch (err) {
-        return err.response.data;
+        return err.response?.data;
     }
 };
+
 
 // Auth
 export const loginUser = async (user, dispatch, navigate) => {
@@ -113,7 +113,7 @@ export const loginUser = async (user, dispatch, navigate) => {
     try {
         const res = await axiost.post(`${host}v1/auth/login/`, user);
         dispatch(loginSuccess(res.data));
-        navigate('/home');
+        navigate('/kltn');
     } catch (err) {
         dispatch(loginFailure());
         alert("Tài khoản hoặc mật khẩu không đúng!");
@@ -139,7 +139,7 @@ export const registerUser = async (user, dispatch, navigate) => {
     try {
         const res = await axiost.post(`${host}v1/auth/register/`, user);
         dispatch(registerSuccess());
-        navigate('/login');
+        navigate('/kltn/login');
         alert(res);
     } catch (err) {
         dispatch(registerFailure());

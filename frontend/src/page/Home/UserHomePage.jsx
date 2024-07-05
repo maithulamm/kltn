@@ -21,26 +21,11 @@ function UserHomePage() {
   const navigate = useNavigate();
   const accessToken = user?.accessToken;
 
-  // localStorage.setItem('access_Token', accessToken);
   useEffect(() => {
     getAllPlace(accessToken, dispatch);
-    // getAllPlace2(accessToken, dispatch);
     getAllTypePlace(accessToken, dispatch);
     getAllNews(accessToken, dispatch);
     document.title = "Du lịch An Giang";
-    // if (user === null || !user) {
-    //   navigate("/login");
-    // }
-    // Lấy đường dẫn tới file CSS từ node_modules
-    // const cssPath = require('primereact/resources/themes/lara-light-green/theme.css');
-
-    // Tạo một thẻ link để thêm CSS từ PrimeReact
-    // const linkElement = document.createElement('link');
-    // linkElement.rel = 'stylesheet';
-    // linkElement.href = cssPath;
-
-    // Thêm thẻ link vào phần tử <head> của trang
-    // document.head.appendChild(linkElement);
   }, []);
 
   return (

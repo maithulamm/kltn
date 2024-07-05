@@ -35,6 +35,7 @@ import { Button } from "primereact/button";
 import { Dock } from "primereact/dock";
 import { Card } from "primereact/card";
 import { getPlaces2Success } from "../../redux/place2Slice";
+import { OverlayPanel } from "primereact/overlaypanel";
 export const HeaderUser = () => {
   const user = useSelector((state) => state.auth?.login?.currentUser);
   const User = useSelector((state) => state.users?.users?.allUsers);
@@ -49,7 +50,7 @@ export const HeaderUser = () => {
     dispatch(getUsersSuccess([]));
     dispatch(getTypePlacesSuccess([]));
     dispatch(getPlaces2Success([]));
-    // navigate("/login");
+    navigate("/kltn/login");
   };
 
   const confirm1 = () => {
@@ -97,21 +98,16 @@ export const HeaderUser = () => {
       </Dialog>
     );
   };
-  const [curDate, setCurrentTime] = useState(new Date().toLocaleString());
+  const [curDate, setCurrentTime] = useState(
+    new Date().toLocaleString().split(" ")[1]
+  );
   const [curWeather, setCurWeather] = useState(
     JSON?.parse(localStorage?.getItem("weather")) || JSON?.parse("{}")
   );
 
   useEffect(() => {
-    const timerId = setInterval(() => {
-      setCurrentTime(
-        new Date().toLocaleString("vi-VN", {
-          timeZone: "Asia/Ho_Chi_Minh",
-        })
-      );
-    }, 1000);
-
-    return () => clearInterval(timerId);
+    setCurrentTime(new Date().toLocaleString().split(" ")[1]);
+    getWeather();
   }, [curDate]);
   // console.log(curWeather);
 
@@ -119,50 +115,19 @@ export const HeaderUser = () => {
     {
       label: "Trang chủ",
       icon: "pi pi-fw pi-home",
-      url: "/home",
+      url: "/kltn/home",
       command: () => showLoadingScreen(),
     },
-    // {
-    //   label: "Dữ liệu",
-    //   icon: "pi pi-fw pi-database",
-    //   items: [
-    //     {
-    //       label: "Địa điểm du lịch",
-    //       icon: "pi pi-fw pi-map-marker",
-    //       url: "/admin/data/place",
-    //     },
-    //     {
-    //       label: "Loại địa điểm",
-    //       icon: "pi pi-fw pi-list",
-    //       url: "/admin/data/type",
-    //     },
-    //     {
-    //       label: "Người dùng",
-    //       icon: "pi pi-fw pi-address-book",
-    //       url: "/admin/data/user",
-    //     },
-    //     {
-    //       label: "Địa điểm tiện ích",
-    //       icon: "pi pi-fw pi-objects-column",
-    //       url: "/admin/data/place2",
-    //     },
-    //     // {
-    //     //   label: "Sở thích",
-    //     //   icon: "pi pi-fw pi-star",
-    //     //   url: "/admin/data/prefer",
-    //     // },
-    //   ],
-    // },
     {
       label: "Bản đồ",
       icon: "pi pi-fw pi-map",
-      url: "/map",
+      url: "/kltn/map",
       command: () => showLoadingScreen(),
     },
     {
       label: "Địa điểm",
       icon: "pi pi-fw pi-map-marker",
-      url: "/place",
+      url: "/kltn/place",
       command: () => {
         showLoadingScreen();
       },
@@ -170,13 +135,13 @@ export const HeaderUser = () => {
     {
       label: "Tiện ích",
       icon: "pi pi-fw pi-objects-column",
-      url: "/place2",
+      url: "/kltn/place2",
       command: () => showLoadingScreen(),
     },
     {
       label: "Bản tin",
       icon: "pi pi-fw pi-book",
-      url: "/news",
+      url: "/kltn/news",
       command: () => showLoadingScreen(),
     },
     {
@@ -185,19 +150,9 @@ export const HeaderUser = () => {
       command: () => {
         showConfirm("Chức năng đang cập nhật");
         showLoadingScreen();
-        // setTimeout(() => {
-          
-        // }, 500);
       },
-      url: "/home",
+      url: "/kltn/home",
     },
-    ,
-    // {
-    //   label: "Hướng dẫn",
-    //   icon: "pi pi-fw pi-question-circle",
-    //   url: "/",
-
-    // },
   ];
   const getCurrentLocation = () => {
     if (navigator.geolocation) {
@@ -213,35 +168,31 @@ export const HeaderUser = () => {
   };
 
   useEffect(() => {
-    // console.log(getDistance("10.378172695497733", "105.43429861542022", "10.378471348476113", "105.4396288379375"));
-    // getCurrentLocation();
-    // getAllUser(accessToken, dispatch);
-    getAllPlace(accessToken, dispatch);
-    // getAllPlace2(accessToken, dispatch);
-    getAllTypePlace(accessToken, dispatch);
-    getAllNews(accessToken, dispatch);
-    // getWeather()
+    // getAllPlace(accessToken, dispatch);
+    // getAllTypePlace(accessToken, dispatch);
+    // getAllNews(accessToken, dispatch);
 
-    const style = document.createElement("style");
+    const style = document.createElement("style", { type: "text/css" });
 
-    const hrefPage = window.location.pathname.split("/");
-    // console.log(getWeather())
+    const hrefPage = window.location.pathname.split("/kltn/");
+    // console.log(hrefPage)
     style.innerHTML = `
-          #HEADER > div.p-menubar.p-component > ul > li:nth-child(${
-            hrefPage[1] === "home"
-              ? 1
-              : hrefPage[1] === "map"
-              ? 2
-              : hrefPage[1] === "place"
-              ? 3
-              : hrefPage[1] === "place2"
-              ? 4
-              : hrefPage[1] === "news"
-              ? 5
-              : hrefPage[1] === "rp"
-              ? 6
-              : null
-          }) > div > a > span {
+    #HEADER > div.p-menubar.p-component > ul > li:nth-child(
+         ${
+           hrefPage[1] === "home"
+             ? 1
+             : hrefPage[1] === "map"
+             ? 2
+             : hrefPage[1] === "place"
+             ? 3
+             : hrefPage[1] === "place2"
+             ? 4
+             : hrefPage[1] === "news"
+             ? 5
+             : hrefPage[1] === "rp"
+             ? 6
+             : 7
+         }) > div > a > span {
             font-weight: 700;
             border-radius: 10px;
             color: #10b981 ;
@@ -251,18 +202,59 @@ export const HeaderUser = () => {
     `;
     document.head.appendChild(style);
 
-    // console.log(curDate);
     return () => {
       document.head.removeChild(style);
     };
   }, []);
+
+  // useEffect(() => {
+  //   const script1 = document.createElement("script");
+  //   script1.src =
+  //     "https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/0.1.0-beta.4/libs/oversea/index.js";
+  //   script1.async = true;
+  //   script1.id = "coze-sdk-script";
+
+  //   let script2;
+
+  //   script1.onload = () => {
+  //     script2 = document.createElement("script");
+  //     script2.id = "coze-client-script";
+  //     script2.innerHTML = `
+  //       new CozeWebSDK.WebChatClient({
+  //         config: {
+  //           bot_id: '7387681070575616016',
+  //         },
+  //         componentProps: {
+  //           title: 'Coze',
+  //         },
+  //       });
+  //     `;
+  //     document.body.appendChild(script2);
+  //   };
+
+  //   if (user) {
+  //     return document.body.appendChild(script1);
+  //   }
+  //   return () => {
+  //     const existingScript1 = document.getElementById("coze-sdk-script");
+  //     const existingScript2 = document.getElementById("coze-client-script");
+  //     if (existingScript1) {
+  //       document.body.removeChild(existingScript1);
+  //     }
+  //     if (existingScript2) {
+  //       document.body.removeChild(existingScript2);
+  //     }
+  //   };
+  // }, []);
+  
+  const op = useRef(null);
   return (
     <section id="HEADER">
       {loading()}
       <Menubar
         start={
           device() ? (
-            <Link to="/home">
+            <Link to="/kltn/home">
               {" "}
               <img
                 alt="logo"
@@ -272,7 +264,7 @@ export const HeaderUser = () => {
               ></img>{" "}
             </Link>
           ) : (
-            <Link to="/home">
+            <Link to="/kltn/home">
               {" "}
               <img
                 alt="logo"
@@ -290,7 +282,7 @@ export const HeaderUser = () => {
               <div className="flex justify-content-center align-items-center">
                 {device() ? (
                   <div className="h-2rem flex justify-content-center align-items-center mx-3">
-                    {curDate} | Long Xuyên
+                    {curDate} | An Giang
                   </div>
                 ) : (
                   <div className="h-2rem flex justify-content-center align-items-center">
@@ -337,7 +329,7 @@ export const HeaderUser = () => {
                   </div>
                 ) : null}
                 <Image
-                  className="rounded-full"
+                  className="rounded-full cursor-pointer"
                   src={
                     avtData[User?.find((u) => u?._id === user?._id)?.avt || 3]
                       ?.path || avtData[3].path
@@ -345,7 +337,23 @@ export const HeaderUser = () => {
                   width={"40vw"}
                   style={{ marginLeft: "1rem" }}
                   imageClassName="rounded-full h-3rem w-2rem"
+                  onClick={(e) => op.current.toggle(e)}
                 />
+                <OverlayPanel ref={op} className="p-0">
+                  <div className="flex flex-column items-center justify-content-center align-items-start m-0 p-0">
+                    <Button
+                      label="Thông tin cá nhân"
+                      onClick={() => setVisibleDialog(true)}
+                      text
+                    />
+                    <Button
+                      label="Đổi mật khẩu"
+                      onClick={() => showConfirm("Chức năng đang cập nhật")}
+                      text
+                    />
+                    <Button label="Đăng xuất" onClick={() => confirm1()} text />
+                  </div>
+                </OverlayPanel>
               </div>
             ) : (
               <div className="flex justify-content-center align-items-center">
@@ -357,7 +365,7 @@ export const HeaderUser = () => {
                 |
                 <Button
                   label="Đăng nhập"
-                  onClick={() => navigate("/login")}
+                  onClick={() => navigate("/kltn/login")}
                   text
                 />
               </div>

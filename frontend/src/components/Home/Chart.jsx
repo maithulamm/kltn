@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Chart } from "primereact/chart";
 import { useSelector } from "react-redux";
+import { Button } from "primereact/button";
+import { getAllPlace2 } from "../../redux/apiRequest";
 
 export default function PieChart() {
   const [chartData, setChartData] = useState({});
   const [chartOptions, setChartOptions] = useState({});
   const places2 = useSelector((state) => state.places2?.places2?.allPlaces2);
-  const anUong = places2?.filter((place) => place?.type === "Ăn uống")?.length;
-  const tramXangDau = places2?.filter(
-    (place) => place?.type === "Trạm xăng dầu"
-  )?.length;
-  const coSoYTe = places2?.filter((place) => place?.type === "Cơ sở y tế")?.length;
-  const atm = places2?.filter((place) => place?.type === "ATM")?.length;
   useEffect(() => {
+    const anUong = places2?.filter((place) => place?.type === "Ăn uống")?.length;
+    const tramXangDau = places2?.filter(
+      (place) => place?.type === "Trạm xăng dầu"
+    )?.length;
+    const coSoYTe = places2?.filter(
+      (place) => place?.type === "Cơ sở y tế"
+    )?.length;
+    const atm = places2?.filter((place) => place?.type === "ATM")?.length;
     const documentStyle = getComputedStyle(document.documentElement);
     const data = {
       labels: ["Ăn uống", "Trạm xăng dầu", "Cơ sở y tế", "Điểm giao dịch ATM"],
@@ -47,7 +51,7 @@ export default function PieChart() {
         },
         title: {
           display: true,
-          text: "Địa điểm tiện ích",
+          text: `Địa điểm tiện ích`,
           font: {
             size: 20,
           },
@@ -85,6 +89,7 @@ export default function PieChart() {
         options={chartOptions}
         className="w-full md:w-30rem"
       />
+      <Button label="" icon="pi pi-sync" className="h-3rem" onClick={() => window.location.reload()}/>
     </div>
   );
 }

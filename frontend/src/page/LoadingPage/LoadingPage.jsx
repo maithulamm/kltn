@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 function LoadingPage() {
     const navigate = useNavigate();
     useEffect(() => {
-        window.location.href = "/admin/home";
+        window.location.href = "/kltn/admin/home";
         // navigate("/admin/login");
     }, []);
   return (

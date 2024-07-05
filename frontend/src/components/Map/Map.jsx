@@ -661,7 +661,7 @@ const Map = ({ height }) => {
             </div>
           </div>
           <div className="field col-12 flex align-items-center"></div>
-          {/* <div className="field col-12 flex align-items-center border-bottom-1 surface-border "></div>
+          <div className="field col-12 flex align-items-center border-bottom-1 surface-border "></div>
           <div className="field col-12 flex align-items-center my-3">
             <div className="field col-6 flex justify-content-end">
               <Button
@@ -683,7 +683,7 @@ const Map = ({ height }) => {
                 }}
               />
             </div>
-          </div> */}
+          </div>
         </div>
         {visible_d && <Dialog_C />}
         {visible_x && <Dialog_X />}
@@ -726,12 +726,12 @@ const Map = ({ height }) => {
               }
               alt={currentPlace2?.name}
               preview="true"
-              imageClassName="w-12 h-20rem"
+              imageClassName="w-12"
               className="w-12 h-15rem"
               downloadIcon="pi pi-download"
               downloadable
               loading="lazy"
-              imageStyle={{ width: "100%", height: "100%", objectFit: "cover" }}
+              imageStyle={{ width: "100%", height: "100%", objectFit: "contain" }}
               // style={{opacity: "0"}}
             />
           </div>

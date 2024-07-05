@@ -28,7 +28,7 @@ import { Dialog } from "primereact/dialog";
 import { getPlacesSuccess } from "../../redux/placeSlice";
 import { getUsersSuccess } from "../../redux/userSlice";
 import { getTypePlacesSuccess } from "../../redux/typePlaceSlice";
-
+import { logOutSuccess } from "../../redux/authSlice";
 
 export const Header = () => {
   const user = useSelector((state) => state.auth.login.currentUser);
@@ -44,11 +44,12 @@ export const Header = () => {
   const toast = useRef(null);
 
   const handleLogout = () => {
+    dispatch(logOutSuccess());
+    navigate("/kltn/login");
     logOut(dispatch, navigate);
     dispatch(getPlacesSuccess([]));
     dispatch(getUsersSuccess([]));
     dispatch(getTypePlacesSuccess([]));
-    navigate("/login");
   };
 
   const confirm1 = () => {
@@ -98,7 +99,7 @@ export const Header = () => {
   };
 
   const page = [
-    { label: "Trang chủ", icon: "pi pi-fw pi-home", url: "/admin/home" },
+    { label: "Trang chủ", icon: "pi pi-fw pi-home", url: "/kltn/admin/home" },
     {
       label: "Dữ liệu",
       icon: "pi pi-fw pi-database",
@@ -106,65 +107,93 @@ export const Header = () => {
         {
           label: "Địa điểm du lịch",
           icon: "pi pi-fw pi-map-marker",
-          url: "/admin/data/place",
-          command: () => showLoadingScreen(),
+          // url: "/kltn/admin/data/place",
+          command: () => {
+            showLoadingScreen();
+            navigate("/kltn/admin/data/place");
+          },
         },
         {
           label: "Loại địa điểm",
           icon: "pi pi-fw pi-list",
-          url: "/admin/data/type",
-          command: () => showLoadingScreen(),
+          // url: "/kltn/admin/data/type",
+          command: () => {
+            showLoadingScreen();
+            navigate("/kltn/admin/data/type");
+          },
         },
         {
           label: "Người dùng",
           icon: "pi pi-fw pi-address-book",
-          url: "/admin/data/user",
-          command: () => showLoadingScreen(),
+          // url: "/kltn/admin/data/user",
+          command: () => {
+            showLoadingScreen();
+            navigate("/kltn/admin/data/user");
+          },
         },
         {
           label: "Địa điểm tiện ích",
           icon: "pi pi-fw pi-objects-column",
-          url: "/admin/data/place2",
-          command: () => showLoadingScreen(),
+          // url: "/kltn/admin/data/place2",
+          command: () => {
+            showLoadingScreen();
+            navigate("/kltn/admin/data/place2");
+          },
         },
-        // {
-        //   label: "Sở thích",
-        //   icon: "pi pi-fw pi-star",
-        //   url: "/admin/data/prefer",
-        // },
+        {
+          label: "Bảng tin",
+          icon: "pi pi-fw pi-bookmark",
+          // url: "/kltn/data/news",
+          command: () => {
+            showLoadingScreen();
+            navigate("/kltn/admin/data/news");
+          },
+        },
       ],
     },
     {
       label: "Bản đồ",
       icon: "pi pi-fw pi-map",
-      url: "/admin/map",
-      command: () => showLoadingScreen(),
+      // url: "/kltn/admin/map",
+      command: () => {
+        showLoadingScreen();
+        navigate("/kltn/admin/map");
+      },
     },
     {
       label: "Phản hồi",
       icon: "pi pi-fw pi-comments",
-      url: "/admin/users",
-      command: () => showLoadingScreen(),
+      // url: "/kltn/admin/users",
+      command: () => {
+        showLoadingScreen();
+        navigate("/kltn/admin/users");
+      },
     },
-    // { label: "Liên kết", icon: "pi pi-fw pi-link", url: "/admin/users" },
+    {
+      label: "[AI]  Huấn luyện Chatbot",
+      icon: "",
+      command: () => {
+        showLoadingScreen();
+        navigate("/kltn/admin/chatbot");
+      },
+    },
     {
       label: "Hướng dẫn",
       icon: "pi pi-fw pi-question-circle",
-      url: "/admin/guide",
+      // url: "/kltn/admin/guide",
       command: () => {
         showLoadingScreen();
         setTimeout(() => {
-          showConfirm('')
+          showConfirm("");
         }, 500);
       },
     },
   ];
 
   useEffect(() => {
-    
     if (!user || user.isAdmin === false) {
       showLoadingScreen();
-      // navigate("/login");
+      navigate("/kltn");
     }
     getAllUser(accessToken, dispatch);
     getAllPlace(accessToken, dispatch);
@@ -176,21 +205,20 @@ export const Header = () => {
     const hrefPage = window.location.pathname.split("/");
 
     style.innerHTML = `
-          #HEADER > div > ul > li[aria-posinset="${
-            hrefPage[2] === "home"
+          #HEADER > div.p-menubar.p-component > ul > li:nth-child(
+          ${
+            hrefPage[3] === "home"
               ? 1
-              : hrefPage[2] === "data"
+              : hrefPage[3] === "data"
               ? 2
-              : hrefPage[2] === "map"
+              : hrefPage[3] === "map"
               ? 3
-              : hrefPage[2] === "feedback"
+              : hrefPage[3] === "feedback"
               ? 4
-              : hrefPage[2] === "link"
+              : hrefPage[3] === "chatbot"
               ? 5
-              : hrefPage[2] === "reports"
-              ? 6
-              : 7
-          }"] > div > a > span {
+              : 6
+          }) > div > a > span {
             font-weight: 700;
             border-radius: 10px;
             color: #10b981 ;
@@ -207,7 +235,7 @@ export const Header = () => {
       {loading()}
       <Menubar
         start={
-          <Link to="/admin/home">
+          <Link to="/kltn/admin/home">
             {" "}
             <img alt="logo" src={logo} height="40" className="mr-2"></img>{" "}
           </Link>

@@ -11,12 +11,12 @@ function App() {
       <Routes>
         {/* Các route không yêu cầu xác thực */}
         {publicRoutes.map((route, index) => (
-          <Route key={index} path={route.path} element={route.element} />
+          <Route key={index} path={`/kltn${route.path}`} element={route.element} />
         ))}
         
         {/* Các route yêu cầu xác thực */}
         {privateRoutes.map((route, index) => (
-          <Route key={index} path={`admin${route.path}`} element={route.element} />
+          <Route key={index} path={`/kltn/admin${route.path}`} element={route.element} />
         ))}
       </Routes>
     </Router>

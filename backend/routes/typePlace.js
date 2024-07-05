@@ -1,8 +1,8 @@
 const {
-    verifyToken,
-    verifyTokenAndAdmin,
-    verifyTokenAndUserAuthorization,
-  } = require("../controllers/middleware");
+  verifyToken,
+  verifyTokenAndAdmin,
+  verifyTokenAndUserAuthorization,
+} = require("../controllers/middleware");
 const typePlaceControllers = require('../controllers/typePlaceControllers');
 
 const router = require('express').Router();

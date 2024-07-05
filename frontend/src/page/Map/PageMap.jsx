@@ -1,9 +1,13 @@
-import React, {Fragment, useState} from "react";
+import React, {Fragment, useEffect, useState} from "react";
 import { Header } from "../../components/Header/Header";
 import { Navbar } from "../../components/Navbar/Navbar";
 import { Map } from "../../components/Map/Map";
 import { HeaderUser } from "../../components/Header/HeaderUser";
 import { MapUser } from "../../components/Map/MapUser";
+import { getAllPlace2 } from "../../redux/apiRequest";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
 
 
 const Mapapp = () => {
@@ -24,6 +28,14 @@ const  MapappUser = ()   =>{
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const user = useSelector((state) => state.auth.login?.currentUser);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const accessToken = user?.accessToken;
+  
+  useEffect(() => {
+    getAllPlace2(accessToken, dispatch);
+  }, []);
   return (
     <Fragment>
       <HeaderUser />

@@ -139,7 +139,7 @@ export default function Circular() {
             className="p-button-outlined p-button-success my-2"
             onClick={() => {
               showLoadingScreen();
-              navigate("/place");
+              navigate("/kltn/place");
             }}
           />
         </div>

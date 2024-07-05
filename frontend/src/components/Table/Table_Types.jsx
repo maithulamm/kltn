@@ -77,7 +77,12 @@ function DynamicColumnsDemo() {
     color: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
   const clearFilter = () => {
-    filters();
+    setGlobalFilterValue("");
+    setFilters({
+      global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      name: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      color: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    });
   };
   const onGlobalFilterChange = (e) => {
     const value = e.target.value;
@@ -97,6 +102,28 @@ function DynamicColumnsDemo() {
       >
         {window.innerHeight > window.innerWidth ? (
           <Fragment>
+            <Button
+              label={null}
+              icon="pi pi-filter-slash"
+              className="p-button-primary"
+              onClick={() => {
+                clearFilter();
+              }}
+              text
+              rounded
+              // tooltip="Xóa tất cả bộ lọc"
+            />
+            <Button
+              label={null}
+              icon="pi pi-plus"
+              className="p-button-primary"
+              onClick={() => {
+                setVisible_a(true);
+              }}
+              text
+              rounded
+              // tooltip="Thêm địa điểm mới"
+            />
             <Button
               type="button"
               icon="pi pi-refresh"
@@ -129,6 +156,28 @@ function DynamicColumnsDemo() {
           </Fragment>
         ) : (
           <Fragment>
+            <Button
+              label={null}
+              icon="pi pi-filter-slash"
+              className="p-button-primary"
+              onClick={() => {
+                clearFilter();
+              }}
+              text
+              rounded
+              tooltip="Xóa tất cả bộ lọc"
+            />
+            <Button
+              label={null}
+              icon="pi pi-plus"
+              className="p-button-primary"
+              onClick={() => {
+                setVisible_a(true);
+              }}
+              text
+              rounded
+              tooltip="Thêm địa điểm mới"
+            />
             <Button
               type="button"
               icon="pi pi-refresh"
@@ -198,7 +247,12 @@ function DynamicColumnsDemo() {
           }}
           tooltip="Xóa loại địa điểm"
           disabled={
-            Place?.filter(item => item.type.some(t => t.name === rowData.name)).length > 0 || User?.filter(item => item.prefer.some(t => t.name === rowData.name)).length > 0
+            Place?.filter((item) =>
+              item.type.some((t) => t.name === rowData.name)
+            ).length > 0 ||
+            User?.filter((item) =>
+              item.prefer.some((t) => t.name === rowData.name)
+            ).length > 0
           }
         />
       </Fragment>
@@ -274,10 +328,24 @@ function DynamicColumnsDemo() {
               value={dataEdit.name}
               id="intro"
               className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
-              readOnly= {
-                Place?.filter(item => item.type.some(t => t.name === dataEdit.name)).length > 0 || User?.filter(item => item.prefer.some(t => t.name === dataEdit.name)).length > 0
+              readOnly={
+                Place?.filter((item) =>
+                  item.type.some((t) => t.name === dataEdit.name)
+                ).length > 0 ||
+                User?.filter((item) =>
+                  item.prefer.some((t) => t.name === dataEdit.name)
+                ).length > 0
               }
-              tooltip={Place?.filter(item => item.type.some(t => t.name === dataEdit.name)).length > 0 || User?.filter(item => item.prefer.some(t => t.name === dataEdit.name)).length > 0 ? "Không thể chỉnh sửa loại địa điểm đang được sử dụng" : null}
+              tooltip={
+                Place?.filter((item) =>
+                  item.type.some((t) => t.name === dataEdit.name)
+                ).length > 0 ||
+                User?.filter((item) =>
+                  item.prefer.some((t) => t.name === dataEdit.name)
+                ).length > 0
+                  ? "Không thể chỉnh sửa loại địa điểm đang được sử dụng"
+                  : null
+              }
             />
           </div>
           <div className="field col-12 md:col-3">
@@ -549,7 +617,7 @@ function DynamicColumnsDemo() {
     // console.log(selectedProducts?.map((e) => e.ID));
     // console.log(Data);
   }, [Data, selectedProducts]);
-  
+
   return (
     <div className="card ">
       <div
@@ -572,7 +640,7 @@ function DynamicColumnsDemo() {
               backgroundColor: "transparent",
             }}
           />
-          <Button
+          {/* <Button
             label={null}
             icon="pi pi-plus"
             className="p-button-primary ml-3"
@@ -582,7 +650,7 @@ function DynamicColumnsDemo() {
             rounded
             outlined
             tooltip="Thêm địa điểm mới"
-          />
+          /> */}
 
           {selectedProducts?.length > 0 && (
             <Button
@@ -640,7 +708,6 @@ function DynamicColumnsDemo() {
           header={<span className={"pi pi-trash"}></span>}
           style={{ width: "3rem" }}
           body={body_trash}
-          
         />
         <Column
           alignHeader={"center"}
@@ -693,11 +760,11 @@ function DynamicColumnsDemo() {
             return (
               <Badge
                 value={
-                  Place.filter(item => 
-                    item.type.some(t => t.name === rowData.name)
+                  Place.filter((item) =>
+                    item.type.some((t) => t.name === rowData.name)
                   ).length
                 }
-                size="large" 
+                size="large"
               />
             );
           }}
@@ -712,11 +779,11 @@ function DynamicColumnsDemo() {
             return (
               <Badge
                 value={
-                  User.filter(item => 
-                    item.prefer.some(t => t.name === rowData.name)
+                  User.filter((item) =>
+                    item.prefer.some((t) => t.name === rowData.name)
                   ).length
                 }
-                size="large" 
+                size="large"
               />
             );
           }}

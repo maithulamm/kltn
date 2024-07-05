@@ -40,7 +40,7 @@ export const NewsUser = () => {
             className="p-button-outlined p-button-success my-2"
             onClick={() => {
               showLoadingScreen();
-              navigate("/news");
+              navigate("/kltn/news");
             }}
           />
         </div>

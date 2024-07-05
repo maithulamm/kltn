@@ -1,97 +1,291 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import { getWeather } from "../../redux/apiRequest";
 
-const WeatherWidget = () => {
-  const [weatherData, setWeatherData] = useState(null);
-  const [loading, setLoading] = useState(true);
+const Card = styled.div`
+  width: 100%;
+  border: 1px solid #e0e0e0;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+  padding: 20px;
+  font-family: "Arial", sans-serif;
+  color: #333333;
 
+  @media (max-width: 768px) {
+    margin: 10px;
+    padding: 10px;
+  }
+`;
+
+const CardHeader = styled.div`
+  background: #10b982;
+  padding: 10px 15px;
+  color: #ffffff;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 1.25em;
+  font-weight: bold;
+
+  @media (max-width: 768px) {
+    font-size: 1em;
+    padding: 8px 12px;
+  }
+`;
+
+const Current = styled.div`
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+  padding: 20px 0;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 10px 0;
+  }
+`;
+
+const Temperature = styled.div`
+  flex: 1;
+  font-size: 3em;
+  color: #003870;
+  font-weight: 900;
+
+  @media (max-width: 768px) {
+    font-size: 2em;
+  }
+`;
+
+const Location = styled.div`
+  flex: 1;
+  font-size: 1.5em;
+  color: #003870;
+  font-weight: 600;
+
+  @media (max-width: 768px) {
+    font-size: 1.25em;
+  }
+`;
+
+const FeelLike = styled.div`
+  flex: 1;
+  font-size: 1em;
+  color: #555555;
+
+  @media (max-width: 768px) {
+    font-size: 0.9em;
+  }
+`;
+
+const TempDescription = styled.div`
+  flex: 1;
+  font-size: 1.25em;
+  color: #555555;
+  text-align: center;
+  margin-top: 10px;
+
+  @media (max-width: 768px) {
+    font-size: 1em;
+    margin-top: 5px;
+  }
+`;
+
+const IconContainer = styled.div`
+  width: 100%;
+  text-align: center;
+`;
+
+const WeatherDays = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+
+  @media (max-width: 768px) {
+    margin-top: 10px;
+  }
+`;
+
+const WeatherDayRow = styled.tr`
+  text-align: center;
+  border-bottom: 1px solid #dddddd;
+  color: #333333;
+  padding: 10px 0;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  img {
+    width: 40px;
+
+    @media (max-width: 768px) {
+      width: 30px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 5px 0;
+  }
+`;
+
+const WeatherDayRow2 = styled.tr`
+  text-align: center;
+  border-bottom: 3px solid #dddddd;
+  color: var(--primary-color);
+  padding: 10px 0;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  img {
+    width: 40px;
+
+    @media (max-width: 768px) {
+      width: 30px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 5px 0;
+  }
+`;
+
+const Logo = styled.img`
+  width: 80px;
+  margin: 10px 0;
+
+  @media (max-width: 768px) {
+    width: 60px;
+  }
+`;
+
+const App = () => {
+  const [curWeather, setCurWeather] = useState(
+    JSON?.parse(localStorage?.getItem("weather")) || JSON?.parse("{}")
+  );
+  const [curDate, setCurDate] = useState(new Date().toLocaleString());
+  const Day = new Date().getDay();
   useEffect(() => {
-    const fetchWeatherData = async () => {
-      try {
-        const response = await axios.get('http://thoitiet.vn/embed/vopgfypubzd?days=5&hC=%2310b982&hB=%23caf1d8&tC=%2310b981&bC=transpane&lC=%23dddddd');
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(response.data, 'text/html');
-        
-        const temperature = doc.querySelector('.temperature').textContent.trim();
-        const location = doc.querySelector('.location a').textContent.trim();
-        const feelLike = doc.querySelector('.feellike').textContent.trim();
-        const description = doc.querySelector('.temp-description').textContent.trim();
-        const icon = doc.querySelector('.icon-container img').src;
-        
-        const days = [...doc.querySelectorAll('#weather-days tr')].map(row => {
-          const columns = row.querySelectorAll('td');
-          if (columns.length === 4) {
-            return {
-              day: columns[0].textContent.trim(),
-              icon: columns[1].querySelector('img').src,
-              name: columns[2].textContent.trim(),
-              temp: columns[3].textContent.trim()
-            };
-          }
-          return null;
-        }).filter(day => day !== null);
-
-        setWeatherData({ temperature, location, feelLike, description, icon, days });
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching weather data:', error);
-        setLoading(false);
-      }
-    };
-    console.log(weatherData)
-    fetchWeatherData();
+    getWeather();
+    setCurWeather(JSON?.parse(localStorage?.getItem("weather")));
+    setCurDate(new Date().toLocaleString().split(" ")[1]);
   }, []);
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-  if (!weatherData) {
-    return <p>No weather data available</p>;
-  }
-
   return (
-    <div className="card card-body">
-      <div className="row">
-        <div className="col-6">
-          <p title="Nhiệt độ hiện tại" className="temperature">
-            {weatherData.temperature}
-          </p>
-          <p className="location">
-            <a href="http://thoitiet.vn/an-giang/long-xuyen">
-              {weatherData.location}
+    <Card>
+      <CardHeader>Dự báo thời tiết</CardHeader>
+      <Current>
+        <div>
+          {new Date().getDay() > 0
+            ? "Thứ " + (new Date().getDay() + 1)
+            : "Chủ nhật"}{" "}
+          {curDate}
+          <Temperature>{curWeather?.current?.temp_c || 30}°C</Temperature>
+          <Location>
+            <a
+              href="https://thoitiet.vn/an-giang/"
+              style={{ color: "#003870", textDecoration: "none" }}
+            >
+              An Giang
             </a>
-          </p>
-          <p className="feellike">
-            {weatherData.feelLike}
-          </p>
+          </Location>
+          <FeelLike>
+            Cảm giác như {curWeather?.current?.feelslike_c || 30}°C
+          </FeelLike>
         </div>
-        <div className="col-6">
-          <div className="icon-container">
-            <img src={weatherData.icon} alt={weatherData.description} title={weatherData.description} />
-          </div>
-          <p className="temp-description">
-            {weatherData.description}
-          </p>
+        {/* <div>
+          <WeatherDays>
+            <tbody>
+              <WeatherDayRow>
+                <td>Tia UV {
+                  curWeather?.current?.uv
+                  }</td>
+              </WeatherDayRow>
+              <WeatherDayRow>
+                <td>Ngày mai</td>
+              </WeatherDayRow>
+            </tbody>
+          </WeatherDays>
+        </div> */}
+
+        <div>
+          <IconContainer>
+            <img
+              src={
+                curWeather?.current?.condition?.icon ||
+                "https://cdn-icons-png.flaticon.com/512/757/757401.png"
+              }
+              alt="Nhiều mây"
+              title="Nhiều mây"
+            />
+          </IconContainer>
+          <TempDescription>
+            {curWeather?.current?.condition?.text}
+          </TempDescription>
         </div>
-      </div>
-      <table id="weather-days">
-        {weatherData.days.map((day, index) => (
-          <tr key={index}>
-            <td>{day.day}</td>
-            <td><img src={day.icon} alt={day.name} title={day.name} /></td>
-            <td><div className="name">{day.name}</div></td>
-            <td><div className="temp">{day.temp}</div></td>
-          </tr>
-        ))}
-        <tr>
-          <td colSpan="4" style={{ textAlign: 'right' }}>
-            <img src="http://thoitiet.vn/img/logo-header.png" alt="thoitiet.vn" title="ThoiTiet.VN" className="logo" style={{ width: '100px' }} />
-          </td>
-        </tr>
-      </table>
-    </div>
+      </Current>
+      <WeatherDays>
+        <tbody>
+          <WeatherDayRow2>
+            <td>
+              {curWeather.forecast.forecastday[0].day.mintemp_c} |{" "}
+              {curWeather.forecast.forecastday[0].day.maxtemp_c}°C
+            </td>
+            <td>Độ ẩm: {curWeather?.current?.humidity}%</td>
+            <td>
+              Chỉ số UV:{" "}
+              {curWeather?.current?.uv < 2 ? 0 : curWeather?.current?.uv}
+            </td>
+            <td>Cập nhật: {curWeather?.current?.last_updated.split(" ")[1]}</td>
+          </WeatherDayRow2>
+          {curWeather.forecast.forecastday
+            .filter((dayData, index) => index > 0)
+            .map((dayData, index) => (
+              <WeatherDayRow key={index}>
+                <td>
+                  {
+                    [
+                      "Chủ nhật",
+                      "Thứ hai",
+                      "Thứ ba",
+                      "Thứ tư",
+                      "Thứ năm",
+                      "Thứ sáu",
+                      "Thứ bảy",
+                    ][(Day + index + 1) % 7]
+                  }{" "}
+                  {dayData.date.split("-")[2] +
+                    "/" +
+                    dayData.date.split("-")[1]}
+                </td>
+                <td>
+                  <img
+                    src={dayData.day.condition.icon}
+                    alt={dayData.day.condition.text}
+                    title={dayData.day.condition.text}
+                  />
+                </td>
+                <td>{dayData.day.condition.text}</td>
+                <td>
+                  {dayData.day.mintemp_c} | {dayData.day.maxtemp_c}°C
+                </td>
+                <td></td>
+              </WeatherDayRow>
+            ))}
+          {/* <WeatherDayRow>
+            <td colSpan="4" style={{ textAlign: "right" }}>
+              <Logo
+                src="https://thoitiet.vn/img/logo-header.png"
+                alt="thoitiet.vn"
+                title="ThoiTiet.VN"
+              />
+            </td>
+          </WeatherDayRow> */}
+        </tbody>
+      </WeatherDays>
+    </Card>
   );
 };
 
-export default WeatherWidget;
+export default App;

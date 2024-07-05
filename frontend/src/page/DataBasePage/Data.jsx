@@ -8,6 +8,7 @@ import { SlidebarData } from "../../components/SlidebarData/SlidebarData";
 import { Table } from "../../components/Table/Table";
 import {Table as Table_User } from "../../components/Table/Table_User";
 import {Table as Table_Types } from "../../components/Table/Table_Types";
+import { Table as Table_News } from "../../components/Table/Table_News";
 import { Table2 } from "../../components/Table/Tabl2";
 
 // import 'primereact/resources/primereact.min.css';
@@ -66,4 +67,17 @@ function Type() {
 }
 
 
-export { Place, User, Type, Place2 };
+function News() {
+  const [show, setShow] = React.useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  return (
+    <Fragment>
+      <Header handleClick={handleShow}/>
+      <Table_News />
+
+    </Fragment>
+  );
+}
+
+export { Place, User, Type, Place2, News };

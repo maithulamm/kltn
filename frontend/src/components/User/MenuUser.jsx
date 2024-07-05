@@ -2,7 +2,11 @@ import { Button } from "primereact/button";
 import React, { useEffect, useState } from "react";
 import { device } from "../Home/Home";
 import { useNavigate } from "react-router-dom";
-import { hideLoadingScreen, showConfirm, showLoadingScreen } from "../../redux/apiRequest";
+import {
+  hideLoadingScreen,
+  showConfirm,
+  showLoadingScreen,
+} from "../../redux/apiRequest";
 import { Dialog } from "primereact/dialog";
 import { Accordion, AccordionTab } from "primereact/accordion";
 import WeatherWidget from "./wt";
@@ -11,6 +15,7 @@ export const MenuUser = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [visibleWeather, setVisibleWeather] = useState(false);
   const [visibleBooking, setVisibleBooking] = useState(false);
+  const [visibleChatbot, setVisibleChatbot] = useState(false);
   const [visibleFeedback, setVisibleFeedback] = useState(false);
   const [visibleGuide, setVisibleGuide] = useState(false);
   const navigate = useNavigate();
@@ -22,7 +27,7 @@ export const MenuUser = () => {
       onClick: () => {
         showLoadingScreen();
         setTimeout(() => {
-          navigate("/place0");
+          navigate("/kltn/place0");
         }, 500);
       },
     },
@@ -32,7 +37,7 @@ export const MenuUser = () => {
       onClick: () => {
         showLoadingScreen();
         setTimeout(() => {
-          navigate("/map");
+          navigate("/kltn/map");
         }, 500);
       },
     },
@@ -42,7 +47,7 @@ export const MenuUser = () => {
       onClick: () => {
         showLoadingScreen();
         setTimeout(() => {
-          navigate("/place");
+          navigate("/kltn/place");
         }, 500);
       },
     },
@@ -52,7 +57,7 @@ export const MenuUser = () => {
       onClick: () => {
         showLoadingScreen();
         setTimeout(() => {
-          navigate("/place2");
+          navigate("/kltn/place2");
         }, 500);
       },
     },
@@ -73,7 +78,7 @@ export const MenuUser = () => {
       onClick: () => {
         showLoadingScreen();
         setTimeout(() => {
-          navigate("/news");
+          navigate("/kltn/news");
         }, 500);
       },
     },
@@ -99,14 +104,20 @@ export const MenuUser = () => {
       },
     },
     {
-      icon: "pi pi-user",
-      title: "Tài khoản",
-      ref: "/feedback",
+      icon: "",
+      title: "Chatbot AI",
+      onClick: () => {
+        showLoadingScreen();
+        setTimeout(() => {
+          hideLoadingScreen();
+        }, 1900);
+        setVisibleChatbot(true);
+      },
     },
     {
       icon: "pi pi-question-circle",
       title: "Hướng dẫn",
-      ref: "/guide",
+      ref: "/kltn/guide",
       onClick: () => {
         showLoadingScreen();
         setTimeout(() => {
@@ -141,7 +152,14 @@ export const MenuUser = () => {
                 className="flex flex-column align-items-center font-bold m-2 col-3 sm:col-2  text-primary hover:text-green-800 "
                 key={index}
               >
-                <Button icon={item?.icon} raised onClick={item?.onClick} className="hover:text-primary-50 hover:shadow-4"/>  
+                <Button
+                  style={{ width: "3rem" }}
+                  icon={index !== 8 ? item?.icon : null}
+                  raised
+                  onClick={item?.onClick}
+                  label={index === 8 ? "AI" : null}
+                  className="hover:text-primary-50 hover:shadow-4 px-0"
+                />
                 <label
                   htmlFor=""
                   className="mt-2 w-100 text-center h-2rem"
@@ -163,7 +181,14 @@ export const MenuUser = () => {
                   className="flex flex-column align-items-center  font-bold m-1 col-3 sm:col-2 "
                   key={index}
                 >
-                  <Button icon={item?.icon} raised onClick={item?.onClick} />
+                  <Button
+                    style={{ width: "3rem" }}
+                    icon={index !== 8 ? item?.icon : null}
+                    raised
+                    onClick={item?.onClick}
+                    label={index === 8 ? "AI" : null}
+                    className="px-0"
+                  />
                   <label
                     htmlFor=""
                     className="mt-2 text-primary w-100 text-center"
@@ -186,7 +211,7 @@ export const MenuUser = () => {
         </div>
       )}
       <Dialog
-        header={`${curDate} | Thời tiết Long Xuyên`}
+        header={`${curDate}`}
         visible={visibleWeather}
         style={{ width: "100vw", height: "100vh", overflow: "hidden" }}
         onHide={() => {
@@ -204,7 +229,7 @@ export const MenuUser = () => {
           height="100%"
           allowTransparency="true"
           style={{ border: "none", overflow: "hidden" }}
-        ></iframe> */}  
+        ></iframe> */}
         <WeatherWidget />
       </Dialog>
       <Dialog
@@ -234,7 +259,7 @@ export const MenuUser = () => {
       <Dialog
         header={`Hướng dẫn sử dụng`}
         visible={visibleGuide}
-        style={{ width: "100%", height: "100%" }}
+        style={{ width: "auto", height: "100%" }}
         onHide={() => {
           if (!visibleGuide) return;
           setVisibleGuide(false);
@@ -282,6 +307,25 @@ export const MenuUser = () => {
             </AccordionTab>
           </Accordion>
         </div>
+      </Dialog>
+      <Dialog
+        header={`Chatbot AI`}
+        visible={visibleChatbot}
+        style={{ width: device() ? "70%" : "auto", height: "100%" }}
+        onHide={() => {
+          if (!visibleChatbot) return;
+          setVisibleChatbot(false);
+        }}
+        draggable={false}
+        contentClassName="flex justify-content-center"
+        className="h-full"
+      >
+        <iframe
+          src="https://api.coze.com/open-platform/sdk/chatapp?params=%7B%22chatClientId%22%3A%22_jwXrPJw7_erd-zsR5ajM%22%2C%22chatConfig%22%3A%7B%22bot_id%22%3A%227387681070575616016%22%2C%22user%22%3A%22Pxqh8XwF27fWQBXNHhsDa%22%2C%22conversation_id%22%3A%22g934EbHyXs0nq1a712wKB%22%7D%2C%22componentProps%22%3A%7B%22layout%22%3A%22mobile%22%2C%22lang%22%3A%22en%22%2C%22uploadable%22%3Atrue%2C%22title%22%3A%22Coze%22%7D%7D"
+          width="100%"
+          height="100%"
+          style={{ border: "none", overflow: "hidden" }}
+        ></iframe>
       </Dialog>
     </div>
   );

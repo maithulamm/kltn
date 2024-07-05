@@ -30,6 +30,8 @@ app.use("/v1/type", typePlaceRoute);
 app.use("/v1/news", newsRoute);
 
 
+
+
 // HTTP
 app.listen(8000, () => {
   console.log("Server is running on http://localhost:8000");

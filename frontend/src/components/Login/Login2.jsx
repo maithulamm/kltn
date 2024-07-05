@@ -7,7 +7,7 @@ import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/lara-light-green/theme.css";
 import { Button } from "primereact/button";
 import { device } from "../Home/Home";
-import backgif from "../../data/Presentation1.gif";
+import  backgif from "../../data/Presentation1.gif";
 import { Dialog } from "primereact/dialog";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,8 +28,8 @@ const Login2 = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
-    if (user && user.isAdmin === true) {
-      navigate("/admin/home");
+    if (user?.isAdmin === true) {
+      navigate("/kltn/admin/home");
     }
   }, [user]);
   useEffect(() => {
@@ -88,7 +88,7 @@ const Login2 = () => {
     dispatch(getUsersSuccess([]));
     dispatch(getTypePlacesSuccess([]));
     dispatch(getPlaces2Success([]));
-    navigate("/home");
+    navigate("/kltn");
   };
 
   const handleLogin = (e) => {

@@ -19,9 +19,9 @@ const Login = () => {
   useEffect(() => {
     document.title = "Quản trị viên đăng nhập";
 
-    if (user && user?.isAdmin === true) {
-      navigate("/admin/home");
-    }
+    // if (user && user?.isAdmin === true) {
+    //   navigate("/kltn/admin/home");
+    // }
   }, [user]);
 
   const [username, setUsername] = useState("");

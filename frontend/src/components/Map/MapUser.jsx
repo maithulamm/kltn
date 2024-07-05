@@ -13,6 +13,7 @@ import {
   LayersControl,
   LayerGroup,
   Tooltip,
+  useMap,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -31,7 +32,6 @@ import hospital2 from "../../data/icon/hospital.gif";
 import atm2 from "../../data/icon/atm.gif";
 import atm3 from "../../data/icon/atm_.gif";
 import hospital3 from "../../data/icon/hospital_.gif";
-// import { place } from "../../assets/data/place";
 import "./style.css";
 import { useDispatch, useSelector } from "react-redux";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -48,7 +48,114 @@ import MapOverlay from "../Table/MapOverlay";
 import { deletePlace, updatePlace } from "../../redux/apiRequest";
 import { getAllPlace } from "../../redux/apiRequest";
 import { Toast } from "primereact/toast";
+import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
+import "leaflet-routing-machine";
+import Select from "react-select";
+const waypoints = [
+  { lat: 10.580582870379785, lng: 104.21931237399188 },
+  { lat: 9.580582870379785, lng: 105.21931237399188 },
+];
+const RoutingControl = ({ map, waypoints, mode }) => {
+  useEffect(() => {
+    if (!map || !waypoints || waypoints.length === 0) return;
 
+    const leafletWaypoints = waypoints.map(point => L.latLng(point.lat, point.lng));
+    const routingControl = L.Routing.control({
+      
+      waypoints: leafletWaypoints,
+      routeWhileDragging: true,
+      show: true,
+      lineOptions: {
+        styles: [{ color: 'blue', opacity: 0.6, weight: 4 }]
+      },
+      createMarker: () => null,
+      router: new L.Routing.OSRMv1({
+        serviceUrl: 'http://router.project-osrm.org/route/v1'
+      }),
+      geocoder: L.Control.Geocoder.nominatim(),
+    }).addTo(map);
+
+
+
+    return () => {
+      if (map && routingControl) {
+        map.removeControl(routingControl);
+      }
+    };
+  }, [map, waypoints, mode]);
+
+  return null;
+};
+
+const DirectionsPanel = ({ setWaypoints, setMode }) => {
+  const [start, setStart] = useState(null);
+  const [end, setEnd] = useState(null);
+  const [transportMode, setTransportMode] = useState('driving');
+  const [startOptions, setStartOptions] = useState([]);
+  const [endOptions, setEndOptions] = useState([]);
+  const [error, setError] = useState(null);
+
+  const handleSearch = () => {
+    if (start && end) {
+      setWaypoints([{ lat: start.lat, lng: start.lon }, { lat: end.lat, lng: end.lon }]);
+      setMode(transportMode);
+    }
+  };
+
+  const fetchSuggestions = async (inputValue) => {
+    const query = String(inputValue).replace(/ /g, '+');
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data.map(item => ({
+        label: item.display_name,
+        value: item.display_name,
+        lat: item.lat,
+        lon: item.lon
+      }));
+    } catch (error) {
+      setError(error.message);
+      return [];
+    }
+  };
+
+  const handleInputChange = (inputValue, { action }, setOptions) => {
+    if (action === 'input-change') {
+      fetchSuggestions(inputValue).then(options => {
+        setOptions(options);
+      });
+    }
+  };
+
+  return (
+    <div className="directions-panel">
+      {error && <div className="error">{error}</div>}
+      <Select
+        placeholder="Start address"
+        value={start}
+        onChange={setStart}
+        onInputChange={(inputValue, actionMeta) => handleInputChange(inputValue, actionMeta, setStartOptions)}
+        options={startOptions}
+      />
+      <Select
+        placeholder="End address"
+        value={end}
+        onChange={setEnd}
+        onInputChange={(inputValue, actionMeta) => handleInputChange(inputValue, actionMeta, setEndOptions)}
+        options={endOptions}
+      />
+      <select value={transportMode} onChange={(e) => setTransportMode(e.target.value)}>
+        <option value="driving">Driving</option>
+        <option value="walking">Walking</option>
+        <option value="cycling">Cycling</option>
+      </select>
+      <button onClick={handleSearch}>Search</button>
+    </div>
+  );
+};
 const MapUser = ({ height }) => {
   const accessToken = useSelector(
     (state) => state.auth.login?.currentUser?.accessToken
@@ -73,6 +180,7 @@ const MapUser = ({ height }) => {
   const apiKey =
     "AAPKc84180eb554748db8f9c5610ea258426GjMeZS-ZZoTcACKRfs7uvF3tG2wQHkLPDjqlq2KXIYiqwdOADtwgFlq4g72h0mBn";
   const [map, setMap] = useState(null);
+
   const [center, setCenter] = useState([
     10.580582870379785, 105.21931237399188,
   ]);
@@ -130,9 +238,7 @@ const MapUser = ({ height }) => {
   const onZoom = useCallback(() => {
     setGetZoom(map.getZoom());
   }, [map]);
-  useEffect(() => {
-
-  }, [map, onZoom]);
+  useEffect(() => {}, [map, onZoom]);
 
   const add_Data = () => {
     return (
@@ -722,12 +828,16 @@ const MapUser = ({ height }) => {
               }
               alt={currentPlace2?.name}
               preview="true"
-              imageClassName="w-12 h-20rem"
+              imageClassName="w-12 "
               className="w-12 h-15rem"
               downloadIcon="pi pi-download"
               downloadable
               loading="lazy"
-              imageStyle={{ width: "100%", height: "100%", objectFit: "cover" }}
+              imageStyle={{
+                width: "100%",
+                height: "100%",
+                objectFit: "contain",
+              }}
               // style={{opacity: "0"}}
             />
           </div>
@@ -791,11 +901,13 @@ const MapUser = ({ height }) => {
       </Sidebar>
     );
   };
-
+  const [waypoints, setWaypoints] = useState([]);
+  const [mode, setMode] = useState("driving");
   return (
     <div style={{ height: height, maxHeight: "90vh" }}>
       {popupSidiebar()}
       {popupSidiebar2()}
+      {/* <DirectionsPanel setWaypoints={setWaypoints} setMode={setMode} /> */}
       <MapContainer
         ref={setMap}
         center={center}
@@ -809,6 +921,9 @@ const MapUser = ({ height }) => {
         )}
       >
         {layersControlData()}
+        {map && (
+          <RoutingControl map={map} waypoints={waypoints} mode={mode} />
+        )}{" "}
       </MapContainer>
       {/* {map ? <DisplayPosition map={map} /> : null} */}
     </div>

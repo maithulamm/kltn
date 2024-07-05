@@ -12,7 +12,9 @@ import { OverlayPanel } from "primereact/overlaypanel";
 import { AutoComplete } from "primereact/autocomplete";
 import { getDistance } from "../../redux/apiRequest";
 import { Dropdown } from "primereact/dropdown";
+import { useNavigate } from "react-router-dom";
 export default function PlaceUser({ code }) {
+  const navigate = useNavigate();
   const place0 = useSelector((state) => state.places?.places?.allPlaces);
   const place00 = place0?.map((item, index) => {
     return {
@@ -102,6 +104,12 @@ export default function PlaceUser({ code }) {
                     />
                   );
                 })}
+                <Button
+                  icon="pi pi-heart"
+                  text
+                  // className="p-button-rounded"
+                  // onClick={() => navigate("/kltn/map")}
+                ></Button>
               </div>
             </div>
             <div className="flex flex-column align-items-center gap-3">
@@ -156,12 +164,12 @@ export default function PlaceUser({ code }) {
               })}
             </div>
 
-            {/* <Button
-              icon="pi pi-shopping-cart"
+            <Button
+              icon="pi pi-heart"
               className="p-button-rounded"
-              disabled={product?.inventoryStatus === "OUTOFSTOCK"}
-              tooltip="Xem chi tiết"
-            ></Button> */}
+              // tooltip="Đến bản đồ"
+              text
+            ></Button>
           </div>
           <div className="flex flex-column align-items-center gap-2 pt-3 pb-0">
             <img
@@ -194,6 +202,12 @@ export default function PlaceUser({ code }) {
                 ? Number(product?.distance).toFixed(2) + "km"
                 : Number(product?.distance * 1000).toFixed(0) + "m"}
             </span>
+            <Button
+              icon="pi pi-map"
+              className="p-button-rounded"
+              tooltip="Đến bản đồ"
+              onClick={() => navigate("/kltn/map")}
+            ></Button>
           </div>
         </div>
       </div>
@@ -427,6 +441,15 @@ export default function PlaceUser({ code }) {
             }}
           >
             {currentProducts?.info || "Đang cập nhật"}
+          </div>
+        </div>
+        <div className="field col-12 flex align-items-center m-0 p-0 justify-content-center w-full">
+          <div className="">
+            <Button
+              label="Đến bản đồ"
+              icon="pi pi-map"
+              onClick={() => navigate("/kltn/map")}
+            />
           </div>
         </div>
       </Dialog>

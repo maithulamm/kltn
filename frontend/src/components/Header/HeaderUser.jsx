@@ -115,42 +115,55 @@ export const HeaderUser = () => {
     {
       label: "Trang chủ",
       icon: "pi pi-fw pi-home",
-      url: "/kltn/home",
-      command: () => showLoadingScreen(),
+      // url: "/kltn/home",
+      command: () => {
+        showLoadingScreen();
+        navigate("/kltn/data/home");
+      },
     },
     {
       label: "Bản đồ",
       icon: "pi pi-fw pi-map",
-      url: "/kltn/map",
-      command: () => showLoadingScreen(),
+      // url: "/kltn/map",
+      command: () => {
+        showLoadingScreen();
+        navigate("/kltn/data/map");
+      },
     },
     {
       label: "Địa điểm",
       icon: "pi pi-fw pi-map-marker",
-      url: "/kltn/place",
+      // url: "/kltn/place",
       command: () => {
         showLoadingScreen();
+        navigate("/kltn/data/place");
       },
     },
     {
       label: "Tiện ích",
       icon: "pi pi-fw pi-objects-column",
-      url: "/kltn/place2",
-      command: () => showLoadingScreen(),
+      // url: "/kltn/place2",
+      command: () => {
+        showLoadingScreen();
+        navigate("/kltn/data/place2");
+      },
     },
     {
       label: "Bản tin",
       icon: "pi pi-fw pi-book",
-      url: "/kltn/news",
-      command: () => showLoadingScreen(),
+      // url: "/kltn/news",
+      command: () => {
+        showLoadingScreen();
+        navigate("/kltn/data/news");
+      },
     },
     {
       label: "Góp ý",
       icon: "pi pi-fw pi-comments",
-      url: "/kltn/feedback",
+      // url: "/kltn/feedback",
       command: () => {
-        // showConfirm("Chức năng đang cập nhật");
         showLoadingScreen();
+        navigate("/kltn/data/feedback");
       },
     },
   ];

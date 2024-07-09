@@ -452,7 +452,7 @@ const Login2 = () => {
               <div className=" ">
                 
                 <div className="flex justify-content-evenly">
-                  <Button icon="pi pi-users" severity="warning" label="Khách" onClick={() => navigate('/home')}/>
+                  <Button icon="pi pi-users" severity="warning" label="Khách" onClick={() => navigate('/kltn/home')}/>
                   <Button icon="pi pi-google" severity="danger" label="Google"/>
                 </div>
                 <div className="flex justify-content-center mt-3">

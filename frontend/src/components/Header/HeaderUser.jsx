@@ -118,7 +118,7 @@ export const HeaderUser = () => {
       // url: "/kltn/home",
       command: () => {
         showLoadingScreen();
-        navigate("/kltn/data/home");
+        navigate("/kltn/home");
       },
     },
     {
@@ -127,7 +127,7 @@ export const HeaderUser = () => {
       // url: "/kltn/map",
       command: () => {
         showLoadingScreen();
-        navigate("/kltn/data/map");
+        navigate("/kltn/map");
       },
     },
     {
@@ -136,7 +136,7 @@ export const HeaderUser = () => {
       // url: "/kltn/place",
       command: () => {
         showLoadingScreen();
-        navigate("/kltn/data/place");
+        navigate("/kltn/place");
       },
     },
     {
@@ -145,7 +145,7 @@ export const HeaderUser = () => {
       // url: "/kltn/place2",
       command: () => {
         showLoadingScreen();
-        navigate("/kltn/data/place2");
+        navigate("/kltn/place2");
       },
     },
     {
@@ -154,7 +154,7 @@ export const HeaderUser = () => {
       // url: "/kltn/news",
       command: () => {
         showLoadingScreen();
-        navigate("/kltn/data/news");
+        navigate("/kltn/news");
       },
     },
     {
@@ -163,7 +163,7 @@ export const HeaderUser = () => {
       // url: "/kltn/feedback",
       command: () => {
         showLoadingScreen();
-        navigate("/kltn/data/feedback");
+        navigate("/kltn/feedback");
       },
     },
   ];
@@ -181,6 +181,9 @@ export const HeaderUser = () => {
   };
 
   useEffect(() => {
+    setTimeout(() => {
+      window.location.reload();
+    }, 60000*5);
     // getAllPlace(accessToken, dispatch);
     // getAllTypePlace(accessToken, dispatch);
     // getAllNews(accessToken, dispatch);
@@ -267,25 +270,22 @@ export const HeaderUser = () => {
       <Menubar
         start={
           device() ? (
-            <Link to="/kltn/home">
-              {" "}
               <img
                 alt="logo"
                 src={logo}
                 height="40"
-                className="mr-2"
-              ></img>{" "}
-            </Link>
+                className="mr-2 cursor-pointer"
+                onClick={() => navigate("/kltn/home")}
+              ></img>
           ) : (
-            <Link to="/kltn/home">
-              {" "}
+
               <img
                 alt="logo"
                 src={logo}
                 height="40"
                 className="mr-2"
-              ></img>{" "}
-            </Link>
+                onClick={() => navigate("/kltn/home")}
+              ></img>
           )
         }
         model={page}

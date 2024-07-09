@@ -710,7 +710,6 @@ const Map = ({ height }) => {
           <div
             className="col-12 flex justify-content-center"
             id="hhh"
-            // style={{backgroundImage:  `url(${currentPlace?.imgURL})`, backgroundSize: "cover", backgroundPosition: "center", height: "15rem"}}
           >
             <Image
               key={currentPlace2?._id}

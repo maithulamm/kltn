@@ -10,7 +10,7 @@ const placeRoute = require("./routes/place");
 const place2Route = require("./routes/place2");
 const typePlaceRoute = require("./routes/typePlace");
 const newsRoute = require("./routes/news");
-
+const feedbackRoute = require("./routes/feedback");
 dotenv.config();
 
 mongoose.connect(process.env.DATABASE_ACCESS).then(() => {
@@ -28,6 +28,7 @@ app.use("/v1/place", placeRoute);
 app.use("/v1/place2", place2Route);
 app.use("/v1/type", typePlaceRoute);
 app.use("/v1/news", newsRoute);
+app.use("/v1/feedback", feedbackRoute);
 
 
 

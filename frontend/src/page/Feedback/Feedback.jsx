@@ -22,7 +22,7 @@ function FB() {
           <Card>
             <div className="flex justify-content-center flex-wrap col-12">
               <div className="col-12">
-                <h3>Người gửi: {user.fullName || user.username}</h3>
+                <h3>Người gửi: {user?.fullName || user?.username}</h3>
                 <p>
                   Chúng tôi rất mong nhận được ý kiến đóng góp của bạn và sẽ
                   phản hồi lại sớm nhất có thể.

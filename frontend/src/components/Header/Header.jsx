@@ -177,17 +177,17 @@ export const Header = () => {
         navigate("/kltn/admin/chatbot");
       },
     },
-    {
-      label: "Hướng dẫn",
-      icon: "pi pi-fw pi-question-circle",
-      // url: "/kltn/admin/guide",
-      command: () => {
-        showLoadingScreen();
-        setTimeout(() => {
-          showConfirm("");
-        }, 500);
-      },
-    },
+    // {
+    //   label: "Hướng dẫn",
+    //   icon: "pi pi-fw pi-question-circle",
+    //   // url: "/kltn/admin/guide",
+    //   command: () => {
+    //     showLoadingScreen();
+    //     setTimeout(() => {
+    //       showConfirm("");
+    //     }, 500);
+    //   },
+    // },
   ];
 
   useEffect(() => {
@@ -235,10 +235,9 @@ export const Header = () => {
       {loading()}
       <Menubar
         start={
-          <Link to="/kltn/admin/home">
-            {" "}
-            <img alt="logo" src={logo} height="40" className="mr-2"></img>{" "}
-          </Link>
+            <img alt="logo" src={logo} height="40" className="mr-2"
+            onClick={() => navigate("/kltn/admin/home")}
+            ></img>
         }
         model={page}
         end={

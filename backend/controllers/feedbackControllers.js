@@ -1,4 +1,4 @@
-const Feedback = require("../models/Feedback");
+const Feedback = require("../models/Feeddback");
 
 const feedbackControllers = {
     // Add a feedback

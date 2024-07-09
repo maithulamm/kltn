@@ -47,7 +47,7 @@ export const Header = () => {
     dispatch(logOutSuccess());
     navigate("/kltn/login");
     logOut(dispatch, navigate);
-    dispatch(getPlacesSuccess([]));
+    // dispatch(getPlacesSuccess([]));
     dispatch(getUsersSuccess([]));
     dispatch(getTypePlacesSuccess([]));
   };

@@ -133,7 +133,8 @@ const authControllers = {
             birthday: req.body.birthday,
             phone: req.body.phone,
             gender: req.body.gender,
-            prefer: req.body.prefer
+            prefer: req.body.prefer,
+            accessToken: req.body.accessToken,
           },
         },
         { new: true }

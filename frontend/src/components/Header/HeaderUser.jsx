@@ -111,6 +111,7 @@ export const HeaderUser = () => {
       phone: dataEdit.phone,
       gender: dataEdit.gender,
       birthday: dataEdit.birthday,
+      accessToken: accessToken,
     };
     const handleInputChange = (e, field) => {
       setDataEdit((prev) => ({ ...prev, [field]: e.target.value }));

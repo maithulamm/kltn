@@ -1,4 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit'
+import { editUser } from './apiRequest';
 
 const authSlice = createSlice({
     name: 'auth',
@@ -56,6 +57,18 @@ const authSlice = createSlice({
             state.login.isFetching = false;
             state.login.error = true;
         },
+        editUserStart: (state) => {
+            state.login.isFetching = true;
+        },
+        editUserSuccess: (state, action) => {
+            state.login.isFetching = false;
+            state.login.currentUser = action.payload;
+            state.login.error = false;
+        },
+        editUserFailure: (state) => {
+            state.login.isFetching = false;
+            state.login.error = true;
+        },
     }
 
 });
@@ -69,7 +82,10 @@ export const {
     registerFailure,
     logOutStart,
     logOutSuccess,
-    logOutFailure
+    logOutFailure,
+    editUserStart,
+    editUserSuccess,
+    editUserFailure,
 } = authSlice.actions;
 
 export default authSlice.reducer;

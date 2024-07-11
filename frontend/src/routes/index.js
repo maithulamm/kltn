@@ -1,7 +1,7 @@
 import HomePage from "../page/Home/HomePage";
 import Map, { Mapapp, MapappUser } from "../page/Map/PageMap";
 import { News, Place, Place2, Type, User } from "../page/DataBasePage/Data";
-import Feedback from "../page/Feedback/Feedback";
+import {Feedback, Feedback2} from "../page/Feedback/Feedback";
 import Links from "../page/LinkPage/LinkPage"
 import Guide from "../page/Guide/Guide";
 import Page404 from "../page/Page404/Page404";
@@ -45,7 +45,7 @@ const privateRoutes = [
   { path: "/data/news", element: <News /> },
 
 
-  { path: "/feedback", element: <Feedback /> },
+  { path: "/feedback", element: <Feedback2 /> },
   { path: "/chatbot", element: <ChatbotPage /> },
   { path: "/guide", element: <Guide /> },
   { path: "*", element: <LoginPageUser /> },

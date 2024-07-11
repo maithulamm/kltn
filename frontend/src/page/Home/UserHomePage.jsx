@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Dashboard, { device } from "../../components/Home/Home.jsx";
 import PieChart from "../../components/Home/Chart.jsx";
-import { getAllNews, getAllPlace, getAllTypePlace, loading, logOut } from "../../redux/apiRequest.js";
+import { getAllFeedback, getAllNews, getAllPlace, getAllPlace2, getAllTypePlace, hideLoadingScreen, loading, logOut, showLoadingScreen } from "../../redux/apiRequest.js";
 import "primereact/resources/themes/lara-light-green/theme.css";
 import "primereact/resources/primereact.min.css";
 import { HeaderUser } from "../../components/Header/HeaderUser.jsx";
@@ -20,16 +20,24 @@ function UserHomePage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const accessToken = user?.accessToken;
-
+  const places = useSelector((state) => state.places?.places?.allPlaces);
   useEffect(() => {
     getAllPlace(accessToken, dispatch);
+    getAllPlace2(accessToken, dispatch);
     getAllTypePlace(accessToken, dispatch);
     getAllNews(accessToken, dispatch);
+    getAllFeedback(accessToken, dispatch);
     document.title = "Du lịch An Giang";
+    showLoadingScreen();
+    setTimeout(() => {
+      hideLoadingScreen();
+      // return window.location.reload();
+    }, 2000);
   }, []);
 
   return (
     <Fragment>
+      
       <HeaderUser />
       <MenuUser />
       <NewsUser />

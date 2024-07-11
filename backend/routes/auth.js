@@ -14,6 +14,6 @@ router.post('/refresh', authControllers.requestRefreshToken);
 // router.post('/logout', middlewareControllers.verifyToken, authControllers.logoutUser);
 
 // edit user
-// router.put('/edit', middlewareControllers.verifyToken, authControllers.editUser);
+router.put('/edit', middlewareControllers.verifyToken, authControllers.editUser);
 
 module.exports = router;

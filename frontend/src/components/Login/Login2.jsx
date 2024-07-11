@@ -7,11 +7,19 @@ import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/lara-light-green/theme.css";
 import { Button } from "primereact/button";
 import { device } from "../Home/Home";
-import  backgif from "../../data/Presentation1.gif";
+import backgif from "../../data/Presentation1.gif";
 import { Dialog } from "primereact/dialog";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getWeather, loading, logOut, loginUser } from "../../redux/apiRequest";
+import {
+  getAllPlace,
+  getWeather,
+  loading,
+  logOut,
+  loginUser,
+  registerUser,
+  showLoadingScreen,
+} from "../../redux/apiRequest";
 import { getPlacesSuccess } from "../../redux/placeSlice";
 import { getUsersSuccess } from "../../redux/userSlice";
 import { getTypePlacesSuccess } from "../../redux/typePlaceSlice";
@@ -22,12 +30,16 @@ const Login2 = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [registerUser1, setRegisterUser1] = useState("");
+  const [registerPass, setRegisterPass] = useState("");
   const [visibleLogin, setVisibleLogin] = useState(false);
   const [resetPassword, setResetPassword] = useState(false);
   const user = useSelector((state) => state.auth.login?.currentUser);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const accessToken = user?.accessToken;
   useEffect(() => {
+    getAllPlace(accessToken, dispatch);
     if (user?.isAdmin === true) {
       navigate("/kltn/admin/home");
     }
@@ -84,7 +96,7 @@ const Login2 = () => {
 
   const handleLogout = () => {
     logOut(dispatch, navigate);
-    dispatch(getPlacesSuccess([]));
+    // dispatch(getPlacesSuccess([]));
     dispatch(getUsersSuccess([]));
     dispatch(getTypePlacesSuccess([]));
     dispatch(getPlaces2Success([]));
@@ -141,11 +153,10 @@ const Login2 = () => {
                 display: isSignUp ? "flex" : "none",
                 flexDirection: "column",
                 alignItems: "center",
-                justifyContent: 'center',
-                animationDuration: '0.5s',
-                animationName: 'fade-in',
-                animationFillMode: 'forwards',
-
+                justifyContent: "center",
+                animationDuration: "0.5s",
+                animationName: "fade-in",
+                animationFillMode: "forwards",
               }}
             >
               {/* <h1 className="signup1">Đăng ký tài khoản</h1>
@@ -158,12 +169,16 @@ const Login2 = () => {
                     icon="pi pi-users"
                     label="Tài khoản khách"
                     severity="info"
-                    className={`mx-3 w-full  ${visibleLogin ? 'py-2' : 'py-3'}`}
+                    className={`mx-3 w-full  ${visibleLogin ? "py-2" : "py-3"}`}
                     tooltip="Sử dụng phần mềm mà không cần tài khoản"
                     onClick={() => handleLogout()}
                   />
                 </div>
-                <div className={`flex justify-content-center my-${visibleLogin ? '1' : '4'}`}>
+                <div
+                  className={`flex justify-content-center my-${
+                    visibleLogin ? "1" : "4"
+                  }`}
+                >
                   <div className=" col-12 flex align-items-center">
                     <div className="col-12 flex align-items-center border-bottom-1 surface-border"></div>
                   </div>
@@ -173,11 +188,15 @@ const Login2 = () => {
                     icon="pi pi-google"
                     label="Google"
                     severity="danger"
-                    className={`mx-3 ${visibleLogin ? 'py-2' : 'py-3'} w-12`}
+                    className={`mx-3 ${visibleLogin ? "py-2" : "py-3"} w-12`}
                     tooltip="Đăng nhập bằng tài khoản Google"
                   />
                 </div>
-                <div className={`flex justify-content-center my-${visibleLogin ? '1' : '4'}`}>
+                <div
+                  className={`flex justify-content-center my-${
+                    visibleLogin ? "1" : "4"
+                  }`}
+                >
                   <div className=" col-12 flex align-items-center">
                     <div className="col-12 flex align-items-center border-bottom-1 surface-border"></div>
                   </div>
@@ -211,8 +230,12 @@ const Login2 = () => {
                 </div>
                 <div className="flex justify-content-center">
                   <Button
-                    label={visibleLogin ? "Đăng nhập" : "Đăng nhập với tài khoản"}
-                    className={`mx-3 p-2 w-full py-3 ${visibleLogin ? 'mt-3' : null}`}
+                    label={
+                      visibleLogin ? "Đăng nhập" : "Đăng nhập với tài khoản"
+                    }
+                    className={`mx-3 p-2 w-full py-3 ${
+                      visibleLogin ? "mt-3" : null
+                    }`}
                     onClick={
                       visibleLogin ? handleLogin : () => setVisibleLogin(true)
                     }
@@ -261,8 +284,8 @@ const Login2 = () => {
                   <InputText
                     id="username"
                     className="text-base text-color surface-overlay p-3 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    value={registerUser1}
+                    onChange={(e) => setRegisterUser1(e.target.value)}
                   />
                   <label htmlFor="username" className="m-0">
                     Tên đăng nhập
@@ -283,8 +306,8 @@ const Login2 = () => {
                   <Password
                     inputId="password"
                     className=""
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    value={registerPass}
+                    onChange={(e) => setRegisterPass(e.target.value)}
                     toggleMask
                     inputClassName="text-base text-color surface-overlay p-3 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
                   />
@@ -294,7 +317,27 @@ const Login2 = () => {
                 </FloatLabel>
               </div>
               {/* <button className="btn mt-3">Đăng ký</button> */}
-              <Button label="Đăng ký" className="btn mt-3" />
+              <Button
+                label="Đăng ký"
+                className="btn mt-3"
+                onClick={() => {
+                  if (
+                    registerUser1 === "" ||
+                    registerPass === "" ||
+                    email === ""
+                  ) {
+                    alert("Vui lòng nhập đầy đủ thông tin");
+                    return;
+                  }
+                  const newUser = {
+                    username: registerUser1,
+                    password: registerPass,
+                    email: email,
+                  };
+                  showLoadingScreen();
+                  registerUser(newUser, dispatch, navigate);
+                }}
+              />
             </div>
           </div>
         </div>
@@ -320,7 +363,7 @@ const Login2 = () => {
           }}
         >
           <div className="">
-            <p className="mainhead" style={{ top: "3rem", fontSize: '1.2rem' }}>
+            <p className="mainhead" style={{ top: "3rem", fontSize: "1.2rem" }}>
               BẢN ĐỒ DU LỊCH AN GIANG
             </p>
           </div>
@@ -427,14 +470,24 @@ const Login2 = () => {
                   </label>
                 </FloatLabel>
                 <div className="flex justify-content-center m-0 flex-column">
-                  <Button label="" text onClick={handleSignUpClick} className="py-0 w-full flex justify-content-center">
+                  <Button
+                    label=""
+                    text
+                    onClick={handleSignUpClick}
+                    className="py-0 w-full flex justify-content-center"
+                  >
                     Bạn đã có tài khoản?{" "}
                     <p style={{ color: "red", marginLeft: "0.5rem" }}>
                       {" "}
                       Đăng nhập
                     </p>
                   </Button>
-                  <Button label="" text onClick={() => handleLogout()} className="py-0 h-2rem w-full flex justify-content-center">
+                  <Button
+                    label=""
+                    text
+                    onClick={() => handleLogout()}
+                    className="py-0 h-2rem w-full flex justify-content-center"
+                  >
                     Đăng nhập không cần tài khoản
                   </Button>
                 </div>
@@ -450,10 +503,18 @@ const Login2 = () => {
               }}
             >
               <div className=" ">
-                
                 <div className="flex justify-content-evenly">
-                  <Button icon="pi pi-users" severity="warning" label="Khách" onClick={() => navigate('/kltn/home')}/>
-                  <Button icon="pi pi-google" severity="danger" label="Google"/>
+                  <Button
+                    icon="pi pi-users"
+                    severity="warning"
+                    label="Khách"
+                    onClick={() => navigate("/kltn/home")}
+                  />
+                  <Button
+                    icon="pi pi-google"
+                    severity="danger"
+                    label="Google"
+                  />
                 </div>
                 <div className="flex justify-content-center mt-3">
                   <div className=" col-4 flex align-items-center">

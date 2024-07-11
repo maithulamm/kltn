@@ -5,6 +5,7 @@ import "./style.css";
 import { Link } from "react-router-dom/dist";
 import { useSelector } from "react-redux";
 import {
+  editUser,
   getAllNews,
   getAllPlace2,
   getAllTypePlace,
@@ -36,6 +37,13 @@ import { Dock } from "primereact/dock";
 import { Card } from "primereact/card";
 import { getPlaces2Success } from "../../redux/place2Slice";
 import { OverlayPanel } from "primereact/overlaypanel";
+import { InputText } from "primereact/inputtext";
+import { Dropdown } from "primereact/dropdown";
+import { Calendar } from "primereact/calendar";
+import { MultiSelect } from "primereact/multiselect";
+import { Tag } from "primereact/tag";
+import { Toast } from "primereact/toast";
+
 export const HeaderUser = () => {
   const user = useSelector((state) => state.auth?.login?.currentUser);
   const User = useSelector((state) => state.users?.users?.allUsers);
@@ -65,17 +73,72 @@ export const HeaderUser = () => {
     });
   };
 
-  const [visibleDialog, setVisibleDialog] = useState(false);
+  const confirm2 = () => {
+    confirmDialog({
+      message: `Đăng nhập để sử dụng chức năng này!`,
+      header: "Bạn chưa đăng nhập!",
+      icon: "pi pi-info-circle",
+      defaultFocus: "reject",
+      acceptClassName: "p-button-primary",
+      position: "top",
+      acceptLabel: "Đăng nhập",
+      rejectLabel: "Để sau",
+      draggable: false,
+      accept: () => {
+        showLoadingScreen();
+        setTimeout(() => {
+          navigate("/kltn/login");
+        }, 1000);
+      },
+    });
+  };
 
+  const [visibleDialog, setVisibleDialog] = useState(false);
+  const toast = useRef(null);
   const DialogCurrentUser = () => {
+    const [dataEdit, setDataEdit] = useState({
+      username: user?.username,
+      fullName: user?.fullName,
+      email: user?.email,
+      phone: user?.phone,
+      gender: user?.gender,
+      birthday: user?.birthday,
+    });
+    const updateData = {
+      username: user?.username,
+      fullName: dataEdit.fullName,
+      email: dataEdit.email,
+      phone: dataEdit.phone,
+      gender: dataEdit.gender,
+      birthday: dataEdit.birthday,
+    };
+    const handleInputChange = (e, field) => {
+      setDataEdit((prev) => ({ ...prev, [field]: e.target.value }));
+    };
+    const Type = useSelector(
+      (state) => state.typePlaces?.typePlaces?.allTypePlaces
+    );
+    const [selectType, setSelectType] = useState(
+      user?.prefer?.map((t) => t[0])
+    );
+    
+
+    const show = ({ severity, summary, detail }) => {
+      toast.current.show({
+        severity: severity,
+        summary: summary,
+        detail: detail,
+      });
+    };
     return (
       <Dialog
         header="Thông tin cá nhân"
         visible={visibleDialog}
-        style={{ width: "450px" }}
+        style={{ width: "50vw" }}
         onHide={() => setVisibleDialog(false)}
         draggable={false}
         maximizable
+        maximized={device() ? false : true}
       >
         <div className="flex flex-column items-center justify-content-center align-items-start">
           <div className="flex justify-content-center align-items-start col-12">
@@ -89,10 +152,141 @@ export const HeaderUser = () => {
             />
           </div>
           <div className="flex flex-column items-center justify-content-center align-items-start col-12">
-            <div className="flex flex-column items-center justify-content-center align-items-start col-12">
-              <span className="text-lg font-bold">{user.username}</span>
-              <span className="text-sm text-gray-500">{user.email}</span>
+            <div className="field col-12 ">
+              <label htmlFor="intro">Tên đăng nhập</label>
+              <InputText
+                onChange={(e) => handleInputChange(e, "username")}
+                value={dataEdit?.username}
+                id="intro"
+                disabled
+                className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+              />
             </div>
+            <div className="field col-12 ">
+              <label htmlFor="lastname6">Họ và tên</label>
+              <InputText
+                onChange={(e) => handleInputChange(e, "fullName")}
+                value={dataEdit?.fullName}
+                className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+              />
+            </div>
+            <div className="field col-12 ">
+              <label htmlFor="lastname6">Email</label>
+              <InputText
+                onChange={(e) => handleInputChange(e, "email")}
+                value={dataEdit?.email}
+                className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+              />
+            </div>
+            <div className="field col-12 ">
+              <label htmlFor="firstname6">Số điện thoại</label>
+              <InputText
+                keyfilter="num"
+                onChange={(e) => handleInputChange(e, "phone")}
+                value={dataEdit?.phone}
+                className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+              />
+            </div>
+            <div className="w-full flex">
+              <div className="field col-12 md:col-6 ">
+                <label htmlFor="lastname6">Giới tính</label>
+                <Dropdown
+                  value={dataEdit?.gender}
+                  options={[
+                    { label: "Nam", value: "Nam" },
+                    { label: "Nữ", value: "Nữ" },
+                  ]}
+                  onChange={(e) => handleInputChange(e, "gender")}
+                  placeholder="Chọn giới tính"
+                  className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                />
+                {/* <InputText onChange={(e) => handleInputChange(e, "gender")} value={user?.gender} className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"/> */}
+              </div>
+              <div className="field col-12 md:col-6">
+                <label htmlFor="firstname6">Ngày sinh</label>
+                <Calendar
+                  onChange={(e) => handleInputChange(e, "birthday")}
+                  dateFormat="dd/mm/yy"
+                  value={new Date(dataEdit?.birthday)}
+                  className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                />
+                {/* <InputText keyfilter="num" onChange={(e) => handleInputChange(e, "birthday")} value={user?.birthday} className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"/> */}
+              </div>
+            </div>
+            <div className="field col-12">
+              <label htmlFor="lastname6">Sở thích</label>
+              <MultiSelect
+                value={selectType?.map((t) => ({ name: t }))}
+                onChange={(e) => {
+                  setSelectType(e.value?.map((t) => t.name) || []);
+                }}
+                options={
+                  Type?.map((t) => ({
+                    name: t.name,
+                  })) || []
+                }
+                optionLabel="name"
+                display="chip"
+                placeholder="Chọn loại"
+                maxSelectedLabels={10}
+                className="w-full"
+                itemTemplate={(option) => {
+                  // console.log(option.name);
+                  return (
+                    <Tag
+                      value={option.name}
+                      style={{
+                        backgroundColor: `#${
+                          Type.find((t) => t.name === option.name)?.color
+                        }`,
+                        color:
+                          parseInt(
+                            Type.find((t) => t.name === option.name)?.color,
+                            16
+                          ) >
+                          0xffffff / 0.9
+                            ? "gray"
+                            : "white",
+                      }}
+                    />
+                  );
+                }}
+              />
+            </div>
+          </div>
+          <div className="flex col-12 md:col-12 justify-content-center">
+            <Button
+              label="Lưu"
+              icon="pi pi-save"
+              className="p-button-success m-2 h-3rem"
+              onClick={() => {
+                if (updateData.username === "" || updateData.email === "") {
+                  show({
+                    severity: "warn",
+                    summary: "Warning",
+                    detail: "Tên đăng nhập và email không được để trống!",
+                  });
+                } else {
+                  editUser(updateData, accessToken, dispatch);
+                  show({
+                    severity: "success",
+                    summary: "Success",
+                    detail: "Cập nhật thông tin thành công!",
+                  });
+                  setVisibleDialog(false);
+                  // setTimeout(() => {
+                  //   getAllUser(accessToken, dispatch);
+                  // }, 1000);
+                  // getAllUser(accessToken, dispatch);
+                }
+              }}
+            />
+            <Button
+              label="Hủy bỏ"
+              icon="pi pi-times"
+              className="p-button-danger m-2 h-3rem"
+              onClick={() => setVisibleDialog(false)}
+            />
           </div>
         </div>
       </Dialog>
@@ -119,6 +313,7 @@ export const HeaderUser = () => {
       command: () => {
         showLoadingScreen();
         navigate("/kltn/home");
+        return window.location.reload();
       },
     },
     {
@@ -162,28 +357,20 @@ export const HeaderUser = () => {
       icon: "pi pi-fw pi-comments",
       // url: "/kltn/feedback",
       command: () => {
-        showLoadingScreen();
-        navigate("/kltn/feedback");
+        if (user) {
+          showLoadingScreen();
+          navigate("/kltn/feedback");
+        } else {
+          confirm2();
+        }
       },
     },
   ];
-  const getCurrentLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-        console.log("Latitude is :", latitude);
-        console.log("Longitude is :", longitude);
-      });
-    } else {
-      console.log("Geolocation is not supported by this browser.");
-    }
-  };
 
   useEffect(() => {
-    setTimeout(() => {
-      window.location.reload();
-    }, 60000*5);
+    // setTimeout(() => {
+    //   window.location.reload();
+    // }, 60000 * 5);
     // getAllPlace(accessToken, dispatch);
     // getAllTypePlace(accessToken, dispatch);
     // getAllNews(accessToken, dispatch);
@@ -191,7 +378,7 @@ export const HeaderUser = () => {
     const style = document.createElement("style", { type: "text/css" });
 
     const hrefPage = window.location.pathname.split("/kltn/");
-    // console.log(hrefPage)
+
     style.innerHTML = `
     #HEADER > div.p-menubar.p-component > ul > li:nth-child(
          ${
@@ -207,7 +394,9 @@ export const HeaderUser = () => {
              ? 5
              : hrefPage[1] === "feedback"
              ? 6
-             : 7
+             : hrefPage === "/kltn"
+             ? 1
+             : null
          }) > div > a > span {
             font-weight: 700;
             border-radius: 10px;
@@ -222,70 +411,29 @@ export const HeaderUser = () => {
       document.head.removeChild(style);
     };
   }, []);
-
-  // useEffect(() => {
-  //   const script1 = document.createElement("script");
-  //   script1.src =
-  //     "https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/0.1.0-beta.4/libs/oversea/index.js";
-  //   script1.async = true;
-  //   script1.id = "coze-sdk-script";
-
-  //   let script2;
-
-  //   script1.onload = () => {
-  //     script2 = document.createElement("script");
-  //     script2.id = "coze-client-script";
-  //     script2.innerHTML = `
-  //       new CozeWebSDK.WebChatClient({
-  //         config: {
-  //           bot_id: '7387681070575616016',
-  //         },
-  //         componentProps: {
-  //           title: 'Coze',
-  //         },
-  //       });
-  //     `;
-  //     document.body.appendChild(script2);
-  //   };
-
-  //   if (user) {
-  //     return document.body.appendChild(script1);
-  //   }
-  //   return () => {
-  //     const existingScript1 = document.getElementById("coze-sdk-script");
-  //     const existingScript2 = document.getElementById("coze-client-script");
-  //     if (existingScript1) {
-  //       document.body.removeChild(existingScript1);
-  //     }
-  //     if (existingScript2) {
-  //       document.body.removeChild(existingScript2);
-  //     }
-  //   };
-  // }, []);
-  
   const op = useRef(null);
   return (
     <section id="HEADER">
       {loading()}
+      <Toast ref={toast} />
       <Menubar
         start={
           device() ? (
-              <img
-                alt="logo"
-                src={logo}
-                height="40"
-                className="mr-2 cursor-pointer"
-                onClick={() => navigate("/kltn/home")}
-              ></img>
+            <img
+              alt="logo"
+              src={logo}
+              height="40"
+              className="mr-2 cursor-pointer"
+              onClick={() => navigate("/kltn/home")}
+            ></img>
           ) : (
-
-              <img
-                alt="logo"
-                src={logo}
-                height="40"
-                className="mr-2"
-                onClick={() => navigate("/kltn/home")}
-              ></img>
+            <img
+              alt="logo"
+              src={logo}
+              height="40"
+              className="mr-2"
+              onClick={() => navigate("/kltn/home")}
+            ></img>
           )
         }
         model={page}

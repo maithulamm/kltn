@@ -166,7 +166,7 @@ export const Header = () => {
       // url: "/kltn/admin/users",
       command: () => {
         showLoadingScreen();
-        navigate("/kltn/admin/users");
+        navigate("/kltn/admin/feedback");
       },
     },
     {

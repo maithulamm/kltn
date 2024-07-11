@@ -117,6 +117,33 @@ const authControllers = {
     );
     res.status(200).json("User has been logged out");
   },
+  // Edit user not password
+  editUser: async (req, res) => {
+    try {
+      const user = await Users.findByIdAndUpdate(
+        req.user.id,
+        {
+          $set: {
+            username: req.body.username,
+            email: req.body.email,
+            isAdmin: req.body.isAdmin,
+            fullName: req.body.fullName,
+            address: req.body.address,
+            avt: req.body.avt,
+            birthday: req.body.birthday,
+            phone: req.body.phone,
+            gender: req.body.gender,
+            prefer: req.body.prefer
+          },
+        },
+        { new: true }
+      );
+      res.status(200).json(user);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  },
+  
 };
 
 module.exports = authControllers;

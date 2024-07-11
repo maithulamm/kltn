@@ -93,6 +93,10 @@ export const NewsUser = () => {
                     webkitBoxOrient: "vertical",
                     display: "-webkit-box",
                   }}
+                  onClick={() => {
+                    setCurrentNews(news[0]);
+                    setVisibleNews(true);
+                  }}
                 >
                   {news[0]?.content}
                 </div>

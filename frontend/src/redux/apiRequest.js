@@ -1,5 +1,5 @@
 import axiost from 'axios';
-import { loginStart, loginFailure, loginSuccess, registerStart, registerSuccess, registerFailure, logOutStart, logOutSuccess, logOutFailure } from './authSlice';
+import { loginStart, loginFailure, loginSuccess, registerStart, registerSuccess, registerFailure, logOutStart, logOutSuccess, logOutFailure, editUserStart, editUserSuccess, editUserFailure } from './authSlice';
 import {
     getUsersStart,
     getUsersSuccess,
@@ -41,6 +41,7 @@ import {
 } from './place2Slice';
 import ld from '../data/load.gif'
 import { addNewsStart, addNewsSuccess, deleteNewsFailure, deleteNewsStart, getNewsFailure, getNewsStart, getNewsSuccess, updateNewsFailure, updateNewsStart, updateNewsSuccess } from './newsSlice';
+import { addFeedbackFailure, addFeedbackStart, addFeedbackSuccess, deleteFeedbackFailure, deleteFeedbackStart, deleteFeedbackSuccess, getFeedbackFailure, getFeedbackStart, getFeedbackSuccess, updateFeedbackFailure, updateFeedbackStart, updateFeedbackSuccess } from './feedbackSlice';
 // const host = 'http://localhost:8000/';
 const host = "https://kltn-pdoe.onrender.com/"
 export const loading = () => {
@@ -140,10 +141,23 @@ export const registerUser = async (user, dispatch, navigate) => {
     try {
         const res = await axiost.post(`${host}v1/auth/register/`, user);
         dispatch(registerSuccess());
-        navigate('/kltn/login');
-        alert(res);
+        navigate('/kltn');
     } catch (err) {
         dispatch(registerFailure());
+    }
+};
+
+export const editUser = async (user, accessToken, dispatch) => {
+    dispatch(editUserStart());
+    try {
+        const res = await axiost.put(`${host}v1/auth/edit/`, user, {
+            headers: {
+                Token: `Bearer ${accessToken}`,
+            },
+        });
+        dispatch(editUserSuccess(res.data));
+    } catch (err) {
+        dispatch(editUserFailure());
     }
 };
 
@@ -215,7 +229,7 @@ export const getAllPlace = async (accessToken, dispatch) => {
     try {
         const res = await axiost.get(`${host}v1/place/`, {
             headers: {
-                Token: `Bearer ${accessToken}`,
+                Token: `Bearer ${accessToken || ""}`,
             },
         });
         dispatch(getPlacesSuccess(res.data));
@@ -438,3 +452,63 @@ export const updateNews = async (news, accessToken, dispatch) => {
         dispatch(updateNewsFailure());
     }
 }
+
+// Feedback
+export const getAllFeedback = async (accessToken, dispatch) => {
+    dispatch(getFeedbackStart());
+    try {
+        const res = await axiost.get(`${host}v1/feedback/all`, {
+            headers: {
+                Token: `Bearer ${accessToken}`,
+            },
+        });
+        dispatch(getFeedbackSuccess(res.data));
+    } catch (err) {
+        dispatch(getFeedbackFailure());
+    }
+};
+
+export const addFeedback = async (feedback, accessToken, dispatch) => {
+    dispatch(addFeedbackStart());
+    try {
+        const res = await axiost.post(`${host}v1/feedback/add/`, feedback, {
+            headers: {
+                Token: `Bearer ${accessToken}`,
+            },
+        });
+        dispatch(addFeedbackSuccess(res.data));
+    } catch (err) {
+        dispatch(addFeedbackFailure());
+    }
+};
+
+export const deleteFeedback = async (id, accessToken, dispatch) => {
+    dispatch(deleteFeedbackStart());
+    try {
+        const res = await axiost.delete(`${host}v1/feedback/del/${id}`, {
+            headers: {
+                Token: `Bearer ${accessToken}`,
+            },
+        });
+        dispatch(deleteFeedbackSuccess(res.data));
+    } catch (err) {
+        dispatch(deleteFeedbackFailure());
+    }
+}
+
+export const updateFeedback = async (feedback, accessToken, dispatch) => {
+    dispatch(updateFeedbackStart());
+    try {
+        const res = await axiost.put(`${host}v1/feedback/update/${feedback._id}`, feedback, {
+            headers: {
+                Token: `Bearer ${accessToken}`,
+            },
+        });
+        dispatch(updateFeedbackSuccess(res.data));
+    } catch (err) {
+        dispatch(updateFeedbackFailure());
+    }
+}
+
+
+

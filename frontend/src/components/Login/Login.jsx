@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import React, { Fragment, useRef, useState } from "react";
 // import styles from "./style.css";
-import { loading, loginUser } from "../../redux/apiRequest";
+import { getAllPlace, loading, loginUser } from "../../redux/apiRequest";
 import { registerUser } from "../../redux/apiRequest";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -15,10 +15,13 @@ import { Toast } from "primereact/toast";
 
 const Login = () => {
   const user = useSelector((state) => state.auth.login?.currentUser);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const accessToken = user?.accessToken;
+
   useEffect(() => {
     document.title = "Quản trị viên đăng nhập";
-
+    getAllPlace(accessToken, dispatch);
     // if (user && user?.isAdmin === true) {
     //   navigate("/kltn/admin/home");
     // }
@@ -26,7 +29,6 @@ const Login = () => {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const dispatch = useDispatch();
 
   const handleLogin = (e) => {
     e.preventDefault();

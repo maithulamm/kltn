@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/kltn/static/css/main.2efd0950.css",
-    "main.js": "/kltn/static/js/main.37620f6e.js",
+    "main.js": "/kltn/static/js/main.e3484c54.js",
     "static/js/960.817a4f43.chunk.js": "/kltn/static/js/960.817a4f43.chunk.js",
     "static/js/592.7f72a991.chunk.js": "/kltn/static/js/592.7f72a991.chunk.js",
     "static/media/Presentation1.gif": "/kltn/static/media/Presentation1.b079b9ee924a5bda3148.gif",
@@ -55,12 +55,12 @@
     "static/media/item1.svg": "/kltn/static/media/item1.2a611c2ca555e9d11f6000d7564acae3.svg",
     "static/media/item3.svg": "/kltn/static/media/item3.44afc2f794fc2438d836508d6c3b2684.svg",
     "main.2efd0950.css.map": "/kltn/static/css/main.2efd0950.css.map",
-    "main.37620f6e.js.map": "/kltn/static/js/main.37620f6e.js.map",
+    "main.e3484c54.js.map": "/kltn/static/js/main.e3484c54.js.map",
     "960.817a4f43.chunk.js.map": "/kltn/static/js/960.817a4f43.chunk.js.map",
     "592.7f72a991.chunk.js.map": "/kltn/static/js/592.7f72a991.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.2efd0950.css",
-    "static/js/main.37620f6e.js"
+    "static/js/main.e3484c54.js"
   ]
 }

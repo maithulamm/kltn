@@ -10,6 +10,8 @@ import {
 import { Dialog } from "primereact/dialog";
 import { Accordion, AccordionTab } from "primereact/accordion";
 import WeatherWidget from "./wt";
+import { useSelector } from "react-redux";
+import { confirmDialog, ConfirmDialog } from "primereact/confirmdialog";
 
 export const MenuUser = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -19,7 +21,26 @@ export const MenuUser = () => {
   const [visibleFeedback, setVisibleFeedback] = useState(false);
   const [visibleGuide, setVisibleGuide] = useState(false);
   const navigate = useNavigate();
-
+  const user = useSelector((state) => state.auth.login?.currentUser);
+  const confirm3 = () => {
+    confirmDialog({
+      message: `Đăng nhập để sử dụng chức năng này!`,
+      header: "Bạn chưa đăng nhập!",
+      icon: "pi pi-info-circle",
+      defaultFocus: "reject",
+      acceptClassName: "p-button-primary",
+      position: "top",
+      acceptLabel: "Đăng nhập",
+      rejectLabel: "Để sau",
+      draggable: false,
+      accept: () => {
+        showLoadingScreen();
+        setTimeout(() => {
+          navigate("/kltn/login");
+        }, 1000);
+      },
+    });
+  };
   const listMenu = [
     {
       icon: "pi pi-star",
@@ -86,32 +107,45 @@ export const MenuUser = () => {
       icon: "pi pi-comments",
       title: "Góp ý",
       onClick: () => {
-        showLoadingScreen();
-        setTimeout(() => {
+        if (user) {
+          showLoadingScreen();
           navigate("/kltn/feedback");
-        }, 500);
+          setTimeout(() => {
+            hideLoadingScreen();
+          }, 1000);
+        } else {
+          return confirm3();
+        }
       },
     },
     {
       icon: "pi pi-calendar-plus",
       title: "Lưu trú",
       onClick: () => {
-        showLoadingScreen();
-        setTimeout(() => {
-          hideLoadingScreen();
-        }, 1900);
-        setVisibleBooking(true);
+        if (user) {
+          showLoadingScreen();
+          setTimeout(() => {
+            hideLoadingScreen();
+          }, 1900);
+          setVisibleBooking(true);
+        } else {
+          return confirm3();
+        }
       },
     },
     {
       icon: "",
       title: "Chatbot AI",
       onClick: () => {
-        showLoadingScreen();
-        setTimeout(() => {
-          hideLoadingScreen();
-        }, 1900);
-        setVisibleChatbot(true);
+        if (user) {
+          showLoadingScreen();
+          setTimeout(() => {
+            hideLoadingScreen();
+          }, 1900);
+          setVisibleChatbot(true);
+        } else {
+          return confirm3();
+        }
       },
     },
     {
@@ -301,6 +335,7 @@ export const MenuUser = () => {
           style={{ border: "none", overflow: "hidden" }}
         ></iframe>
       </Dialog>
+      {/* <ConfirmDialog /> */}
     </div>
   );
 };

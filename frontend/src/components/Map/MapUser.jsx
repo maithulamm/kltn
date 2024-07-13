@@ -14,6 +14,7 @@ import {
   LayerGroup,
   Tooltip,
   useMap,
+  FeatureGroup,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -45,138 +46,36 @@ import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
 import { InputTextarea } from "primereact/inputtextarea";
 import MapOverlay from "../Table/MapOverlay";
-import { deletePlace, updatePlace } from "../../redux/apiRequest";
+import {
+  deletePlace,
+  showLoadingScreen,
+  updatePlace,
+} from "../../redux/apiRequest";
 import { getAllPlace } from "../../redux/apiRequest";
 import { Toast } from "primereact/toast";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import "leaflet-routing-machine";
-import 'leaflet-control-geocoder';
+import "leaflet-control-geocoder";
 import Select from "react-select";
-const waypoints = [
-  { lat: 10.580582870379785, lng: 104.21931237399188 },
-  { lat: 9.580582870379785, lng: 105.21931237399188 },
-];
-const RoutingControl = ({ map, waypoints, mode }) => {
-  useEffect(() => {
-    if (!map || !waypoints || waypoints.length === 0) return;
-
-    const leafletWaypoints = waypoints.map(point => L.latLng(point.lat, point.lng));
-    const routingControl = L.Routing.control({
-      waypoints: leafletWaypoints,
-      routeWhileDragging: true,
-      show: true,
-      lineOptions: {
-        styles: [{ color: 'blue', opacity: 0.6, weight: 4 }]
-      },
-      createMarker: () => null,
-      router: new L.Routing.OSRMv1({
-        serviceUrl: 'http://router.project-osrm.org/route/v1'
-      }),
-      geocoder: L.Control.Geocoder.nominatim(),
-      fitSelectedRoutes: true,
-      showAlternatives: true,
-      altLineOptions: {
-        styles: [{ color: 'red', opacity: 0.6, weight: 4 }]
-      },
-      icons: {
-        start: new L.divIcon({
-          className: 'routing-icon routing-icon-start',
-          iconSize: [20, 20],
-          html: '🏁'
-        }),
-        end: new L.divIcon({
-          className: 'routing-icon routing-icon-end',
-          iconSize: [20, 20],
-          html: '🏁'
-        }),
-      },
-
-    }).addTo(map);
-
-    return () => {
-      if (map && routingControl) {
-        map.removeControl(routingControl);
-      }
-    };
-  }, [map, waypoints, mode]);
-
-  return null;
-};
-
-const DirectionsPanel = ({ setWaypoints, setMode }) => {
-  const [start, setStart] = useState(null);
-  const [end, setEnd] = useState(null);
-  const [transportMode, setTransportMode] = useState('driving');
-  const [startOptions, setStartOptions] = useState([]);
-  const [endOptions, setEndOptions] = useState([]);
-  const [error, setError] = useState(null);
-
-  const handleSearch = () => {
-    if (start && end) {
-      setWaypoints([{ lat: start.lat, lng: start.lon }, { lat: end.lat, lng: end.lon }]);
-      setMode(transportMode);
-    }
-  };
-
-  const fetchSuggestions = async (inputValue) => {
-    const query = String(inputValue).replace(/ /g, '+');
-    try {
-      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      return data.map(item => ({
-        label: item.display_name,
-        value: item.display_name,
-        lat: item.lat,
-        lon: item.lon
-      }));
-    } catch (error) {
-      setError(error.message);
-      return [];
-    }
-  };
-
-  const handleInputChange = (inputValue, { action }, setOptions) => {
-    if (action === 'input-change') {
-      fetchSuggestions(inputValue).then(options => {
-        setOptions(options);
-      });
-    }
-  };
-
-  return (
-    <div className="directions-panel">
-      {error && <div className="error">{error}</div>}
-      <Select
-        placeholder="Start address"
-        value={start}
-        onChange={setStart}
-        onInputChange={(inputValue, actionMeta) => handleInputChange(inputValue, actionMeta, setStartOptions)}
-        options={startOptions}
-      />
-      <Select
-        placeholder="End address"
-        value={end}
-        onChange={setEnd}
-        onInputChange={(inputValue, actionMeta) => handleInputChange(inputValue, actionMeta, setEndOptions)}
-        options={endOptions}
-      />
-      <select value={transportMode} onChange={(e) => setTransportMode(e.target.value)}>
-        <option value="driving">Driving</option>
-        <option value="walking">Walking</option>
-        <option value="cycling">Cycling</option>
-      </select>
-      <button onClick={handleSearch}>Search</button>
-    </div>
-  );
-};
+import { FullscreenControl } from "react-leaflet-fullscreen";
+import "react-leaflet-fullscreen/styles.css";
+import { EditControl } from "react-leaflet-draw";
+import "leaflet-draw/dist/leaflet.draw.css";
+import {
+  useLeafletContext,
+  leafletElement,
+  createLayerComponent,
+} from "@react-leaflet/core";
+import Leaflet from "leaflet";
+import "leaflet/dist/leaflet.css";
+import { confirmDialog, ConfirmDialog } from "primereact/confirmdialog";
+import { useNavigate } from "react-router-dom";
+import { current } from "@reduxjs/toolkit";
 
 const MapUser = ({ height }) => {
-  const accessToken = useSelector(
-    (state) => state.auth.login?.currentUser?.accessToken
-  );
+  const user = useSelector((state) => state.auth.login?.currentUser);
+  const accessToken = user?.accessToken;
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const toast = useRef(null);
 
@@ -193,7 +92,7 @@ const MapUser = ({ height }) => {
   const currentPlace2 = place2?.find((p) => p._id === currentPlaceID);
   // const [currentPlace, setCurrentPlace] = useState();
 
-  // console.log(place2);
+  // console.log(currentPlace || currentPlace2);
   const apiKey =
     "AAPKc84180eb554748db8f9c5610ea258426GjMeZS-ZZoTcACKRfs7uvF3tG2wQHkLPDjqlq2KXIYiqwdOADtwgFlq4g72h0mBn";
   const [map, setMap] = useState(null);
@@ -240,7 +139,7 @@ const MapUser = ({ height }) => {
           </LayersControl.Overlay>
         </LayersControl>
 
-        <ScaleControl position="bottomleft" />
+        <ScaleControl position="topleft" />
       </Fragment>
     );
   }
@@ -255,7 +154,19 @@ const MapUser = ({ height }) => {
   const onZoom = useCallback(() => {
     setGetZoom(map.getZoom());
   }, [map]);
-  useEffect(() => {}, [map, onZoom]);
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        setLocation([position.coords.latitude, position.coords.longitude]);
+        return localStorage.setItem("location", [
+          position.coords.latitude,
+          position.coords.longitude,
+        ]);
+      });
+    } else {
+      localStorage.setItem("location", []);
+    }
+  }, [map, onZoom]);
 
   const add_Data = () => {
     return (
@@ -273,10 +184,12 @@ const MapUser = ({ height }) => {
             })}
             eventHandlers={{
               click: () => {
-                setVisibleSlide(true);
-                setVisibleSlide2(false);
                 setCurrentPlaceID(p._id);
-                map.flyTo([p.lat, p.long], 18);
+                if (!visibleRouting) {
+                  setVisibleSlide(true);
+                  setVisibleSlide2(false);
+                  map.flyTo([p.lat, p.long], 16);
+                }
               },
             }}
           >
@@ -307,10 +220,12 @@ const MapUser = ({ height }) => {
               })}
               eventHandlers={{
                 click: () => {
-                  setVisibleSlide2(true);
-                  setVisibleSlide(false);
                   setCurrentPlaceID(p._id);
-                  map.flyTo([p.lat, p.long], 18);
+                  if (!visibleRouting) {
+                    setVisibleSlide2(true);
+                    setVisibleSlide(false);
+                    map.flyTo([p.lat, p.long], 16);
+                  }
                 },
               }}
             >
@@ -920,11 +835,96 @@ const MapUser = ({ height }) => {
   };
   const [waypoints, setWaypoints] = useState([]);
   const [mode, setMode] = useState("driving");
+  const _created = (e) => console.log(e);
+  const [locationMarker, setLocationMarker] = useState(false);
+  const [location, setLocation] = useState([]);
+  const [visibleRouting, setVisibleRouting] = useState(false);
+  const confirm2 = () => {
+    return confirmDialog({
+      message: `Đăng nhập để sử dụng chức năng này!`,
+      header: "Bạn chưa đăng nhập!",
+      icon: "pi pi-info-circle",
+      defaultFocus: "reject",
+      acceptClassName: "p-button-primary",
+      position: "top",
+      acceptLabel: "Đăng nhập",
+      rejectLabel: "Để sau",
+      draggable: false,
+      accept: () => {
+        showLoadingScreen();
+        setTimeout(() => {
+          navigate("/kltn/login");
+        }, 1000);
+      },
+    });
+  };
+  const RoutingControl = () => {
+    const map = useMap();
+    const routingControlRef = useRef(null);
+
+    useEffect(() => {
+      if (!map || routingControlRef.current) return;
+
+      routingControlRef.current = L.Routing.control({
+        waypoints: [
+          L.latLng(localStorage.getItem("location").split(",")),
+          currentPlace?.lat || currentPlace2?.lat
+            ? [
+                currentPlace?.lat || currentPlace2?.lat,
+                currentPlace?.long || currentPlace2?.long,
+              ]
+            : null,
+          // L.latLng(10.580582870379785, 105.51931237399188),
+        ],
+        routeWhileDragging: true,
+        geocoder: L.Control.Geocoder.nominatim(),
+        router: new L.Routing.OSRMv1({
+          serviceUrl: "http://router.project-osrm.org/route/v1",
+          profile: "driving",
+
+        }),
+        createMarker: (i, wp, n) =>
+          L.marker(wp.latLng, {
+            draggable: true,
+            icon: L.icon({
+              iconUrl:
+                "https://www.freeiconspng.com/uploads/red-location-icon-map-png-4.png",
+              iconSize: [25, 41],
+              iconAnchor: [12, 41],
+            }),
+          }),
+        formatter: new L.Routing.Formatter({
+          language: "en",
+        }),
+        autoRoute: true,
+        // plan: new L.Routing.Plan(
+        //   [
+        //     L.latLng(localStorage.getItem("location").split(",")),
+        //     currentPlace?.lat || currentPlace2?.lat
+        //       ? [
+        //           currentPlace?.lat || currentPlace2?.lat,
+        //           currentPlace?.long || currentPlace2?.long,
+        //         ]
+        //       : null,
+        //   ]
+        // ),
+      }).addTo(map);
+
+
+
+      return () => {
+        if (routingControlRef.current) {
+          map.removeControl(routingControlRef.current);
+        }
+      };
+    }, [map]);
+
+    return null;
+  };
   return (
     <div style={{ height: height, maxHeight: "90vh" }}>
       {popupSidiebar()}
       {popupSidiebar2()}
-      <DirectionsPanel setWaypoints={setWaypoints} setMode={setMode} />
       <MapContainer
         ref={setMap}
         center={center}
@@ -932,16 +932,97 @@ const MapUser = ({ height }) => {
         minZoom={6}
         maxZoom={18}
         crollWheelZoom={true}
-        maxBounds={L.latLngBounds(
-          L.latLng(11.530582870379785, 106.21931237399188),
-          L.latLng(9.530582870379785, 104.21931237399188)
-        )}
+        // maxBounds={L.latLngBounds(
+        //   L.latLng(11.530582870379785, 106.21931237399188),
+        //   L.latLng(9.530582870379785, 104.21931237399188)
+        // )}
       >
         {layersControlData()}
-        {map && (
-          <RoutingControl map={map} waypoints={waypoints} mode={mode} />
-        )}{" "}
+        {visibleRouting && map && <RoutingControl />}
+        <FullscreenControl position="topleft" />
+        <FeatureGroup>
+          <EditControl
+            position="topleft"
+            onCreated={_created}
+            draw={{
+              marker: {
+                icon: new L.divIcon({
+                  className: "my-div-icon",
+                  html: `<img src="https://www.freeiconspng.com/uploads/red-location-icon-map-png-4.png" class="icon-image"/>`,
+                }),
+              },
+            }}
+          />
+        </FeatureGroup>
+        <div className="leaflet-bottom leaflet-right">
+          <Button
+            className={`leaflet-control cursor-pointer ${
+              visibleRouting ? "bg-teal-50 text-primary" : null
+            }`}
+            onClick={() => {
+              if (user) {
+                if (localStorage.getItem("location")) {
+                  setVisibleRouting(!visibleRouting);
+                } else {
+                  alert("Vui lòng bật vị trí để sử dụng chức năng này");
+                }
+              } else {
+                return confirm2();
+              }
+            }}
+            label=""
+            icon="pi pi-map"
+            raised
+          />
+          <Button
+            className="leaflet-control cursor-pointer"
+            onClick={() => {
+              if (localStorage.getItem("location")) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                  setLocation([
+                    position.coords.latitude,
+                    position.coords.longitude,
+                  ]);
+                  return localStorage.setItem("location", [
+                    position.coords.latitude,
+                    position.coords.longitude,
+                  ]);
+                });
+                map.flyTo(localStorage.getItem("location").split(","), 16);
+                setLocationMarker(true);
+              } else {
+                alert("Vui lòng bật vị trí để sử dụng chức năng này");
+              }
+            }}
+            label=""
+            icon="pi pi-map-marker"
+            raised
+          />
+          <Button
+            className="leaflet-control cursor-pointer"
+            onClick={() => {
+              map.flyTo(center, zoom);
+              setTimeout(() => {
+                setLocationMarker(false);
+              }, 1000);
+            }}
+            label=""
+            icon="pi pi-home"
+            raised
+          />
+        </div>
+        {locationMarker ? (
+          <Marker
+            position={location}
+            icon={L.divIcon({
+              className: "my-div-icon",
+              html: `<img src="https://www.freeiconspng.com/uploads/red-location-icon-map-png-4.png" class="icon-image"/>`,
+              iconSize: [30, 30],
+            })}
+          />
+        ) : null}
       </MapContainer>
+      {/* <ConfirmDialog /> */}
       {/* {map ? <DisplayPosition map={map} /> : null} */}
     </div>
   );

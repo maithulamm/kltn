@@ -5,6 +5,7 @@ import "./style.css";
 import { Link } from "react-router-dom/dist";
 import { useSelector } from "react-redux";
 import {
+  editUser,
   getAllPlace2,
   getAllTypePlace,
   getWeather,
@@ -28,7 +29,15 @@ import { Dialog } from "primereact/dialog";
 import { getPlacesSuccess } from "../../redux/placeSlice";
 import { getUsersSuccess } from "../../redux/userSlice";
 import { getTypePlacesSuccess } from "../../redux/typePlaceSlice";
-import { logOutSuccess } from "../../redux/authSlice";
+import { loginSuccess, logOutSuccess } from "../../redux/authSlice";
+import { Toast } from "primereact/toast";
+import { InputText } from "primereact/inputtext";
+import { Dropdown } from "primereact/dropdown";
+import { Tag } from "primereact/tag";
+import { Button } from "primereact/button";
+import { MultiSelect } from "primereact/multiselect";
+import { Calendar } from "primereact/calendar";
+import { device } from "../Home/Home";
 
 export const Header = () => {
   const user = useSelector((state) => state.auth.login.currentUser);
@@ -65,16 +74,53 @@ export const Header = () => {
   };
 
   const [visibleDialog, setVisibleDialog] = useState(false);
-
+  // const toast = useRef(null);
   const DialogCurrentUser = () => {
+    const [dataEdit, setDataEdit] = useState({
+      username: user?.username,
+      fullName: user?.fullName,
+      email: user?.email,
+      phone: user?.phone,
+      gender: user?.gender,
+      birthday: user?.birthday,
+      avt: user?.avt,
+    });
+    const updateData = {
+      username: user?.username,
+      fullName: dataEdit.fullName,
+      email: dataEdit.email,
+      phone: dataEdit.phone,
+      gender: dataEdit.gender,
+      birthday: dataEdit.birthday,
+      avt: dataEdit?.avt,
+      accessToken: accessToken,
+    };
+    const handleInputChange = (e, field) => {
+      setDataEdit((prev) => ({ ...prev, [field]: e.target.value }));
+    };
+    const Type = useSelector(
+      (state) => state.typePlaces?.typePlaces?.allTypePlaces
+    );
+    const [selectType, setSelectType] = useState(
+      user?.prefer?.map((t) => t[0])
+    );
+
+    const show = ({ severity, summary, detail }) => {
+      toast.current.show({
+        severity: severity,
+        summary: summary,
+        detail: detail,
+      });
+    };
     return (
       <Dialog
         header="Thông tin cá nhân"
         visible={visibleDialog}
-        style={{ width: "450px" }}
+        style={{ width: "50vw" }}
         onHide={() => setVisibleDialog(false)}
         draggable={false}
         maximizable
+        maximized={device() ? false : true}
       >
         <div className="flex flex-column items-center justify-content-center align-items-start">
           <div className="flex justify-content-center align-items-start col-12">
@@ -88,10 +134,142 @@ export const Header = () => {
             />
           </div>
           <div className="flex flex-column items-center justify-content-center align-items-start col-12">
-            <div className="flex flex-column items-center justify-content-center align-items-start col-12">
-              <span className="text-lg font-bold">{user?.username}</span>
-              <span className="text-sm text-gray-500">{user?.email}</span>
+            <div className="field col-12 ">
+              <label htmlFor="intro">Tên đăng nhập</label>
+              <InputText
+                onChange={(e) => handleInputChange(e, "username")}
+                value={dataEdit?.username}
+                id="intro"
+                disabled
+                className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+              />
             </div>
+            <div className="field col-12 ">
+              <label htmlFor="lastname6">Họ và tên</label>
+              <InputText
+                onChange={(e) => handleInputChange(e, "fullName")}
+                value={dataEdit?.fullName}
+                className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+              />
+            </div>
+            <div className="field col-12 ">
+              <label htmlFor="lastname6">Email</label>
+              <InputText
+                onChange={(e) => handleInputChange(e, "email")}
+                value={dataEdit?.email}
+                className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+              />
+            </div>
+            <div className="field col-12 ">
+              <label htmlFor="firstname6">Số điện thoại</label>
+              <InputText
+                keyfilter="num"
+                onChange={(e) => handleInputChange(e, "phone")}
+                value={dataEdit?.phone}
+                className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+              />
+            </div>
+            <div className="w-full flex">
+              <div className="field col-12 md:col-6 ">
+                <label htmlFor="lastname6">Giới tính</label>
+                <Dropdown
+                  value={dataEdit?.gender}
+                  options={[
+                    { label: "Nam", value: "Nam" },
+                    { label: "Nữ", value: "Nữ" },
+                  ]}
+                  onChange={(e) => handleInputChange(e, "gender")}
+                  placeholder="Chọn giới tính"
+                  className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                />
+                {/* <InputText onChange={(e) => handleInputChange(e, "gender")} value={user?.gender} className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"/> */}
+              </div>
+              <div className="field col-12 md:col-6">
+                <label htmlFor="firstname6">Ngày sinh</label>
+                <Calendar
+                  onChange={(e) => handleInputChange(e, "birthday")}
+                  dateFormat="dd/mm/yy"
+                  value={new Date(dataEdit?.birthday)}
+                  className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                />
+                {/* <InputText keyfilter="num" onChange={(e) => handleInputChange(e, "birthday")} value={user?.birthday} className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"/> */}
+              </div>
+            </div>
+            <div className="field col-12">
+              <label htmlFor="lastname6">Sở thích</label>
+              <MultiSelect
+                value={selectType?.map((t) => ({ name: t }))}
+                onChange={(e) => {
+                  setSelectType(e.value?.map((t) => t.name) || []);
+                }}
+                options={
+                  Type?.map((t) => ({
+                    name: t.name,
+                  })) || []
+                }
+                optionLabel="name"
+                display="chip"
+                placeholder="Chọn loại"
+                maxSelectedLabels={10}
+                className="w-full"
+                itemTemplate={(option) => {
+                  // console.log(option.name);
+                  return (
+                    <Tag
+                      value={option.name}
+                      style={{
+                        backgroundColor: `#${
+                          Type.find((t) => t.name === option.name)?.color
+                        }`,
+                        color:
+                          parseInt(
+                            Type.find((t) => t.name === option.name)?.color,
+                            16
+                          ) >
+                          0xffffff / 0.9
+                            ? "gray"
+                            : "white",
+                      }}
+                    />
+                  );
+                }}
+              />
+            </div>
+          </div>
+          <div className="flex col-12 md:col-12 justify-content-center">
+            <Button
+              label="Lưu"
+              icon="pi pi-save"
+              className="p-button-success m-2 h-3rem"
+              onClick={() => {
+                if (updateData.username === "" || updateData.email === "") {
+                  show({
+                    severity: "warn",
+                    summary: "Warning",
+                    detail: "Tên đăng nhập và email không được để trống!",
+                  });
+                } else {
+                  editUser(updateData, accessToken, dispatch);
+                  show({
+                    severity: "success",
+                    summary: "Success",
+                    detail: "Cập nhật thông tin thành công!",
+                  });
+                  setVisibleDialog(false);
+                  loginSuccess();
+                  // setTimeout(() => {
+                  //   getAllUser(accessToken, dispatch);
+                  // }, 1000);
+                  // getAllUser(accessToken, dispatch);
+                }
+              }}
+            />
+            <Button
+              label="Hủy bỏ"
+              icon="pi pi-times"
+              className="p-button-danger m-2 h-3rem"
+              onClick={() => setVisibleDialog(false)}
+            />
           </div>
         </div>
       </Dialog>
@@ -233,6 +411,7 @@ export const Header = () => {
   return (
     <section id="HEADER">
       {loading()}
+      <Toast ref={toast} />
       <Menubar
         start={
             <img alt="logo" src={logo} height="40" className="mr-2"

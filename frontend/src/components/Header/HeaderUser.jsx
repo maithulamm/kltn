@@ -11,6 +11,7 @@ import {
   getAllTypePlace,
   getDistance,
   getWeather,
+  hideLoadingScreen,
   loading,
   logOut,
   showConfirm,
@@ -43,6 +44,7 @@ import { Calendar } from "primereact/calendar";
 import { MultiSelect } from "primereact/multiselect";
 import { Tag } from "primereact/tag";
 import { Toast } from "primereact/toast";
+import { loginSuccess } from "../../redux/authSlice";
 
 export const HeaderUser = () => {
   const user = useSelector((state) => state.auth?.login?.currentUser);
@@ -122,7 +124,6 @@ export const HeaderUser = () => {
     const [selectType, setSelectType] = useState(
       user?.prefer?.map((t) => t[0])
     );
-    
 
     const show = ({ severity, summary, detail }) => {
       toast.current.show({
@@ -275,6 +276,7 @@ export const HeaderUser = () => {
                     detail: "Cập nhật thông tin thành công!",
                   });
                   setVisibleDialog(false);
+                  loginSuccess();
                   // setTimeout(() => {
                   //   getAllUser(accessToken, dispatch);
                   // }, 1000);
@@ -314,7 +316,6 @@ export const HeaderUser = () => {
       command: () => {
         showLoadingScreen();
         navigate("/kltn/home");
-        return window.location.reload();
       },
     },
     {
@@ -361,6 +362,9 @@ export const HeaderUser = () => {
         if (user) {
           showLoadingScreen();
           navigate("/kltn/feedback");
+          setTimeout(() => {
+            hideLoadingScreen();
+          }, 1000);
         } else {
           confirm2();
         }

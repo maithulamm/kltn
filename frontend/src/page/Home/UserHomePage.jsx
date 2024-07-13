@@ -8,7 +8,17 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Dashboard, { device } from "../../components/Home/Home.jsx";
 import PieChart from "../../components/Home/Chart.jsx";
-import { getAllFeedback, getAllNews, getAllPlace, getAllPlace2, getAllTypePlace, hideLoadingScreen, loading, logOut, showLoadingScreen } from "../../redux/apiRequest.js";
+import {
+  getAllFeedback,
+  getAllNews,
+  getAllPlace,
+  getAllPlace2,
+  getAllTypePlace,
+  hideLoadingScreen,
+  loading,
+  logOut,
+  showLoadingScreen,
+} from "../../redux/apiRequest.js";
 import "primereact/resources/themes/lara-light-green/theme.css";
 import "primereact/resources/primereact.min.css";
 import { HeaderUser } from "../../components/Header/HeaderUser.jsx";
@@ -33,11 +43,20 @@ function UserHomePage() {
       hideLoadingScreen();
       // return window.location.reload();
     }, 2000);
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        return localStorage.setItem("location", [
+          position.coords.latitude,
+          position.coords.longitude,
+        ]);
+      });
+    } else {
+      localStorage.setItem("location", []);
+    }
   }, []);
 
   return (
     <Fragment>
-      
       <HeaderUser />
       <MenuUser />
       <NewsUser />

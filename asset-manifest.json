@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/kltn/static/css/main.e26d9a9a.css",
-    "main.js": "/kltn/static/js/main.4daaee7c.js",
+    "main.js": "/kltn/static/js/main.753f2f3f.js",
     "static/js/960.817a4f43.chunk.js": "/kltn/static/js/960.817a4f43.chunk.js",
     "static/js/592.7f72a991.chunk.js": "/kltn/static/js/592.7f72a991.chunk.js",
     "static/media/Presentation1.gif": "/kltn/static/media/Presentation1.b079b9ee924a5bda3148.gif",
@@ -54,19 +54,19 @@
     "static/media/Dulieu.svg": "/kltn/static/media/Dulieu.17acb8735b0ff260e385cd6a1608beea.svg",
     "static/media/Huongdan.svg": "/kltn/static/media/Huongdan.2dacb58443a96a4d936cbe68e6a1de6a.svg",
     "static/media/item2.svg": "/kltn/static/media/item2.292a0de90dfb0dcd42e09e01f4349241.svg",
+    "index.html": "/kltn/index.html",
     "static/media/item1.svg": "/kltn/static/media/item1.2a611c2ca555e9d11f6000d7564acae3.svg",
     "static/media/Phanhoi.svg": "/kltn/static/media/Phanhoi.cc034e3092021ed0f23a3a4642e01ca0.svg",
     "static/media/Trangchu.svg": "/kltn/static/media/Trangchu.55743320dded35872e81afe06271d55b.svg",
     "static/media/Lienket.svg": "/kltn/static/media/Lienket.8f2bbd1cf916bff441297bec05ef6edb.svg",
     "static/media/item3.svg": "/kltn/static/media/item3.44afc2f794fc2438d836508d6c3b2684.svg",
-    "index.html": "/kltn/index.html",
     "main.e26d9a9a.css.map": "/kltn/static/css/main.e26d9a9a.css.map",
-    "main.4daaee7c.js.map": "/kltn/static/js/main.4daaee7c.js.map",
+    "main.753f2f3f.js.map": "/kltn/static/js/main.753f2f3f.js.map",
     "960.817a4f43.chunk.js.map": "/kltn/static/js/960.817a4f43.chunk.js.map",
     "592.7f72a991.chunk.js.map": "/kltn/static/js/592.7f72a991.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e26d9a9a.css",
-    "static/js/main.4daaee7c.js"
+    "static/js/main.753f2f3f.js"
   ]
 }
